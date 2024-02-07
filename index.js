@@ -54,9 +54,10 @@ process.on("multipleResolves", (type, promise, reason) => {
 
 const fs = require("fs-extra");
 const axios = require("axios");
+const SimplDB = require("simpl.db");
 const stripAnsi = require("strip-ansi");
 
-
+const db = new SimplDB();
 
 axios.get("https://raw.githubusercontent.com/snappiee/Donkzz/main/index.js").then((res) => {
   let v = res.data.match(/Version ([0-9]*\.?)+/)[0]?.replace("Version ", "");
@@ -175,7 +176,7 @@ async function start(token, channelId) {
     const user = await client.users.fetch(botid);
     const createdDm = await user.createDM();
 
-    if (config.playInDms) channelId = createdDm.id;
+    
 
     channel = await client.channels.fetch(channelId);
 
@@ -244,7 +245,6 @@ async function start(token, channelId) {
       setInterval(() => vote(), 4.32e+7, true);
     };
 
-    if (config.serverEventsDonate.enabled && config.playInDms) return console.log(chalk.redBright("Server Events Donate is not supported in DMs. Please disable playInDms in config.json and add channel ids before the tokens in tokens.txt in the format <channelid> <token>"))
     if (config.serverEventsDonate.enabled) await channel.sendSlash(botid, "withdraw", "max")
     await channel.sendSlash(botid, "balance").catch((e) => console.log(e));
 
