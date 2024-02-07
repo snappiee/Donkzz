@@ -388,7 +388,7 @@ async function start(token, channelId) {
       return;
     }
     
-    if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("Under Maintenance")) {
+    if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("Hold tight! Maintenance in progress.")) {
       console.log(chalk.redBright(`${client.user.username} got maintenance! Stopping Donkzz; restart it later.`));
       process.exit(0);
       return;
