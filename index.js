@@ -2,8 +2,8 @@
 const version = "2.2.0";
 
 const chalk = require("chalk");
-console.log(chalk.red(`Slashy has started!!`))
-console.log(chalk.hex('#FFA500')(`If you encounter any issues, join our Discord: \nhttps://discord.gg/HGfFFUQ7F7 or \nhttps://discord.gg/7A6gAdnBaw`))
+console.log(chalk.red(`Donkzz has started!!`))
+console.log(chalk.hex('#FFA500')(`If you encounter any issues, join our Discord: \nhttps://discord.gg/7A6gAdnBaw`))
 console.log(chalk.yellowBright(`Your version is: ${version}`))
 
 if (!process.version.startsWith('v20')) console.log(chalk.redBright('You are running a NodeJS version under v20. If you don\'t upgrade, you may get large lag spikes or ram overloads.'))
@@ -58,9 +58,9 @@ const stripAnsi = require("strip-ansi");
 
 
 
-axios.get("https://raw.githubusercontent.com/TahaGorme/slashy/main/index.js").then((res) => {
+axios.get("https://raw.githubusercontent.com/snappiee/Donkzz/main/index.js").then((res) => {
   let v = res.data.match(/Version ([0-9]*\.?)+/)[0]?.replace("Version ", "");
-  if (v && v !== version) console.log(chalk.bold.bgRed("There is a new version available: " + v + "\t\nPlease update. " + chalk.underline("https://github.com/TahaGorme/slashy")));
+  if (v && v !== version) console.log(chalk.bold.bgRed("There is a new version available: " + v + "\t\nPlease update. " + chalk.underline("https://github.com/snappiee/Donkzz")));
 }).catch((error) => {
   console.log(error);
 });
@@ -389,7 +389,7 @@ async function start(token, channelId) {
     }
     
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("Under Maintenance")) {
-      console.log(chalk.redBright(`${client.user.username} got maintenance! Stopping Slashy; restart it later.`));
+      console.log(chalk.redBright(`${client.user.username} got maintenance! Stopping Donkzz; restart it later.`));
       process.exit(0);
       return;
     }
