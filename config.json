@@ -1,0 +1,113 @@
+{
+  "playInDms": false,
+  "discordStatus": "invisible",
+  "password": "password",
+  "loginDelay": 1500,
+  "commands": [
+    {
+      "command": "beg",
+      "cooldown": 50000
+    },
+    {
+      "command": "scratch",
+      "cooldown": 10850000
+    },
+    {
+      "command": "hunt",
+      "cooldown": 40000
+    },
+    {
+      "command": "work shift",
+      "cooldown": 3600000
+    },
+    { "command": "giveaway view",
+      "cooldown": 10000
+    },
+    {
+      "command": "search",
+      "cooldown": 30000
+    },
+    {
+      "command": "dig",
+      "cooldown": 40000
+    },
+    {
+      "command": "crime",
+      "cooldown": 50000
+    },
+    {
+      "command": "highlow",
+      "cooldown": 30000
+    },
+    {
+      "command": "postmemes",
+      "cooldown": 30000
+    },
+    {
+      "command": "stream",
+      "cooldown": 350000
+    }
+  ],
+  "autoAdventure": true,
+  "adventure": "west",
+  "autoApple": true,
+  "autoDaily": true,
+  "autoHorseshoe": true,
+  "postMemesPlatforms": ["tiktok", "discord"],
+  "streamGame": "",
+  "devMode": true,
+  "webhookLogging": true,
+  "webhook": "https://discord.com/api/webhooks/1204392397770067969/ZI9i_HrFarv-rv0s0Lga-Lw4qtCe-QeBR2ycaQI3TwmyCEbJWQNHSJIG4xjt7YD23NvR",
+  "autoVote": false,
+  "triviaOdds": 0.65,
+  "autoDeposit": true,
+  "autoFishingBait": false,
+  "autoAmmo": false,
+  "searchLocations": [],
+  "crimeLocations": [],
+  "serverEventsDonate": {
+    "enabled": false,
+    "blacklist": [
+      "Apple",
+      "Lucky Horseshoe",
+      "Hunting Rifle",
+      "Fishing Pole",
+      "Shovel",
+      "Trivia Trophy",
+      "Adventure Ticket",
+      "Mouse",
+      "Keyboard",
+      "Birthday Cake",
+      "Pink Plastic Bits"
+    ],
+    "mainUserId": "1203329416323923968",
+    "payoutOnlyMode": false,
+    "tokenWhichWillPayout": "",
+    "payoutChannelID": "1049355030022590607",
+    "payout": false
+  },
+  "cooldowns": {
+    "buttonClickDelay": {
+      "minDelay": 500,
+      "maxDelay": 700
+    },
+    "triviaCooldown": {
+      "minDelay": 800,
+      "maxDelay": 1250
+    },
+    "shortBreak": {
+      "minDelay": 45000,
+      "maxDelay": 75000,
+      "frequency": 0.0075
+    },
+    "longBreak": {
+      "minDelay": 125000,
+      "maxDelay": 175000,
+      "frequency": 0.00010
+    },
+    "commandInterval": {
+      "minDelay": 1500,
+      "maxDelay": 3000
+    }
+  }
+}
