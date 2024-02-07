@@ -151,11 +151,7 @@ async function start(token, channelId) {
   var botNotFreeCount = 0;
   var isDeadMeme = false;
   var isPlayingAdventure = false;
-  var wallet = 0;
-  var bank = 0;
-  var totalNet = 0;
-  var market = 0;
-  var invNet = 0;
+
 
   const client = new Client({
     checkUpdate: false
@@ -572,17 +568,7 @@ async function start(token, channelId) {
 
     // =================== Stream End ===================
 
-    // =================== Update Balance Start ===================
-
-
-    if (message?.embeds[0]?.fields[1]?.name?.includes("Current Wallet Balance")) {
-      wallet = Number(message?.embeds[0]?.fields[1].value?.replace("⏣ ", "")?.replace(/,/g, ""));
-      bank = Number(message?.embeds[0]?.fields[2].value?.replace("⏣ ", "")?.replace(/,/g, ""));
-
-      console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.cyan(`Wallet: ${wallet}`)}, ${chalk.cyan(`Bank: ${bank}`)}`);
-    }
-
-    // =================== Update Balance End ===================
+    
 
     // =================== Serverevents Donate Start ===================
     if (message?.interaction?.commandName?.includes("serverevents donate") && message?.embeds[0]?.title?.includes("Pending Confirmation")) {
@@ -686,27 +672,6 @@ async function start(token, channelId) {
 
     
 
-    // =================== Balance Updater Start ===================
-    if (message?.embeds[0]?.title?.includes(`${client.user.username}'s Balance`)) {
-      let fields = message?.embeds[0]?.fields;
-      wallet = Number(fields.filter(n => n.name === 'Pocket')[0].value.slice(2).replaceAll(',', ''));
-      bank = Number(fields.filter(n => n.name === 'Bank')[0].value.slice(2).replaceAll(',', ''));
-      invNet = Number(fields.filter(n => n.name === 'Inventory Net')[0].value.slice(2).replaceAll(',', ''));
-      market = Number(fields.filter(n => n.name === 'Market Net')[0].value.slice(2).replaceAll(',', ''));
-      totalNet = Number(fields.filter(n => n.name === 'Total Net')[0].value.slice(2).replaceAll(',', ''));
-
-      if (config.serverEventsDonate.enabled && wallet > 0) await message.channel.sendSlash(botid, "serverevents donate", wallet.toString());
-
-      db.set(client.user.id + ".wallet", wallet);
-      db.set(client.user.id + ".bank", bank);
-      db.set(client.user.id + ".invNet", invNet);
-      db.set(client.user.id + ".market", market);
-      db.set(client.user.id + ".totalNet", totalNet);
-
-      if (config.devMode) console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.blue(`Wallet: ${wallet}`)}, ${chalk.blue(`Bank: ${bank}`)}, ${chalk.blue(`Inventory Net: ${invNet}`)}, ${chalk.blue(`Market Net: ${market}`)}, ${chalk.blue(`Total Net: ${totalNet}`)} `);
-    }
-
-    // =================== Balance Updater End ===================
 
     // =================== Crime Command Start ===================
 
