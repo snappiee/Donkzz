@@ -1030,7 +1030,7 @@ async function start(token, channelId) {
       });
       if (config.devMode) console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.blue("Queued balance command")} `);
     } else {
-      if (randomInt(1, 10) == 4 && config.autoDeposit) {
+      if (randomInt(1, 9) == 4 && config.autoDeposit) {
         queueCommands.push({
           command: "deposit",
           args: ["max"],
