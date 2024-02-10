@@ -1,5 +1,5 @@
-// Version 2.2.1
-const version = "2.2.1";
+// Version 2.2.2
+const version = "2.2.2";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -363,8 +363,6 @@ async function start(token, channelId) {
 
   client.on("messageCreate", async (message) => {
     if (message.author.id != botid) return;
-
-    if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You are unable to interact with this due to an ongoing command or a minor issue.")) isBotFree = false;
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("You're currently banned!")) {
       console.log(chalk.redBright(`${client.user.username} is banned!`));
