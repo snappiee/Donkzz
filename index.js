@@ -1,5 +1,5 @@
-// Version 2.2.0
-const version = "2.2.0";
+// Version 2.2.1
+const version = "2.2.1";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -7,7 +7,7 @@ console.log(chalk.hex('#FFA500')(`If you encounter any issues, join our Discord:
 console.log(chalk.yellowBright(`Your version is: ${version}`))
 
 if (!process.version.startsWith('v20')) console.log(chalk.redBright('You are running a NodeJS version under v20. If you don\'t upgrade, you may get large lag spikes or ram overloads.'))
-    
+
 const {
   Webhook,
   MessageBuilder
@@ -72,7 +72,7 @@ var logs = [];
 
 
 const {
-  Client
+  Client, BaseSelectMenuInteraction
 } = require("discord.js-selfbot-v13");
 const tokens = process.env.tokens ? process.env.tokens.split("\n") : fs.readFileSync("tokens.txt", "utf-8").split("\n");
 const botid = "270904126974590976";
@@ -172,7 +172,7 @@ async function start(token, channelId) {
     const user = await client.users.fetch(botid);
     const createdDm = await user.createDM();
 
-    
+
 
     channel = await client.channels.fetch(channelId);
 
@@ -324,8 +324,8 @@ async function start(token, channelId) {
     }
 
     if (newMessage?.embeds[0]?.title?.includes(client.user.username + ", choose items you want to bring along")) {
-      if (newMessage.components[1].components[0].disabled) return (isPlayingAdventure = false);
-      await clickButton(newMessage, newMessage.components[1].components[0]);
+      if (newMessage.components[1]?.components[0].disabled) return (isPlayingAdventure = false);
+      await clickButton(newMessage, newMessage.components[1]?.components[0]);
       setTimeout(async () => {
         isPlayingAdventure = false;
       }, 300000)
@@ -364,8 +364,8 @@ async function start(token, channelId) {
   client.on("messageCreate", async (message) => {
     if (message.author.id != botid) return;
 
-    if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You are locked from doing commands and interacting until all active commands finish. Complete any ongoing commands or try again in a few minutes.")) isBotFree = false;
-    
+    if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You are unable to interact with this due to an ongoing command or a minor issue.")) isBotFree = false;
+
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("You're currently banned!")) {
       console.log(chalk.redBright(`${client.user.username} is banned!`));
 
@@ -374,7 +374,7 @@ async function start(token, channelId) {
 
       return;
     }
-    
+
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("Sad, wish you were a human")) {
       console.log(chalk.redBright(`${client.user.username} is banned! They fell for the fake captcha!`));
 
@@ -383,7 +383,7 @@ async function start(token, channelId) {
 
       return;
     }
-    
+
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("Hold tight! Maintenance in progress.")) {
       console.log(chalk.redBright(`${client.user.username} got maintenance! Stopping Donkzz; restart it later.`));
       process.exit(0);
@@ -568,7 +568,7 @@ async function start(token, channelId) {
 
     // =================== Stream End ===================
 
-    
+
 
     // =================== Serverevents Donate Start ===================
     if (message?.interaction?.commandName?.includes("serverevents donate") && message?.embeds[0]?.title?.includes("Pending Confirmation")) {
@@ -670,7 +670,7 @@ async function start(token, channelId) {
     autoAdventure(message);
     // =================== Autoadventure End ===================
 
-    
+
 
 
     // =================== Crime Command Start ===================
@@ -706,16 +706,16 @@ async function start(token, channelId) {
     // =================== Crime Command End ===================
 
     // =================== Giveaway Command Start =================== //
-    
+
     if (message?.embeds[0]?.title?.includes("Giveaway")) {
       await clickButton(message, message.components[0].components[0]);
-    isBotFree = true;
+      isBotFree = true;
     }
 
     // =================== Giveaway Command End =================== //
 
     // =================== Scratch Command Start =================//
-  
+
     if (message?.embeds[0]?.description?.includes("You can scratch")) {
       await clickRandomButton(message, 0);
       await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay, config.cooldowns.buttonClickDelay.maxDelay * 2));
@@ -727,7 +727,7 @@ async function start(token, channelId) {
       await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay * 3, config.cooldowns.buttonClickDelay.maxDelay * 6));
       await clickButton(message, message.components[4]?.components[3]);
       await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay * 3, config.cooldowns.buttonClickDelay.maxDelay * 6));
-    isBotFree = true;
+      isBotFree = true;
     }
 
     // =================== Scratch Command End =================//
@@ -864,6 +864,7 @@ async function start(token, channelId) {
 
   async function playMinigames(message) {
     let description = message?.embeds[0]?.description?.replace(/<a?(:[^:]*:)\d+>/g, "$1");
+    let description2 = message?.embeds[0]?.description
     let positions = description?.split("\n").slice(1).map((e) => e.split(":").filter((e) => e !== ""));
 
     if (description?.includes("Dodge the Fireball!")) {
@@ -890,231 +891,349 @@ async function start(token, channelId) {
       let buttons = message.components[0]?.components;
       let btn = buttons.filter((e) => safePostion.includes(e.label))[randomInt(0, 1)];
       message.clickButton(btn);
-    }
-  }
-
-  async function autoAdventure(newMessage) {
-    if (!newMessage?.interaction.commandName.includes("adventure")) return;
-    if (!newMessage.interaction) return;
-    if (!newMessage.components[0]) return;
-    if (newMessage?.embeds[0]?.title?.includes(client.user.username + ", choose items you want to take with you")) return;
-    if (newMessage?.embeds[0]?.author?.name?.includes("Adventure Summary")) {
-      isPlayingAdventure = false;
-
-      let btn = newMessage.components[0].components[0];
-      let btnLabel = btn.label;
-      var time = btnLabel.match(/in \d+ minutes/)[0]?.replace("in ", "")?.replace(" minutes", "");
-
-      console.log(`${client.user.username}: Finished playing adventure. Next adventure in ${time} minutes`);
-
-      setTimeout(() => {
-        queueCommands.push({
-          command: "adventure"
-        });
-      }, randomInt(Number(time) * 60 * 1000, Number(time) * 1.1 * 60 * 1000));
-    }
-
-    if (newMessage?.components[0]?.components[1]?.disabled) return clickButton(newMessage, newMessage.components[1].components[1]);
-    if (!newMessage?.components[1]?.components[1]) return clickButton(newMessage, newMessage.components[0].components[1]);
-
-    const database = require(`./adventures/${config.adventure}.json`).database;
-
-    const answer = database.find((e) => e.name.includes(newMessage?.embeds[0]?.description?.split("<")[0]?.split("\n")[0]?.trim()))?.click;
-    var found = false;
-    if (answer) {
-      for (let i = 0; i < newMessage.components.length; i++) {
-        for (let j = 0; j < newMessage.components[i].components.length; j++) {
-          if (newMessage?.components[i]?.components[j]?.label?.toLowerCase()?.includes(answer.toLowerCase())) {
-            found = true;
-            await clickButton(newMessage, newMessage.components[i].components[j]);
-            await wait(200)
-            if (!newMessage.components[i].components[j].disabled) await clickButton(newMessage, newMessage.components[i].components[j]);
-            await clickButton(newMessage, newMessage.components[1].components[1])
-            await wait(250)
-            if (!newMessage.components[1].components[1].disabled) await clickButton(newMessage, newMessage.components[1].components[1])
+    } else if (description2?.includes("Look at the emoji closely!")) {
+      let emoji = description2?.split("\n")[1];
+      var buttonToClick = undefined;
+      await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay * 10, config.cooldowns.buttonClickDelay.maxDelay * 10));
+      const components = message.components[0]?.components;
+      const components2 = message.components[1]?.components;
+      for (var m = 0; m < 10; m++) {
+        if (m < 5) {
+          let btnz = components[m];
+          if (emoji?.includes(btnz)) {
+            buttonToClick = btnz;
+            message.clickButton(buttonToClick);
+            break;
+          }
+        }
+        if (m > 4) {
+          k = (m - 5);
+          let btnz = components2[k];
+          if (emoji?.includes(btnz)) {
+            buttonToClick = btnz;
+            message.clickButton(buttonToClick);
+            break;
           }
         }
       }
-
-      if (!found) {
-        await clickButton(newMessage, newMessage.components[0].components[randomInt(0, newMessage.components[0].components.length - 1)]).then(() => {
-          setTimeout(async () => {
-            isPlayingAdventure = false;
-          }, 300000)
-        });
+    } else if (description2?.includes("Remember words order!")) {
+      var buttonToClick = undefined;
+      let words = description2?.split("order!")[1];
+      await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay * 10, config.cooldowns.buttonClickDelay.maxDelay * 10));
+      const components = message.components[0]?.components;
+      for (var i = 0; i < 5; i++) {
+        var word = words.split("\n")[i];
+        var word2 = word.split("`")[1];
+        for (var k = 0; k < 5; k++) {
+          let btnz = components[k];
+          if (word2?.includes(btnz?.label.toLowerCase())) {
+            buttonToClick = btnz;
+            message.clickButton(buttonToClick);
+            break;
+          }
+        }
       }
-    } else {
-      if (newMessage?.embeds[0]?.description?.includes("Catch one of em!")) {
-        await clickButton(newMessage, newMessage.components[0].components[2]);
-        await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay, config.cooldowns.buttonClickDelay.maxDelay));
-        await clickButton(newMessage, newMessage.components[1].components[1]);
-        return;
-      }
+    } else if (description2?.includes("Look at each color next to the words closely!")) {
+    var buttonToClick = undefined;
 
-      await clickButton(newMessage, newMessage.components[0].components[randomInt(0, newMessage.components[0].components.length - 1)]);
+    const emojiMarine = "<:Marine:863886248572878939>";
+    const emojiCyan = "<:Cyan:863886248670265392>";
+    const emojiYellow = "<:Yellow:863886248296316940>";
+    const emojiGreen = "<:Green:863886248527134730>";
+    const emojiBlack = "<:Black:863886248431190066>";
+    const emojiWhite = "<:White:863886248689926204>";
+
+    const colMarine = "marine";
+    const colCyan = "cyan";
+    const colWhite = "white";
+    const colBlack = "black";
+    const colGreen = "green";
+    const colYellow = "yellow";
+
+    let wordemoji = description2?.split("closely!")[1];
+    await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay * 10, config.cooldowns.buttonClickDelay.maxDelay * 10));
+
+    const components = message.components[0]?.components;
+    const wordAsked = description2?.split("`")[1];
+    for (var i; i < 3; i++) {
+      let line = wordemoji.split("\n")[i];
+      if (line?.includes(wordAsked)) {
+        if (line?.includes(emojiMarine)) {
+          for (var l; l < 3; l++) {
+            let btnz = components[l];
+            if (colMarine?.includes(btnz?.label.toLowerCase())) {
+              buttonToClick = btnz;
+              message.clickButton(buttonToClick);
+            }
+          }
+        } else if (line?.includes(emojiCyan)) {
+          for (var l; l < 3; l++) {
+            let btnz = components[l];
+            if (colCyan?.includes(btnz?.label.toLowerCase())) {
+              buttonToClick = btnz;
+              message.clickButton(buttonToClick);
+            }
+          }
+        } else if (line?.includes(emojiYellow)) {
+          for (var l; l < 3; l++) {
+            let btnz = components[l];
+            if (colYellow?.includes(btnz?.label.toLowerCase())) {
+              buttonToClick = btnz;
+              message.clickButton(buttonToClick);
+            }
+          }
+        } else if (line?.includes(emojiWhite)) {
+          for (var l; l < 3; l++) {
+            let btnz = components[l];
+            if (colWhite?.includes(btnz?.label.toLowerCase())) {
+              buttonToClick = btnz;
+              message.clickButton(buttonToClick);
+            }
+          }
+        } else if (line?.includes(emojiBlack)) {
+          for (var l; l < 3; l++) {
+            let btnz = components[l];
+            if (colBlack?.includes(btnz?.label.toLowerCase())) {
+              buttonToClick = btnz;
+              message.clickButton(buttonToClick);
+            }
+          }
+        } else if (line?.includes(emojiGreen)) {
+          for (var l; l < 3; l++) {
+            let btnz = components[l];
+            if (colGreen?.includes(btnz?.label.toLowerCase())) {
+              buttonToClick = btnz;
+              message.clickButton(buttonToClick);
+            }
+          }
+        }
+      }
     }
   }
+}
 
-  
-  async function randomCommand(onGoingCommands, channel, client, queueCommands) {
-    const commands = config.commands;
-    const randomCommand = commands[Math.floor(Math.random() * commands.length)];
-    if (botNotFreeCount > 5) {
-      botNotFreeCount = 0;
-      isBotFree = true;
-    }
-    if (!isBotFree) return botNotFreeCount++;
-    let command = randomCommand.command;
-    if (isDeadMeme && command == "postmemes") return;
-    if (onGoingCommands.includes(command)) return;
-    if (queueCommands.length > 0) {
-      if (queueCommands[0]?.command) {
-        if (queueCommands.length <= 0) return queueCommands.shift();
-        else {
-          return channel.sendSlash(botid, queueCommands[0].command, queueCommands[0].args ? queueCommands[0].args : []).then(() => {
-            queueCommands.shift();
+    async function autoAdventure(newMessage) {
+      if (!newMessage?.interaction.commandName.includes("adventure")) return;
+      if (!newMessage.interaction) return;
+      if (!newMessage.components[0]) return;
+      if (newMessage?.embeds[0]?.title?.includes(client.user.username + ", choose items you want to bring along")) return;
+      if (newMessage?.embeds[0]?.author?.name?.includes("Adventure Summary")) {
+        isPlayingAdventure = false;
 
-            console.log(
-              `${chalk.magentaBright(client.user.username)}: ${chalk.blue(
-                "Sent queued command"
-              )} - ${chalk.green(queueCommands[0].command)} `
-            );
-          }).catch((err) => {
-            queueCommands.shift();
+        let btn = newMessage.components[0].components[0];
+        let btnLabel = btn.label;
+        var time = btnLabel.match(/in \d+ minutes/)[0]?.replace("in ", "")?.replace(" minutes", "");
+
+        console.log(`${client.user.username}: Finished playing adventure. Next adventure in ${time} minutes`);
+
+        setTimeout(() => {
+          queueCommands.push({
+            command: "adventure"
+          });
+        }, randomInt(Number(time) * 60 * 1000, Number(time) * 1.1 * 60 * 1000));
+      }
+
+      if (newMessage?.components[0]?.components[1]?.disabled) return clickButton(newMessage, newMessage.components[1].components[1]);
+      if (!newMessage?.components[1]?.components[1]) return clickButton(newMessage, newMessage.components[0].components[1]);
+
+      const database = require(`./adventures/${config.adventure}.json`).database;
+
+      const answer = database.find((e) => e.name.includes(newMessage?.embeds[0]?.description?.split("<")[0]?.split("\n")[0]?.trim()))?.click;
+      var found = false;
+      if (answer) {
+        for (let i = 0; i < newMessage.components.length; i++) {
+          for (let j = 0; j < newMessage.components[i].components.length; j++) {
+            if (newMessage?.components[i]?.components[j]?.label?.toLowerCase()?.includes(answer.toLowerCase())) {
+              found = true;
+              await clickButton(newMessage, newMessage.components[i].components[j]);
+              await wait(200)
+              if (!newMessage.components[i].components[j].disabled) await clickButton(newMessage, newMessage.components[i].components[j]);
+              await clickButton(newMessage, newMessage.components[1].components[1])
+              await wait(250)
+              if (!newMessage.components[1].components[1].disabled) await clickButton(newMessage, newMessage.components[1].components[1])
+            }
+          }
+        }
+
+        if (!found) {
+          await clickButton(newMessage, newMessage.components[0].components[randomInt(0, newMessage.components[0].components.length - 1)]).then(() => {
+            setTimeout(async () => {
+              isPlayingAdventure = false;
+            }, 300000)
           });
         }
       } else {
-        return queueCommands.shift();
+        if (newMessage?.embeds[0]?.description?.includes("Catch one of em!")) {
+          await clickButton(newMessage, newMessage.components[0].components[2]);
+          await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay, config.cooldowns.buttonClickDelay.maxDelay));
+          await clickButton(newMessage, newMessage.components[1].components[1]);
+          return;
+        }
+
+        await clickButton(newMessage, newMessage.components[0].components[randomInt(0, newMessage.components[0].components.length - 1)]);
       }
     }
 
-    if (isPlayingAdventure) return;
-    if (randomInt(1, 75) == 4) {
-      queueCommands.push({
-        command: "balance",
-      });
-      if (config.devMode) console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.blue("Queued balance command")} `);
-    } else {
-      if (randomInt(1, 9) == 4 && config.autoDeposit) {
+
+    async function randomCommand(onGoingCommands, channel, client, queueCommands) {
+      const commands = config.commands;
+      const randomCommand = commands[Math.floor(Math.random() * commands.length)];
+      if (botNotFreeCount > 5) {
+        botNotFreeCount = 0;
+        isBotFree = true;
+      }
+      if (!isBotFree) return botNotFreeCount++;
+      let command = randomCommand.command;
+      if (isDeadMeme && command == "postmemes") return;
+      if (onGoingCommands.includes(command)) return;
+      if (queueCommands.length > 0) {
+        if (queueCommands[0]?.command) {
+          if (queueCommands.length <= 0) return queueCommands.shift();
+          else {
+            return channel.sendSlash(botid, queueCommands[0].command, queueCommands[0].args ? queueCommands[0].args : []).then(() => {
+              queueCommands.shift();
+
+              console.log(
+                `${chalk.magentaBright(client.user.username)}: ${chalk.blue(
+                  "Sent queued command"
+                )} - ${chalk.green(queueCommands[0].command)} `
+              );
+            }).catch((err) => {
+              queueCommands.shift();
+            });
+          }
+        } else {
+          return queueCommands.shift();
+        }
+      }
+
+      if (isPlayingAdventure) return;
+      if (randomInt(1, 75) == 4) {
         queueCommands.push({
-          command: "deposit",
-          args: ["max"],
+          command: "balance",
         });
-        if (config.devMode) console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.yellowBright("Deposited all the coins in the bank")} `);
+        if (config.devMode) console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.blue("Queued balance command")} `);
+      } else {
+        if (randomInt(1, 8) == 4 && config.autoDeposit) {
+          queueCommands.push({
+            command: "deposit",
+            args: ["max"],
+          });
+          if (config.devMode) console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.yellowBright("Deposited all the coins in the bank")} `);
+        }
+      }
+      if (command === "search" || command === "crime" || command === "highlow" || command === "trivia" || command === "postmemes" || command === "stream") isBotFree = false;
+
+      await channel.sendSlash(botid, command);
+      if (config.devMode) console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.blue(command)}`);
+      onGoingCommands.push(command);
+
+      setTimeout(() => {
+        removeAllInstances(onGoingCommands, command);
+      }, randomInt(randomCommand.cooldown * 0.9, randomCommand.cooldown * 1.1));
+    }
+
+    function removeAllInstances(arr, item) {
+      for (var i = arr.length; i--;) {
+        if (arr[i] === item) arr.splice(i, 1);
       }
     }
-    if (command === "search" || command === "crime" || command === "highlow" || command === "trivia" || command === "postmemes" || command === "stream") isBotFree = false;
 
-    await channel.sendSlash(botid, command);
-    if (config.devMode) console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.blue(command)}`);
-    onGoingCommands.push(command);
+    async function main(onGoingCommands, channel, client, queueCommands, isOnBreak) {
+      var commandCooldown = randomInt(config.cooldowns.commandInterval.minDelay, config.cooldowns.commandInterval.maxDelay);
+      var shortBreakCooldown = randomInt(config.cooldowns.shortBreak.minDelay, config.cooldowns.shortBreak.maxDelay);
 
-    setTimeout(() => {
-      removeAllInstances(onGoingCommands, command);
-    }, randomInt(randomCommand.cooldown * 0.9, randomCommand.cooldown * 1.1));
-  }
+      var longBreakCooldown = randomInt(config.cooldowns.longBreak.minDelay, config.cooldowns.longBreak.maxDelay);
+      if (isOnBreak) return;
+      var actualDelay;
+      randomCommand(onGoingCommands, channel, client, queueCommands);
 
-  function removeAllInstances(arr, item) {
-    for (var i = arr.length; i--;) {
-      if (arr[i] === item) arr.splice(i, 1);
+      if (Math.random() < config.cooldowns.shortBreak.frequency) {
+        actualDelay = shortBreakCooldown;
+        isOnBreak = true;
+        console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.gray("Short break for")} ${chalk.yellowBright((shortBreakCooldown / 1000).toFixed(1))} seconds`);
+      } else if (Math.random() < config.cooldowns.longBreak.frequency) {
+        actualDelay = longBreakCooldown;
+        isOnBreak = true;
+        console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.gray("Long break for")} ${chalk.yellowBright((longBreakCooldown / 1000).toFixed(1))} seconds`);
+      } else {
+        isOnBreak = false;
+        actualDelay = commandCooldown;
+      }
+
+      setTimeout(() => {
+        isOnBreak = false;
+        main(onGoingCommands, channel, client, queueCommands, isOnBreak);
+      }, actualDelay);
     }
   }
 
-  async function main(onGoingCommands, channel, client, queueCommands, isOnBreak) {
-    var commandCooldown = randomInt(config.cooldowns.commandInterval.minDelay, config.cooldowns.commandInterval.maxDelay);
-    var shortBreakCooldown = randomInt(config.cooldowns.shortBreak.minDelay, config.cooldowns.shortBreak.maxDelay);
-
-    var longBreakCooldown = randomInt(config.cooldowns.longBreak.minDelay, config.cooldowns.longBreak.maxDelay);
-    if (isOnBreak) return;
-    var actualDelay;
-    randomCommand(onGoingCommands, channel, client, queueCommands);
-
-    if (Math.random() < config.cooldowns.shortBreak.frequency) {
-      actualDelay = shortBreakCooldown;
-      isOnBreak = true;
-      console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.gray("Short break for")} ${chalk.yellowBright((shortBreakCooldown / 1000).toFixed(1))} seconds`);
-    } else if (Math.random() < config.cooldowns.longBreak.frequency) {
-      actualDelay = longBreakCooldown;
-      isOnBreak = true;
-      console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.gray("Long break for")} ${chalk.yellowBright((longBreakCooldown / 1000).toFixed(1))} seconds`);
-    } else {
-      isOnBreak = false;
-      actualDelay = commandCooldown;
-    }
-
-    setTimeout(() => {
-      isOnBreak = false;
-      main(onGoingCommands, channel, client, queueCommands, isOnBreak);
-    }, actualDelay);
+  async function wait(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
   }
-}
 
-async function wait(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
-
-function randomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-async function clickRandomButton(message, rows) {
-  const components = message.components[randomInt(0, rows)]?.components;
-  if (!components?.length) return;
-  let btn = components[Math.floor(Math.random() * components?.length)];
-  return message.clickButton(btn)
-}
-
-async function clickButton(message, btn) {
-  setTimeout(async () => {
-    await message.clickButton(btn?.customId);
-  }, randomInt(config.cooldowns.buttonClickDelay.minDelay, config.cooldowns.buttonClickDelay.maxDelay));
-}
-
-async function findAnswer(question) {
-  const trivia = require('./trivia.json');
-  for (let i = 0; i < trivia.database.length; i++) {
-    if (trivia.database[i].question.includes(question)) return trivia.database[i].correct_answer;
+  function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
-}
 
-function formatConsoleDate(date) {
-  var hour = date.getHours();
-  var minutes = date.getMinutes();
-  var seconds = date.getSeconds();
-  return chalk.cyanBright('[' + ((hour < 10) ? '0' + hour : hour) + ':' + ((minutes < 10) ? '0' + minutes : minutes) + ':' + ((seconds < 10) ? '0' + seconds : seconds) + '] - ')
-}
+  async function clickRandomButton(message, rows) {
+    const components = message.components[randomInt(0, rows)]?.components;
+    if (!components?.length) return;
+    let btn = components[Math.floor(Math.random() * components?.length)];
+    return message.clickButton(btn)
+  }
 
-var log = console.log;
+  async function clickButton(message, btn) {
+    setTimeout(async () => {
+      await message.clickButton(btn?.customId);
+    }, randomInt(config.cooldowns.buttonClickDelay.minDelay, config.cooldowns.buttonClickDelay.maxDelay));
+  }
 
-console.log = function () {
-  var first_parameter = arguments[0];
-  var other_parameters = Array.prototype.slice.call(arguments, 1);
-
-  const msg = stripAnsi([...arguments].join(' '));
-
-  if (config?.webhookLogging && config?.webhook) {
-    try {
-      webhook.send(new MessageBuilder().setDescription(msg).setColor(`#2e3236`))
-    } catch (err) {
-      console.log(err)
+  async function findAnswer(question) {
+    const trivia = require('./trivia.json');
+    for (let i = 0; i < trivia.database.length; i++) {
+      if (trivia.database[i].question.includes(question)) return trivia.database[i].correct_answer;
     }
   }
 
-  logs.push(`<p>${msg}</p>`);
-  log.apply(console, [formatConsoleDate(new Date()) + first_parameter].concat(other_parameters));
-};
+  function formatConsoleDate(date) {
+    var hour = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    return chalk.cyanBright('[' + ((hour < 10) ? '0' + hour : hour) + ':' + ((minutes < 10) ? '0' + minutes : minutes) + ':' + ((seconds < 10) ? '0' + seconds : seconds) + '] - ')
+  }
+
+  var log = console.log;
+
+  console.log = function () {
+    var first_parameter = arguments[0];
+    var other_parameters = Array.prototype.slice.call(arguments, 1);
+
+    const msg = stripAnsi([...arguments].join(' '));
+
+    if (config?.webhookLogging && config?.webhook) {
+      try {
+        webhook.send(new MessageBuilder().setDescription(msg).setColor(`#2e3236`))
+      } catch (err) {
+        console.log(err)
+      }
+    }
+
+    logs.push(`<p>${msg}</p>`);
+    log.apply(console, [formatConsoleDate(new Date()) + first_parameter].concat(other_parameters));
+  };
 
 
-var error = console.error;
+  var error = console.error;
 
-console.error = function () {
-  var first_parameter = arguments[0];
-  var other_parameters = Array.prototype.slice.call(arguments, 1);
+  console.error = function () {
+    var first_parameter = arguments[0];
+    var other_parameters = Array.prototype.slice.call(arguments, 1);
 
-  const msg = stripAnsi([...arguments].join(' '));
+    const msg = stripAnsi([...arguments].join(' '));
 
-  logs.push(`<p style="color:red;">${msg}</p>`);
-  error.apply(console, [formatConsoleDate(new Date()) + first_parameter].concat(other_parameters));
-};
+    logs.push(`<p style="color:red;">${msg}</p>`);
+    error.apply(console, [formatConsoleDate(new Date()) + first_parameter].concat(other_parameters));
+  };
