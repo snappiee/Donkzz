@@ -895,14 +895,14 @@ async function start(token, channelId) {
       var buttonToClick = undefined;
 
       await wait(7500);
-      const components = newMessage.components[0]?.components;
-      const components2 = newMessage.components[1]?.components;
+      const components = newMessage?.components[0]?.components;
+      const components2 = newMessage?.components[1]?.components;
       for (var m = 0; m < 10; m++) {
         if (m < 5) {
           let btnz = components[m];
           if (emoji?.includes(btnz?.emoji) || emoji?.includes(btnz?.label)) {
             buttonToClick = btnz;
-            newMessage.clickButton(buttonToClick);
+            clickButton(newMessage, buttonToClick);
           }
         }
         if (m > 4) {
@@ -910,7 +910,7 @@ async function start(token, channelId) {
           let btnz = components2[k];
           if (emoji?.includes(btnz?.label)) {
             buttonToClick = btnz;
-            newMessage.clickButton(buttonToClick);
+            clickButton(newMessage, buttonToClick);
           }
         }
       }
@@ -918,7 +918,7 @@ async function start(token, channelId) {
       var buttonToClick = undefined;
       let words = description2?.split("order!\n")[1];
       await wait(7500);
-      const components = newMessage.components[0]?.components;
+      const components = newMessage?.components[0]?.components;
       for (var i = 0; i < 5; i++) {
         var word = words.split("\n")[i];
         var word2 = word.split("`")[1];
@@ -926,7 +926,7 @@ async function start(token, channelId) {
           let btnz = components[k];
           if (word2?.includes(btnz?.label)) {
             buttonToClick = btnz;
-            newMessage.clickButton(buttonToClick);
+            clickButton(newMessage, buttonToClick);
           }
         }
       }
@@ -950,7 +950,7 @@ async function start(token, channelId) {
       let wordemoji = description2?.split("closely!\n")[1];
       await wait(7500);
 
-      const components = newMessage.components[0]?.components;
+      const components = newMessage?.components[0]?.components;
       const wordAsked = description3?.split("`")[1];
       for (var i; i < 3; i++) {
         let line = wordemoji.split("\n")[i];
@@ -960,7 +960,7 @@ async function start(token, channelId) {
               let btnz = components[l];
               if (colMarine.includes(btnz?.label.toLowerCase())) {
                 buttonToClick = btnz;
-                newMessage.clickButton(buttonToClick);
+                clickButton(newMessage, buttonToClick);
               }
             }
           } else if (line?.includes(emojiCyan)) {
@@ -968,7 +968,7 @@ async function start(token, channelId) {
               let btnz = components[l];
               if (colCyan.includes(btnz?.label.toLowerCase())) {
                 buttonToClick = btnz;
-                newMessage.clickButton(buttonToClick);
+                clickButton(newMessage, buttonToClick);
               }
             }
           } else if (line?.includes(emojiYellow)) {
@@ -976,7 +976,7 @@ async function start(token, channelId) {
               let btnz = components[l];
               if (colYellow.includes(btnz?.label.toLowerCase())) {
                 buttonToClick = btnz;
-                newMessage.clickButton(buttonToClick);
+                clickButton(newMessage, buttonToClick);
               }
             }
           } else if (line?.includes(emojiWhite)) {
@@ -984,7 +984,7 @@ async function start(token, channelId) {
               let btnz = components[l];
               if (colWhite.includes(btnz?.label.toLowerCase())) {
                 buttonToClick = btnz;
-                newMessage.clickButton(buttonToClick);
+                clickButton(newMessage, buttonToClick);
               }
             }
           } else if (line?.includes(emojiBlack)) {
@@ -992,7 +992,7 @@ async function start(token, channelId) {
               let btnz = components[l];
               if (colBlack.includes(btnz?.label.toLowerCase())) {
                 buttonToClick = btnz;
-                newMessage.clickButton(buttonToClick);
+                clickButton(newMessage, buttonToClick);
               }
             }
           } else if (line?.includes(emojiGreen)) {
@@ -1000,7 +1000,7 @@ async function start(token, channelId) {
               let btnz = components[l];
               if (colGreen.includes(btnz?.label.toLowerCase())) {
                 buttonToClick = btnz;
-                newMessage.clickButton(buttonToClick);
+                clickButton(newMessage, buttonToClick);
               }
             }
           }
