@@ -1,5 +1,5 @@
-// Version 2.2.2
-const version = "2.2.2";
+// Version 2.2.3
+const version = "2.2.3";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -68,11 +68,9 @@ axios.get("https://raw.githubusercontent.com/snappiee/Donkzz/main/index.js").the
 
 var logs = [];
 
-
-
-
 const {
-  Client, BaseSelectMenuInteraction
+  Client,
+  BaseSelectMenuInteraction
 } = require("discord.js-selfbot-v13");
 const tokens = process.env.tokens ? process.env.tokens.split("\n") : fs.readFileSync("tokens.txt", "utf-8").split("\n");
 const botid = "270904126974590976";
@@ -152,7 +150,6 @@ async function start(token, channelId) {
   var isDeadMeme = false;
   var isPlayingAdventure = false;
 
-
   const client = new Client({
     checkUpdate: false
   });
@@ -172,8 +169,6 @@ async function start(token, channelId) {
     const user = await client.users.fetch(botid);
     const createdDm = await user.createDM();
 
-
-
     channel = await client.channels.fetch(channelId);
 
     if (config.autoDaily) {
@@ -192,20 +187,19 @@ async function start(token, channelId) {
         db.set(client.user.id + ".daily", Date.now());
       }
 
-
       if (db.get(client.user.id + ".daily") && Date.now() - db.get(client.user.id + ".daily") > remainingTime) {
         await channel.sendSlash(botid, "daily").then(() => {
-          db.set(client.user.id + ".daily", Date.now());
-          console.log(chalk.yellow(`${client.user.username} claimed daily`));
-
-          setInterval(async () => {
-            queueCommands.push({
-              command: "daily"
-            });
             db.set(client.user.id + ".daily", Date.now());
             console.log(chalk.yellow(`${client.user.username} claimed daily`));
-          }, remainingTime + randomInt(10000, 60000));
-        })
+
+            setInterval(async () => {
+              queueCommands.push({
+                command: "daily"
+              });
+              db.set(client.user.id + ".daily", Date.now());
+              console.log(chalk.yellow(`${client.user.username} claimed daily`));
+            }, remainingTime + randomInt(10000, 60000));
+          })
           .catch((e) => {
             return console.log(e);
           });
@@ -269,7 +263,6 @@ async function start(token, channelId) {
         }, randomInt(5000, 150000))
       }
     }
-
 
     if (!db.get(client.user.id + ".ammo") || Date.now() - db.get(client.user.id + ".ammo") > 1 * 60 * 60 * 1000) {
       if (config.autoAmmo) {
@@ -349,7 +342,6 @@ async function start(token, channelId) {
         });
       });
 
-
       if (allItemsInInventory.length <= 0) {
         if (!isOneAccPayingOut && config.serverEventsDonate.payout && client.token.includes(config.serverEventsDonate.tokenWhichWillPayout)) {
           newMessage.channel.sendSlash(botid, "serverevents pool")
@@ -388,9 +380,7 @@ async function start(token, channelId) {
       return;
     }
 
-
     // =================== Apple-Use Start ===================
-
 
     /* if (message?.embeds[0]?.title?.includes("Item Expiration") && config.autoApple && message?.embeds[0]?.description?.includes("Apple")) {
       queueCommands.push({
@@ -422,7 +412,6 @@ async function start(token, channelId) {
 
     // =================== Apple-Use End ===================
 
-
     // =================== Autoalerts Start ===================
 
     if (message?.embeds[0]?.title?.includes("You have an unread alert") && message?.flags?.has("EPHEMERAL")) {
@@ -434,8 +423,6 @@ async function start(token, channelId) {
     }
 
     // =================== Autoalerts End ===================
-
-
 
     // =================== Click Minigame Start ===================
 
@@ -566,8 +553,6 @@ async function start(token, channelId) {
 
     // =================== Stream End ===================
 
-
-
     // =================== Serverevents Donate Start ===================
     if (message?.interaction?.commandName?.includes("serverevents donate") && message?.embeds[0]?.title?.includes("Pending Confirmation")) {
       if (!message.components[0].components[1]) return;
@@ -577,7 +562,6 @@ async function start(token, channelId) {
       if (allItemsInInventory.length <= 0) return message.channel.sendSlash(botid, "inventory")
       await message.channel.sendSlash(botid, "serverevents donate", allItemsInInventory[0].quantity, allItemsInInventory[0].item)
     }
-
 
     if (message?.embeds[0]?.title?.includes("Server Pool")) {
       if (!config.serverEventsDonate.payout) return;
@@ -618,7 +602,6 @@ async function start(token, channelId) {
           quantity: itemQuantity
         });
       });
-
 
       if (allItemsInInventory.length <= 0) {
         if (!isOneAccPayingOut && config.serverEventsDonate.payout && client.token.includes(config.serverEventsDonate.tokenWhichWillPayout)) {
@@ -667,9 +650,6 @@ async function start(token, channelId) {
 
     autoAdventure(message);
     // =================== Autoadventure End ===================
-
-
-
 
     // =================== Crime Command Start ===================
 
@@ -729,8 +709,6 @@ async function start(token, channelId) {
     }
 
     // =================== Scratch Command End =================//
-
-
 
     // =================== Search Command Start ===================
 
@@ -891,7 +869,7 @@ async function start(token, channelId) {
       let btn = buttons.filter((e) => safePostion.includes(e.label))[randomInt(0, 1)];
       message.clickButton(btn);
     } else if (description2?.includes("Look at the emoji closely!")) {
-      let emoji = description2?.split("!\n")[1];
+      let emoji = description2?.split("!\n")[1].toLowerCase();
       var buttonToClick = undefined;
 
       await wait(7500);
@@ -900,9 +878,9 @@ async function start(token, channelId) {
       for (var m = 0; m < 10; m++) {
         if (m < 5) {
           let btnz = components[m];
-          if (emoji?.includes(btnz?.label)) {
+          if (emoji?.includes(btnz?.label.toLowerCase())) {
             buttonToClick = btnz;
-            message.clickButton(buttonToClick);
+            newMessage.clickButton(buttonToClick);
           }
         }
         if (m > 4) {
@@ -910,7 +888,7 @@ async function start(token, channelId) {
           let btnz = components2[k];
           if (emoji?.includes(btnz?.label)) {
             buttonToClick = btnz;
-            message.clickButton(buttonToClick);
+            newMessage.clickButton(buttonToClick);
           }
         }
       }
@@ -926,7 +904,7 @@ async function start(token, channelId) {
           let btnz = components[k];
           if (word2?.includes(btnz?.label)) {
             buttonToClick = btnz;
-            message.clickButton(buttonToClick);
+            newMessage.clickButton(buttonToClick);
           }
         }
       }
@@ -960,7 +938,7 @@ async function start(token, channelId) {
               let btnz = components[l];
               if (colMarine.includes(btnz?.label.toLowerCase())) {
                 buttonToClick = btnz;
-                message.clickButton(buttonToClick);
+                newMessage.clickButton(buttonToClick);
               }
             }
           } else if (line?.includes(emojiCyan)) {
@@ -968,7 +946,7 @@ async function start(token, channelId) {
               let btnz = components[l];
               if (colCyan.includes(btnz?.label.toLowerCase())) {
                 buttonToClick = btnz;
-                message.clickButton(buttonToClick);
+                newMessage.clickButton(buttonToClick);
               }
             }
           } else if (line?.includes(emojiYellow)) {
@@ -976,7 +954,7 @@ async function start(token, channelId) {
               let btnz = components[l];
               if (colYellow.includes(btnz?.label.toLowerCase())) {
                 buttonToClick = btnz;
-                message.clickButton(buttonToClick);
+                newMessage.clickButton(buttonToClick);
               }
             }
           } else if (line?.includes(emojiWhite)) {
@@ -984,7 +962,7 @@ async function start(token, channelId) {
               let btnz = components[l];
               if (colWhite.includes(btnz?.label.toLowerCase())) {
                 buttonToClick = btnz;
-                message.clickButton(buttonToClick);
+                newMessage.clickButton(buttonToClick);
               }
             }
           } else if (line?.includes(emojiBlack)) {
@@ -992,7 +970,7 @@ async function start(token, channelId) {
               let btnz = components[l];
               if (colBlack.includes(btnz?.label.toLowerCase())) {
                 buttonToClick = btnz;
-                message.clickButton(buttonToClick);
+                newMessage.clickButton(buttonToClick);
               }
             }
           } else if (line?.includes(emojiGreen)) {
@@ -1000,7 +978,7 @@ async function start(token, channelId) {
               let btnz = components[l];
               if (colGreen.includes(btnz?.label.toLowerCase())) {
                 buttonToClick = btnz;
-                message.clickButton(buttonToClick);
+                newMessage.clickButton(buttonToClick);
               }
             }
           }
@@ -1070,7 +1048,6 @@ async function start(token, channelId) {
       await clickButton(newMessage, newMessage.components[0].components[randomInt(0, newMessage.components[0].components.length - 1)]);
     }
   }
-
 
   async function randomCommand(onGoingCommands, channel, client, queueCommands) {
     const commands = config.commands;
@@ -1204,7 +1181,7 @@ function formatConsoleDate(date) {
 
 var log = console.log;
 
-console.log = function () {
+console.log = function() {
   var first_parameter = arguments[0];
   var other_parameters = Array.prototype.slice.call(arguments, 1);
 
@@ -1222,10 +1199,9 @@ console.log = function () {
   log.apply(console, [formatConsoleDate(new Date()) + first_parameter].concat(other_parameters));
 };
 
-
 var error = console.error;
 
-console.error = function () {
+console.error = function() {
   var first_parameter = arguments[0];
   var other_parameters = Array.prototype.slice.call(arguments, 1);
 
