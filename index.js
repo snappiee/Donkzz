@@ -285,11 +285,10 @@ async function start(token, channelId) {
     // =================== Emoji Minigame Start ==============
     if (newMessage?.embeds[0]?.description?.includes("What was the emoji")) {
       var buttonToClick = undefined;
-      let btnz = newMessage?.components[0]?.components[m];
-      let btnz2 = newMessage?.components[1]?.components[m];
       console.log("var emoji", emoji);
       for (var m = 0; m < 5; m++) {
-        
+        let btnz = newMessage?.components[0]?.components[m];
+        let btnz2 = newMessage?.components[1]?.components[m];
         if (btnz.label.includes(emoji)) {
           buttonToClick = btnz;
           wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
