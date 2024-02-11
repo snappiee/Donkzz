@@ -1,5 +1,5 @@
-// Version 2.3.5
-const version = "2.3.5";
+// Version 2.3.6
+const version = "2.3.6";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -318,7 +318,7 @@ async function start(token, channelId) {
       for (var m = 0; m < 10; m++) {
         if (m < 5) {
           let btnz = newMessage?.components[0].components[m];
-          if (emoji.includes(btnz?.emoji) || emoji.includes(btnz?.label)) {
+          if (emoji.includes(btnz.label)) {
             buttonToClick = btnz;
             clickButton(newMessage, buttonToClick);
             console.log("clicked emo ", emoji);
@@ -326,7 +326,7 @@ async function start(token, channelId) {
         } else if (m > 4) {
           var k = (m - 5);
           let btnz = newMessage?.components[1].components[k];
-          if (emoji.includes(btnz?.emoji) || emoji.includes(btnz?.label)) {
+          if (emoji.includes(btnz.label)) {
             buttonToClick = btnz;
             clickButton(newMessage, buttonToClick);
             console.log("clicked emo ", emoji);
@@ -410,7 +410,7 @@ async function start(token, channelId) {
               }
             }
           }
-        }
+        } else return;
       }
     }
 
@@ -423,12 +423,13 @@ async function start(token, channelId) {
       for (var i = 0; i < 5; i++) {
         var word = words.split("\n")[i];
         var word2 = word.split("`")[1];
-        console.log("var word ", word, "var word2 ", word2, "var words ", words);
         for (var k = 0; k < 5; k++) {
           let btnz = newMessage?.components[0].components[k];
-          if (word2.includes(btnz?.label.toLowerCase())) {
+          if (word2.includes(btnz.label.toLowerCase())) {
+            console.log("var word ", word, "var word2 ", word2, "var words ", words);
             buttonToClick = btnz;
             clickButton(newMessage, buttonToClick);
+            console.log("clicked on", word2);
           }
         }
       }
