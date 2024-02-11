@@ -1,5 +1,5 @@
-// Version 2.3.0
-const version = "2.3.0";
+// Version 2.3.5
+const version = "2.3.5";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -354,12 +354,12 @@ async function start(token, channelId) {
       const colBlack = "black";
       const colGreen = "green";
       const colYellow = "yellow";
-
+      //parsing and responding block
       var buttonToClick = undefined;
       var wordAsked = newMessage?.embeds[0]?.description?.split("`")[1];
       for (var i; i < 3; i++) {
         let line = wordemoji.split("\n")[i];
-        console.log("var wordemoji", wordemoji, "var wordAsked", wordAsked, "var line", line);
+        console.log("var wordemoji ", wordemoji, "var wordAsked ", wordAsked, "var line ", line);
         if (line.includes(wordAsked)) {
           if (line.includes(emojiMarine)) {
             for (var l; l < 3; l++) {
@@ -423,7 +423,7 @@ async function start(token, channelId) {
       for (var i = 0; i < 5; i++) {
         var word = words.split("\n")[i];
         var word2 = word.split("`")[1];
-        console.log("var word:", word, "var word2", word2, "var words", words);
+        console.log("var word ", word, "var word2 ", word2, "var words ", words);
         for (var k = 0; k < 5; k++) {
           let btnz = newMessage?.components[0].components[k];
           if (word2.includes(btnz?.label.toLowerCase())) {
@@ -435,6 +435,14 @@ async function start(token, channelId) {
     }
 
     // =================== Word Order Minigame End ==============
+
+    // =================== Scratch Prompt Start ================
+
+    if (newMessage?.embeds[0]?.description?.includes("Next Scratch-Off available")) {
+      let btnz = newMessage?.components[4].components[3];
+      clickButton(newMessage, btnz);
+    }
+    // =================== Scratch Prompt End ================
 
     // =================== Adventure Start ===================
 
@@ -808,13 +816,14 @@ async function start(token, channelId) {
     if (message?.embeds[0]?.description?.includes("You can scratch")) {
       await clickRandomButton(message, 0);
       await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay, config.cooldowns.buttonClickDelay.maxDelay * 2));
+
       await clickRandomButton(message, 1);
       await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay * 2, config.cooldowns.buttonClickDelay.maxDelay * 4));
+
       await clickRandomButton(message, 2);
       await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay * 3, config.cooldowns.buttonClickDelay.maxDelay * 6));
+
       await clickRandomButton(message, 3);
-      await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay * 3, config.cooldowns.buttonClickDelay.maxDelay * 6));
-      await clickButton(message, message.components[4]?.components[3]);
       await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay * 3, config.cooldowns.buttonClickDelay.maxDelay * 6));
       isBotFree = true;
     }
@@ -982,11 +991,11 @@ async function start(token, channelId) {
       let btn = buttons.filter((e) => safePostion.includes(e.label))[randomInt(0, 1)];
       message.clickButton(btn);
     } else if (description2?.includes("Look at each color next to the words closely!")) {
-      var wordemoji = description2?.split("closely!\n")[1];
+      wordemoji = description2?.split("closely!\n")[1]; // declare var wordemoji for updated messages
     } else if (description2?.includes("Remember words order!")) {
-      var words = description2?.split("order!\n")[1];
+      words = description2?.split("order!\n")[1]; // declare var words for updated messages
     } else if (description2?.includes("Look at the emoji closely!")) {
-      var emoji = description2?.split("!\n")[1];
+      emoji = description2?.split("!\n")[1]; // declare var words for updated messages
     }
   }
 
