@@ -1,5 +1,5 @@
-// Version 2.5.2
-const version = "2.5.2";
+// Version 2.5.5
+const version = "2.5.5";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -285,28 +285,24 @@ async function start(token, channelId) {
     // =================== Emoji Minigame Start ==============
     if (newMessage?.embeds[0]?.description?.includes("What was the emoji")) {
       var buttonToClick = undefined;
+      let btnz = newMessage?.components[0]?.components[m];
+      let btnz2 = newMessage?.components[1]?.components[m];
       console.log("var emoji", emoji);
-      for (var m = 0; m < 10; m++) {
-        if (m < 5) {
-          let btnz = newMessage?.components[0]?.components[m];
-          await wait(300);
-          if (emoji.includes(btnz.emoji) || emoji.includes(btnz.label)) {
-            buttonToClick = btnz;
-            wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
-            console.log("clicked emo ", emoji);
-            isHavingInteraction = false;
-          }
-        } if (m > 4) {
-          var k = (m - 5);
-          let btnz = newMessage?.components[1]?.components[k];
-          await wait(300);
-          if (emoji.includes(btnz.emoji) || emoji.includes(btnz.label)) {
-            buttonToClick = btnz;
-            wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
-            console.log("clicked emo ", emoji);
-            isHavingInteraction = false;
-          }
+      for (var m = 0; m < 5; m++) {
+        
+        if (btnz.emoji.includes(emoji) || btnz.label.includes(emoji)) {
+          buttonToClick = btnz;
+          wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
+          console.log("clicked emo ", emoji);
+          isHavingInteraction = false;
         }
+        if (btnz2.emoji.includes(emoji) || btnz2.label.includes(emoji)) {
+          buttonToClick = btnz;
+          wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
+          console.log("clicked emo ", emoji);
+          isHavingInteraction = false;
+        }
+        await wait(300);
       }
     }
 
@@ -339,7 +335,7 @@ async function start(token, channelId) {
                 isHavingInteraction = false;
               }
             }
-          } else if (line.includes("Cyan" || "cyan" || "863886248670265392")) {
+          } if (line.includes("Cyan" || "cyan" || "863886248670265392")) {
             for (var l; l < 3; l++) {
               await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
@@ -349,7 +345,7 @@ async function start(token, channelId) {
                 isHavingInteraction = false;
               }
             }
-          } else if (line.includes("Yellow" || "yellow" || "863886248296316940")) {
+          } if (line.includes("Yellow" || "yellow" || "863886248296316940")) {
             for (var l; l < 3; l++) {
               await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
@@ -359,7 +355,7 @@ async function start(token, channelId) {
                 isHavingInteraction = false;
               }
             }
-          } else if (line.includes("White" || "white" || "863886248689926204")) {
+          } if (line.includes("White" || "white" || "863886248689926204")) {
             for (var l; l < 3; l++) {
               await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
@@ -369,7 +365,7 @@ async function start(token, channelId) {
                 isHavingInteraction = false;
               }
             }
-          } else if (line.includes("Black" || "black" || "863886248431190066")) {
+          } if (line.includes("Black" || "black" || "863886248431190066")) {
             for (var l; l < 3; l++) {
               await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
@@ -379,7 +375,7 @@ async function start(token, channelId) {
                 isHavingInteraction = false;
               }
             }
-          } else if (line.includes("Green" || "green" || "863886248527134730")) {
+          } if (line.includes("Green" || "green" || "863886248527134730")) {
             for (var l; l < 3; l++) {
               await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
@@ -410,7 +406,7 @@ async function start(token, channelId) {
             buttonToClick = btnz;
             setTimeout(() => { clickButton(newMessage, buttonToClick); }, 1000);
             await wait(200);
-            
+
           }
         } isHavingInteraction = false;
       }
