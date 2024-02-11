@@ -1,5 +1,5 @@
-// Version 2.2.3
-const version = "2.2.3";
+// Version 2.3.0
+const version = "2.3.0";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -151,6 +151,9 @@ async function start(token, channelId) {
   var botNotFreeCount = 0;
   var isDeadMeme = false;
   var isPlayingAdventure = false;
+  var wordemoji = "";
+  var emoji = "";
+  var words = "";
 
 
   const client = new Client({
@@ -172,8 +175,6 @@ async function start(token, channelId) {
     const user = await client.users.fetch(botid);
     const createdDm = await user.createDM();
 
-
-
     channel = await client.channels.fetch(channelId);
 
     if (config.autoDaily) {
@@ -191,7 +192,6 @@ async function start(token, channelId) {
 
         db.set(client.user.id + ".daily", Date.now());
       }
-
 
       if (db.get(client.user.id + ".daily") && Date.now() - db.get(client.user.id + ".daily") > remainingTime) {
         await channel.sendSlash(botid, "daily").then(() => {
@@ -237,7 +237,6 @@ async function start(token, channelId) {
           })
         });
       };
-
       setInterval(() => vote(), 4.32e+7, true);
     };
 
@@ -310,8 +309,132 @@ async function start(token, channelId) {
         isDeadMeme = false;
       }, 3.02 * 1000 * 60);
     }
+    // =================== Dead Meme End =====================
 
-    // =================== Dead Meme End ===================
+    // =================== Emoji Minigame Start ==============
+    if (newMessage?.embeds[0]?.description?.includes("What was the emoji")) {
+      var buttonToClick = undefined;
+      console.log("var emoji", emoji);
+      for (var m = 0; m < 10; m++) {
+        if (m < 5) {
+          let btnz = newMessage?.components[0].components[m];
+          if (emoji.includes(btnz?.emoji) || emoji.includes(btnz?.label)) {
+            buttonToClick = btnz;
+            clickButton(newMessage, buttonToClick);
+            console.log("clicked emo ", emoji);
+          }
+        } else if (m > 4) {
+          var k = (m - 5);
+          let btnz = newMessage?.components[1].components[k];
+          if (emoji.includes(btnz?.emoji) || emoji.includes(btnz?.label)) {
+            buttonToClick = btnz;
+            clickButton(newMessage, buttonToClick);
+            console.log("clicked emo ", emoji);
+          }
+        }
+      }
+    }
+
+    // =================== Emoji Minigame End ==============
+
+    // =================== Word-Color Minigame Start ==============
+
+    if (newMessage?.embeds[0]?.description?.includes("What was the color")) {
+      //build emojis from message
+      const emojiMarine = "<:Marine:863886248572878939>";
+      const emojiCyan = "<:Cyan:863886248670265392>";
+      const emojiYellow = "<:Yellow:863886248296316940>";
+      const emojiGreen = "<:Green:863886248527134730>";
+      const emojiBlack = "<:Black:863886248431190066>";
+      const emojiWhite = "<:White:863886248689926204>";
+      //build color components
+      const colMarine = "marine";
+      const colCyan = "cyan";
+      const colWhite = "white";
+      const colBlack = "black";
+      const colGreen = "green";
+      const colYellow = "yellow";
+
+      var buttonToClick = undefined;
+      var wordAsked = newMessage?.embeds[0]?.description?.split("`")[1];
+      for (var i; i < 3; i++) {
+        let line = wordemoji.split("\n")[i];
+        console.log("var wordemoji", wordemoji, "var wordAsked", wordAsked, "var line", line);
+        if (line.includes(wordAsked)) {
+          if (line.includes(emojiMarine)) {
+            for (var l; l < 3; l++) {
+              let btnz = newMessage?.components[0]?.components[l];
+              if (colMarine.includes(btnz?.label.toLowerCase())) {
+                buttonToClick = btnz;
+                clickButton(newMessage, buttonToClick);
+              }
+            }
+          } else if (line?.includes(emojiCyan)) {
+            for (var l; l < 3; l++) {
+              let btnz = newMessage?.components[0]?.components[l];
+              if (colCyan.includes(btnz?.label.toLowerCase())) {
+                buttonToClick = btnz;
+                clickButton(newMessage, buttonToClick);
+              }
+            }
+          } else if (line?.includes(emojiYellow)) {
+            for (var l; l < 3; l++) {
+              let btnz = newMessage?.components[0]?.components[l];
+              if (colYellow.includes(btnz?.label.toLowerCase())) {
+                buttonToClick = btnz;
+                clickButton(newMessage, buttonToClick);
+              }
+            }
+          } else if (line?.includes(emojiWhite)) {
+            for (var l; l < 3; l++) {
+              let btnz = newMessage?.components[0]?.components[l];
+              if (colWhite.includes(btnz?.label.toLowerCase())) {
+                buttonToClick = btnz;
+                clickButton(newMessage, buttonToClick);
+              }
+            }
+          } else if (line?.includes(emojiBlack)) {
+            for (var l; l < 3; l++) {
+              let btnz = newMessage?.components[0]?.components[l];
+              if (colBlack.includes(btnz?.label.toLowerCase())) {
+                buttonToClick = btnz;
+                clickButton(newMessage, buttonToClick);
+              }
+            }
+          } else if (line?.includes(emojiGreen)) {
+            for (var l; l < 3; l++) {
+              let btnz = newMessage?.components[0]?.components[l];
+              if (colGreen.includes(btnz?.label.toLowerCase())) {
+                buttonToClick = btnz;
+                clickButton(newMessage, buttonToClick);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // =================== Word-Color Minigame End ==============
+
+    // =================== Word Order Minigame Start ==============
+
+    if (newMessage?.embeds[0]?.description?.includes("Click the buttons in correct order")) {
+      var buttonToClick = undefined;
+      for (var i = 0; i < 5; i++) {
+        var word = words.split("\n")[i];
+        var word2 = word.split("`")[1];
+        console.log("var word:", word, "var word2", word2, "var words", words);
+        for (var k = 0; k < 5; k++) {
+          let btnz = newMessage?.components[0].components[k];
+          if (word2.includes(btnz?.label.toLowerCase())) {
+            buttonToClick = btnz;
+            clickButton(newMessage, buttonToClick);
+          }
+        }
+      }
+    }
+
+    // =================== Word Order Minigame End ==============
 
     // =================== Adventure Start ===================
 
@@ -332,6 +455,7 @@ async function start(token, channelId) {
     }
 
     playMinigames(newMessage);
+
 
     if (config.serverEventsDonate.enabled && newMessage?.embeds[0]?.author?.name?.includes(`${client.user.username}'s inventory`)) {
       var inputString = newMessage.embeds[0].description;
@@ -388,39 +512,6 @@ async function start(token, channelId) {
       return;
     }
 
-
-    // =================== Apple-Use Start ===================
-
-
-    /* if (message?.embeds[0]?.title?.includes("Item Expiration") && config.autoApple && message?.embeds[0]?.description?.includes("Apple")) {
-      queueCommands.push({
-        command: "use",
-        args: ["apple"]
-      });
-    }
-
-    if (message?.embeds[0]?.title?.includes("Item Expiration") && config.autoHorseshoe && message?.embeds[0]?.description?.includes("Lucky Horseshoe")) {
-      queueCommands.push({
-        command: "use",
-        args: ["lucky horseshoe"]
-      });
-    }
-
-    if (message?.embeds[0]?.title?.includes("Item Expiration") && config.autoFishingBait && message?.embeds[0]?.description?.includes("Fishing Bait")) {
-      queueCommands.push({
-        command: "use",
-        args: ["fishing bait"]
-      });
-    }
-
-    if (message?.embeds[0]?.title?.includes("Item Expiration") && config.autoAmmo && message?.embeds[0]?.description?.includes("Ammo")) {
-      queueCommands.push({
-        command: "use",
-        args: ["ammo"]
-      });
-    } */
-
-    // =================== Apple-Use End ===================
 
 
     // =================== Autoalerts Start ===================
@@ -827,6 +918,7 @@ async function start(token, channelId) {
 
     playMinigames(message);
 
+
     // =================== Minigame End ===================
 
     // =================== PostMeme Command Start ===================
@@ -862,8 +954,7 @@ async function start(token, channelId) {
 
   async function playMinigames(message, newMessage) {
     let description = message?.embeds[0]?.description?.replace(/<a?(:[^:]*:)\d+>/g, "$1");
-    let description2 = message?.embeds[0]?.description
-    let description3 = newMessage?.embeds[0]?.description
+    let description2 = message?.embeds[0]?.description;
     let positions = description?.split("\n").slice(1).map((e) => e.split(":").filter((e) => e !== ""));
 
     if (description?.includes("Dodge the Fireball!")) {
@@ -890,122 +981,12 @@ async function start(token, channelId) {
       let buttons = message.components[0]?.components;
       let btn = buttons.filter((e) => safePostion.includes(e.label))[randomInt(0, 1)];
       message.clickButton(btn);
-    } else if (description2?.includes("Look at the emoji closely!")) {
-      let emoji = description2?.split("!\n")[1];
-      var buttonToClick = undefined;
-
-      await wait(7500);
-      const components = newMessage?.components[0]?.components;
-      const components2 = newMessage?.components[1]?.components;
-      for (var m = 0; m < 10; m++) {
-        if (m < 5) {
-          let btnz = components[m];
-          if (emoji?.includes(btnz?.emoji) || emoji?.includes(btnz?.label)) {
-            buttonToClick = btnz;
-            clickButton(newMessage, buttonToClick);
-          }
-        }
-        if (m > 4) {
-          k = (m - 5);
-          let btnz = components2[k];
-          if (emoji?.includes(btnz?.label)) {
-            buttonToClick = btnz;
-            clickButton(newMessage, buttonToClick);
-          }
-        }
-      }
-    } else if (description2?.includes("Remember words order!")) {
-      var buttonToClick = undefined;
-      let words = description2?.split("order!\n")[1];
-      await wait(7500);
-      const components = newMessage?.components[0]?.components;
-      for (var i = 0; i < 5; i++) {
-        var word = words.split("\n")[i];
-        var word2 = word.split("`")[1];
-        for (var k = 0; k < 5; k++) {
-          let btnz = components[k];
-          if (word2?.includes(btnz?.label)) {
-            buttonToClick = btnz;
-            clickButton(newMessage, buttonToClick);
-          }
-        }
-      }
     } else if (description2?.includes("Look at each color next to the words closely!")) {
-      var buttonToClick = undefined;
-
-      const emojiMarine = "<:Marine:863886248572878939>";
-      const emojiCyan = "<:Cyan:863886248670265392>";
-      const emojiYellow = "<:Yellow:863886248296316940>";
-      const emojiGreen = "<:Green:863886248527134730>";
-      const emojiBlack = "<:Black:863886248431190066>";
-      const emojiWhite = "<:White:863886248689926204>";
-
-      const colMarine = "marine";
-      const colCyan = "cyan";
-      const colWhite = "white";
-      const colBlack = "black";
-      const colGreen = "green";
-      const colYellow = "yellow";
-
-      let wordemoji = description2?.split("closely!\n")[1];
-      await wait(7500);
-
-      const components = newMessage?.components[0]?.components;
-      const wordAsked = description3?.split("`")[1];
-      for (var i; i < 3; i++) {
-        let line = wordemoji.split("\n")[i];
-        if (line.includes(wordAsked)) {
-          if (line.includes(emojiMarine)) {
-            for (var l; l < 3; l++) {
-              let btnz = components[l];
-              if (colMarine.includes(btnz?.label.toLowerCase())) {
-                buttonToClick = btnz;
-                clickButton(newMessage, buttonToClick);
-              }
-            }
-          } else if (line?.includes(emojiCyan)) {
-            for (var l; l < 3; l++) {
-              let btnz = components[l];
-              if (colCyan.includes(btnz?.label.toLowerCase())) {
-                buttonToClick = btnz;
-                clickButton(newMessage, buttonToClick);
-              }
-            }
-          } else if (line?.includes(emojiYellow)) {
-            for (var l; l < 3; l++) {
-              let btnz = components[l];
-              if (colYellow.includes(btnz?.label.toLowerCase())) {
-                buttonToClick = btnz;
-                clickButton(newMessage, buttonToClick);
-              }
-            }
-          } else if (line?.includes(emojiWhite)) {
-            for (var l; l < 3; l++) {
-              let btnz = components[l];
-              if (colWhite.includes(btnz?.label.toLowerCase())) {
-                buttonToClick = btnz;
-                clickButton(newMessage, buttonToClick);
-              }
-            }
-          } else if (line?.includes(emojiBlack)) {
-            for (var l; l < 3; l++) {
-              let btnz = components[l];
-              if (colBlack.includes(btnz?.label.toLowerCase())) {
-                buttonToClick = btnz;
-                clickButton(newMessage, buttonToClick);
-              }
-            }
-          } else if (line?.includes(emojiGreen)) {
-            for (var l; l < 3; l++) {
-              let btnz = components[l];
-              if (colGreen.includes(btnz?.label.toLowerCase())) {
-                buttonToClick = btnz;
-                clickButton(newMessage, buttonToClick);
-              }
-            }
-          }
-        }
-      }
+      var wordemoji = description2?.split("closely!\n")[1];
+    } else if (description2?.includes("Remember words order!")) {
+      var words = description2?.split("order!\n")[1];
+    } else if (description2?.includes("Look at the emoji closely!")) {
+      var emoji = description2?.split("!\n")[1];
     }
   }
 
@@ -1075,7 +1056,7 @@ async function start(token, channelId) {
   async function randomCommand(onGoingCommands, channel, client, queueCommands) {
     const commands = config.commands;
     const randomCommand = commands[Math.floor(Math.random() * commands.length)];
-    if (botNotFreeCount > 5) {
+    if (botNotFreeCount > 6) {
       botNotFreeCount = 0;
       isBotFree = true;
     }
@@ -1119,7 +1100,7 @@ async function start(token, channelId) {
         if (config.devMode) console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.yellowBright("Deposited all the coins in the bank")} `);
       }
     }
-    if (command === "search" || command === "crime" || command === "highlow" || command === "trivia" || command === "postmemes" || command === "stream") isBotFree = false;
+    if (command === "search" || command === "crime" || command === "highlow" || command === "trivia" || command === "postmemes" || command === "stream" || command === "scratch") isBotFree = false;
 
     await channel.sendSlash(botid, command);
     if (config.devMode) console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.blue(command)}`);
@@ -1135,6 +1116,8 @@ async function start(token, channelId) {
       if (arr[i] === item) arr.splice(i, 1);
     }
   }
+
+
 
   async function main(onGoingCommands, channel, client, queueCommands, isOnBreak) {
     var commandCooldown = randomInt(config.cooldowns.commandInterval.minDelay, config.cooldowns.commandInterval.maxDelay);
@@ -1164,6 +1147,7 @@ async function start(token, channelId) {
     }, actualDelay);
   }
 }
+
 
 async function wait(ms) {
   return new Promise((resolve) => {
