@@ -1,5 +1,5 @@
-// Version 2.3.6
-const version = "2.3.6";
+// Version 2.3.7
+const version = "2.3.7";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -333,6 +333,7 @@ async function start(token, channelId) {
           }
         }
       }
+      isBotFree = true;
     }
 
     // =================== Emoji Minigame End ==============
@@ -410,8 +411,9 @@ async function start(token, channelId) {
               }
             }
           }
-        } else return;
+        }
       }
+      isBotFree = true;
     }
 
     // =================== Word-Color Minigame End ==============
@@ -432,6 +434,7 @@ async function start(token, channelId) {
             console.log("clicked on", word2);
           }
         }
+        isBotFree = true;
       }
     }
 
@@ -992,10 +995,13 @@ async function start(token, channelId) {
       let btn = buttons.filter((e) => safePostion.includes(e.label))[randomInt(0, 1)];
       message.clickButton(btn);
     } else if (description2?.includes("Look at each color next to the words closely!")) {
+      isBotFree = false;
       wordemoji = description2?.split("closely!\n")[1]; // declare var wordemoji for updated messages
     } else if (description2?.includes("Remember words order!")) {
+      isBotFree = false;
       words = description2?.split("order!\n")[1]; // declare var words for updated messages
     } else if (description2?.includes("Look at the emoji closely!")) {
+      isBotFree = false;
       emoji = description2?.split("!\n")[1]; // declare var words for updated messages
     }
   }
