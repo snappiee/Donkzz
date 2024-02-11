@@ -1,5 +1,5 @@
-// Version 2.5.0
-const version = "2.5.0";
+// Version 2.5.1
+const version = "2.5.1";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -288,7 +288,7 @@ async function start(token, channelId) {
       console.log("var emoji", emoji);
       for (var m = 0; m < 10; m++) {
         if (m < 5) {
-          let btnz = newMessage?.components[0].components[m];
+          let btnz = newMessage?.components[0]?.components[m];
           await wait(300);
           if (emoji.includes(btnz.emoji) || emoji.includes(btnz.label)) {
             buttonToClick = btnz;
@@ -297,7 +297,7 @@ async function start(token, channelId) {
           }
         } if (m > 4) {
           var k = (m - 5);
-          let btnz = newMessage?.components[1].components[k];
+          let btnz = newMessage?.components[1]?.components[k];
           await wait(300);
           if (emoji.includes(btnz.emoji) || emoji.includes(btnz.label)) {
             buttonToClick = btnz;
@@ -329,6 +329,7 @@ async function start(token, channelId) {
         if (line.includes(wordAsked)) {
           if (line.includes("Marine" || "marine" || "863886248572878939")) {
             for (var l; l < 3; l++) {
+              await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
               if (colMarine.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
@@ -337,6 +338,7 @@ async function start(token, channelId) {
             }
           } else if (line.includes("Cyan" || "cyan" || "863886248670265392")) {
             for (var l; l < 3; l++) {
+              await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
               if (colCyan.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
@@ -345,6 +347,7 @@ async function start(token, channelId) {
             }
           } else if (line.includes("Yellow" || "yellow" || "863886248296316940")) {
             for (var l; l < 3; l++) {
+              await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
               if (colYellow.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
@@ -353,6 +356,7 @@ async function start(token, channelId) {
             }
           } else if (line.includes("White" || "white" || "863886248689926204")) {
             for (var l; l < 3; l++) {
+              await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
               if (colWhite.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
@@ -361,6 +365,7 @@ async function start(token, channelId) {
             }
           } else if (line.includes("Black" || "black" || "863886248431190066")) {
             for (var l; l < 3; l++) {
+              await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
               if (colBlack.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
@@ -369,6 +374,7 @@ async function start(token, channelId) {
             }
           } else if (line.includes("Green" || "green" || "863886248527134730")) {
             for (var l; l < 3; l++) {
+              await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
               if (colGreen.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
