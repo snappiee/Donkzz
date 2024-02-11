@@ -212,34 +212,6 @@ async function start(token, channelId) {
       }
     }
 
-    if (config.autoVote) {
-      const vote = () => {
-        axios.post("https://discord.com/api/v10/oauth2/authorize?client_id=477949690848083968&response_type=code&scope=identify", {
-          authorize: true,
-          permissions: 0
-        }, {
-          headers: {
-            authorization: token
-          }
-        }).then((res) => {
-          if (!res.data || !res.data.location) return;
-          axios.get(`https://discordbotlist.com/api/v1/oauth?code=${res.data.location.split('code=')[1]}`).then((res) => {
-            axios.post(`https://discordbotlist.com/api/v1/bots/270904126974590976/upvote`, {}, {
-              headers: {
-                authorization: res.data.token
-              }
-            }).then((res) => {
-              if (res.data.success) console.log(chalk.yellow(`${client.user.username} voted`));
-            }).catch(err => {
-              if (err.response) console.log(chalk.red(`${client.user.username} Vote Error: (${err.response.status}) ${error.response.data}`))
-              else console.log(chalk.red(`${client.user.username} Vote Error: unknown`))
-            });
-          })
-        });
-      };
-      setInterval(() => vote(), 4.32e+7, true);
-    };
-
     if (config.serverEventsDonate.enabled) await channel.sendSlash(botid, "withdraw", "max")
     await channel.sendSlash(botid, "balance").catch((e) => console.log(e));
 
@@ -320,7 +292,7 @@ async function start(token, channelId) {
           let btnz = newMessage?.components[0].components[m];
           if (emoji.includes(btnz.label)) {
             buttonToClick = btnz;
-            clickButton(newMessage, buttonToClick);
+            wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
             console.log("clicked emo ", emoji);
           }
         } else if (m > 4) {
@@ -328,7 +300,7 @@ async function start(token, channelId) {
           let btnz = newMessage?.components[1].components[k];
           if (emoji.includes(btnz.label)) {
             buttonToClick = btnz;
-            clickButton(newMessage, buttonToClick);
+            wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
             console.log("clicked emo ", emoji);
           }
         }
@@ -341,13 +313,6 @@ async function start(token, channelId) {
     // =================== Word-Color Minigame Start ==============
 
     if (newMessage?.embeds[0]?.description?.includes("What was the color")) {
-      //build emojis from message
-      const emojiMarine = "<:Marine:863886248572878939>";
-      const emojiCyan = "<:Cyan:863886248670265392>";
-      const emojiYellow = "<:Yellow:863886248296316940>";
-      const emojiGreen = "<:Green:863886248527134730>";
-      const emojiBlack = "<:Black:863886248431190066>";
-      const emojiWhite = "<:White:863886248689926204>";
       //build color components
       const colMarine = "marine";
       const colCyan = "cyan";
@@ -362,52 +327,52 @@ async function start(token, channelId) {
         let line = wordemoji.split("\n")[i];
         console.log("var wordemoji ", wordemoji, "var wordAsked ", wordAsked, "var line ", line);
         if (line.includes(wordAsked)) {
-          if (line.includes(emojiMarine)) {
+          if (line.includes("Marine")) {
             for (var l; l < 3; l++) {
               let btnz = newMessage?.components[0]?.components[l];
-              if (colMarine.includes(btnz?.label.toLowerCase())) {
+              if (colMarine.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
-                clickButton(newMessage, buttonToClick);
+                wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
               }
             }
-          } else if (line?.includes(emojiCyan)) {
+          } else if (line.includes("Cyan")) {
             for (var l; l < 3; l++) {
               let btnz = newMessage?.components[0]?.components[l];
-              if (colCyan.includes(btnz?.label.toLowerCase())) {
+              if (colCyan.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
-                clickButton(newMessage, buttonToClick);
+                wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
               }
             }
-          } else if (line?.includes(emojiYellow)) {
+          } else if (line.includes("Yellow")) {
             for (var l; l < 3; l++) {
               let btnz = newMessage?.components[0]?.components[l];
-              if (colYellow.includes(btnz?.label.toLowerCase())) {
+              if (colYellow.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
-                clickButton(newMessage, buttonToClick);
+                wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
               }
             }
-          } else if (line?.includes(emojiWhite)) {
+          } else if (line.includes("White")) {
             for (var l; l < 3; l++) {
               let btnz = newMessage?.components[0]?.components[l];
-              if (colWhite.includes(btnz?.label.toLowerCase())) {
+              if (colWhite.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
-                clickButton(newMessage, buttonToClick);
+                wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
               }
             }
-          } else if (line?.includes(emojiBlack)) {
+          } else if (line.includes("Black")) {
             for (var l; l < 3; l++) {
               let btnz = newMessage?.components[0]?.components[l];
-              if (colBlack.includes(btnz?.label.toLowerCase())) {
+              if (colBlack.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
-                clickButton(newMessage, buttonToClick);
+                wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
               }
             }
-          } else if (line?.includes(emojiGreen)) {
+          } else if (line.includes("Green")) {
             for (var l; l < 3; l++) {
               let btnz = newMessage?.components[0]?.components[l];
-              if (colGreen.includes(btnz?.label.toLowerCase())) {
+              if (colGreen.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
-                clickButton(newMessage, buttonToClick);
+                wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
               }
             }
           }
@@ -426,11 +391,11 @@ async function start(token, channelId) {
         var word = words.split("\n")[i];
         var word2 = word.split("`")[1];
         for (var k = 0; k < 5; k++) {
-          let btnz = newMessage?.components[0].components[k];
+          let btnz = newMessage?.components[0]?.components[k];
           if (word2.includes(btnz.label.toLowerCase())) {
-            console.log("var word ", word, "var word2 ", word2, "var words ", words);
+            console.log("var word ", word, ",", "var word2 ", word2);
             buttonToClick = btnz;
-            clickButton(newMessage, buttonToClick);
+            wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
             console.log("clicked on", word2);
           }
         }
@@ -444,7 +409,7 @@ async function start(token, channelId) {
 
     if (newMessage?.embeds[0]?.description?.includes("Next Scratch-Off available")) {
       let btnz = newMessage?.components[4].components[3];
-      clickButton(newMessage, btnz);
+      await clickButton(newMessage, btnz);
     }
     // =================== Scratch Prompt End ================
 
