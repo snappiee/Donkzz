@@ -1,5 +1,5 @@
-// Version 2.5.1
-const version = "2.5.1";
+// Version 2.5.2
+const version = "2.5.2";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -151,6 +151,7 @@ async function start(token, channelId) {
   var botNotFreeCount = 0;
   var isDeadMeme = false;
   var isPlayingAdventure = false;
+  var isHavingInteraction = false;
   var buyShovel = false;
   var buyRifle = false;
   var wordemoji = "";
@@ -264,7 +265,6 @@ async function start(token, channelId) {
     if (modal.title == "Dank Memer Shop") {
       modal.components[0].components[0].setValue("1");
       modal.reply();
-      isBotFree = true;
     }
   })
 
@@ -294,6 +294,7 @@ async function start(token, channelId) {
             buttonToClick = btnz;
             wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
             console.log("clicked emo ", emoji);
+            isHavingInteraction = false;
           }
         } if (m > 4) {
           var k = (m - 5);
@@ -303,6 +304,7 @@ async function start(token, channelId) {
             buttonToClick = btnz;
             wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
             console.log("clicked emo ", emoji);
+            isHavingInteraction = false;
           }
         }
       }
@@ -334,6 +336,7 @@ async function start(token, channelId) {
               if (colMarine.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
                 wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
+                isHavingInteraction = false;
               }
             }
           } else if (line.includes("Cyan" || "cyan" || "863886248670265392")) {
@@ -343,6 +346,7 @@ async function start(token, channelId) {
               if (colCyan.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
                 wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
+                isHavingInteraction = false;
               }
             }
           } else if (line.includes("Yellow" || "yellow" || "863886248296316940")) {
@@ -352,6 +356,7 @@ async function start(token, channelId) {
               if (colYellow.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
                 wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
+                isHavingInteraction = false;
               }
             }
           } else if (line.includes("White" || "white" || "863886248689926204")) {
@@ -361,6 +366,7 @@ async function start(token, channelId) {
               if (colWhite.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
                 wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
+                isHavingInteraction = false;
               }
             }
           } else if (line.includes("Black" || "black" || "863886248431190066")) {
@@ -370,6 +376,7 @@ async function start(token, channelId) {
               if (colBlack.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
                 wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
+                isHavingInteraction = false;
               }
             }
           } else if (line.includes("Green" || "green" || "863886248527134730")) {
@@ -379,6 +386,7 @@ async function start(token, channelId) {
               if (colGreen.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
                 wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
+                isHavingInteraction = false;
               }
             }
           }
@@ -402,8 +410,9 @@ async function start(token, channelId) {
             buttonToClick = btnz;
             setTimeout(() => { clickButton(newMessage, buttonToClick); }, 1000);
             await wait(200);
+            
           }
-        }
+        } isHavingInteraction = false;
       }
     }
 
@@ -799,7 +808,6 @@ async function start(token, channelId) {
 
     if (message?.embeds[0]?.title?.includes("Giveaway")) {
       await clickButton(message, message.components[0].components[0]);
-      isBotFree = true;
     }
 
     // =================== Giveaway Command End =================== 
@@ -835,6 +843,7 @@ async function start(token, channelId) {
 
       await clickRandomButton(message, 3);
       await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay * 3, config.cooldowns.buttonClickDelay.maxDelay * 6));
+
       isBotFree = true;
     }
 
@@ -997,13 +1006,13 @@ async function start(token, channelId) {
       let btn = buttons.filter((e) => safePostion.includes(e.label))[randomInt(0, 1)];
       message.clickButton(btn);
     } else if (description2?.includes("Look at each color next to the words closely!")) {
-      isBotFree = false;
+      isHavingInteraction = true;
       wordemoji = description2?.split("closely!\n")[1]; // declare var wordemoji for updated messages
     } else if (description2?.includes("Remember words order!")) {
-      isBotFree = false;
+      isHavingInteraction = true;
       words = description2?.split("order!\n")[1]; // declare var words for updated messages
     } else if (description2?.includes("Look at the emoji closely!")) {
-      isBotFree = false;
+      isHavingInteraction = true;
       emoji = description2?.split("!\n")[1]; // declare var emoji for updated messages
     }
   }
@@ -1109,6 +1118,7 @@ async function start(token, channelId) {
     }
 
     if (isPlayingAdventure) return;
+    if (isHavingInteraction) return;
     if (randomInt(1, 75) == 4) {
       queueCommands.push({
         command: "balance",
