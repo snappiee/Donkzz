@@ -1,5 +1,5 @@
-// Version 2.5.5
-const version = "2.5.5";
+// Version 2.6.0
+const version = "2.6.0";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -290,13 +290,13 @@ async function start(token, channelId) {
       console.log("var emoji", emoji);
       for (var m = 0; m < 5; m++) {
         
-        if (btnz.emoji.includes(emoji) || btnz.label.includes(emoji)) {
+        if (btnz.label.includes(emoji)) {
           buttonToClick = btnz;
           wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
           console.log("clicked emo ", emoji);
           isHavingInteraction = false;
         }
-        if (btnz2.emoji.includes(emoji) || btnz2.label.includes(emoji)) {
+        if (btnz2.label.includes(emoji)) {
           buttonToClick = btnz;
           wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
           console.log("clicked emo ", emoji);
@@ -322,6 +322,7 @@ async function start(token, channelId) {
       var buttonToClick = undefined;
       var wordAsked = newMessage?.embeds[0]?.description?.split("`")[1];
       for (var i; i < 3; i++) {
+        await wait(300);
         let line = wordemoji.split("\n")[i];
         console.log("var wordemoji ", wordemoji, "var wordAsked ", wordAsked, "var line ", line);
         if (line.includes(wordAsked)) {
@@ -401,11 +402,11 @@ async function start(token, channelId) {
         var word2 = word.split("`")[1];
         for (var k = 0; k < 5; k++) {
           let btnz = newMessage?.components[0]?.components[k];
-          await wait(300);
+          await wait(1000);
           if (word2.includes(btnz.label.toLowerCase())) {
             buttonToClick = btnz;
-            setTimeout(() => { clickButton(newMessage, buttonToClick); }, 1000);
-            await wait(200);
+            setTimeout(() => { clickButton(newMessage, buttonToClick); }, 2000);
+            await wait(1000);
 
           }
         } isHavingInteraction = false;
