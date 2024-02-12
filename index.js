@@ -1,5 +1,5 @@
-// Version 2.9.7
-const version = "2.9.7";
+// Version 2.9.8
+const version = "2.9.8";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -475,6 +475,10 @@ async function start(token, channelId) {
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("captcha" || "Captcha")) {
       console.log(chalk.redBright(`${client.user.username} is being suspicious! Solve the captcha yourself!`));
+      if (config?.webhookLogging && config?.webhook) {
+          webhook.send("@", client.user.id, " @", config.mainUserId);
+        }
+
       process.exit(0);
     }
 
