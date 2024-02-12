@@ -1,5 +1,5 @@
-// Version 2.6.0
-const version = "2.6.0";
+// Version 2.6.1
+const version = "2.6.1";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -319,7 +319,7 @@ async function start(token, channelId) {
       const colYellow = "yellow";
       //parsing and responding block
       var buttonToClick = undefined;
-      var wordAsked = newMessage?.embeds[0]?.description?.split("`")[1];
+      var wordAsked = newMessage?.embeds[0]?.description.split("`")[1];
       for (var i; i < 3; i++) {
         await wait(300);
         let line = wordemoji.split("\n")[i];
@@ -329,7 +329,7 @@ async function start(token, channelId) {
             for (var l; l < 3; l++) {
               await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
-              if (colMarine.includes(btnz.label.toLowerCase())) {
+              if ((btnz.label.toLowerCase()).includes(colMarine)) {
                 buttonToClick = btnz;
                 wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
                 isHavingInteraction = false;
@@ -339,7 +339,7 @@ async function start(token, channelId) {
             for (var l; l < 3; l++) {
               await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
-              if (colCyan.includes(btnz.label.toLowerCase())) {
+              if ((btnz.label.toLowerCase()).includes(colCyan)) {
                 buttonToClick = btnz;
                 wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
                 isHavingInteraction = false;
@@ -349,7 +349,7 @@ async function start(token, channelId) {
             for (var l; l < 3; l++) {
               await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
-              if (colYellow.includes(btnz.label.toLowerCase())) {
+              if ((btnz.label.toLowerCase()).includes(colYellow)) {
                 buttonToClick = btnz;
                 wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
                 isHavingInteraction = false;
@@ -359,7 +359,7 @@ async function start(token, channelId) {
             for (var l; l < 3; l++) {
               await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
-              if (colWhite.includes(btnz.label.toLowerCase())) {
+              if ((btnz.label.toLowerCase()).includes(colWhite)) {
                 buttonToClick = btnz;
                 wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
                 isHavingInteraction = false;
@@ -369,7 +369,7 @@ async function start(token, channelId) {
             for (var l; l < 3; l++) {
               await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
-              if (colBlack.includes(btnz.label.toLowerCase())) {
+              if ((btnz.label.toLowerCase()).includes(colBlack)) {
                 buttonToClick = btnz;
                 wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
                 isHavingInteraction = false;
@@ -379,7 +379,7 @@ async function start(token, channelId) {
             for (var l; l < 3; l++) {
               await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
-              if (colGreen.includes(btnz.label.toLowerCase())) {
+              if ((btnz.label.toLocaleLowerCase()).includes(colGreen)) {
                 buttonToClick = btnz;
                 wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
                 isHavingInteraction = false;
@@ -399,6 +399,7 @@ async function start(token, channelId) {
       for (var i = 0; i < 5; i++) {
         var word = words.split("\n")[i];
         var word2 = word.split("`")[1];
+        console.log("var word", word, "var word2", word2);
         for (var k = 0; k < 5; k++) {
           let btnz = newMessage?.components[0]?.components[k];
           await wait(1000);
@@ -406,7 +407,7 @@ async function start(token, channelId) {
             buttonToClick = btnz;
             setTimeout(() => { clickButton(newMessage, buttonToClick); }, 2000);
             await wait(1000);
-
+            console.log("clicked on ", word2);
           }
         } isHavingInteraction = false;
       }
@@ -1001,15 +1002,15 @@ async function start(token, channelId) {
       let buttons = message.components[0]?.components;
       let btn = buttons.filter((e) => safePostion.includes(e.label))[randomInt(0, 1)];
       message.clickButton(btn);
-    } else if (description2?.includes("Look at each color next to the words closely!")) {
+    } else if (description2?.includes("Look at each color next to the word")) {
       isHavingInteraction = true;
-      wordemoji = description2?.split("closely!\n")[1]; // declare var wordemoji for updated messages
+      wordemoji = description2?.split("\n")[1]; // declare var wordemoji for updated messages
     } else if (description2?.includes("Remember words order!")) {
       isHavingInteraction = true;
-      words = description2?.split("order!\n")[1]; // declare var words for updated messages
+      words = description2?.split("\n")[1]; // declare var words for updated messages
     } else if (description2?.includes("Look at the emoji closely!")) {
       isHavingInteraction = true;
-      emoji = description2?.split("!\n")[1]; // declare var emoji for updated messages
+      emoji = description2?.split("\n")[1]; // declare var emoji for updated messages
     }
   }
 
