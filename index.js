@@ -1,5 +1,5 @@
-// Version 2.8.5
-const version = "2.8.5";
+// Version 2.8.6
+const version = "2.8.6";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -297,7 +297,6 @@ async function start(token, channelId) {
       const hugging = "🤗";
       const upside_down = "🙃";
       //declare clickEmoji
-      var buttonToClick = undefined;
       var clickEmoji = "";
       console.log("var emoji", emoji);
       //defining clickEmoji
@@ -311,25 +310,19 @@ async function start(token, channelId) {
       if (emoji.includes(grin)) { clickEmoji = grin; }
       if (emoji.includes(hugging)) { clickEmoji = hugging; }
       if (emoji.includes(upside_down)) { clickEmoji = upside_down; }
-      console.log(clickEmoji);
+      console.log("var clickEmoji", clickEmoji);
       //select clicking components
-      for (var m = 0; m < 5; m++) {
-        let btnz = newMessage?.components[0]?.components[m];
-        let btnz2 = newMessage?.components[1]?.components[m];
-
-        if (clickEmoji.includes(btnz?.label || btnz?.emoji)) {
-          buttonToClick = btnz;
-          clickButton(newMessage, buttonToClick);
-          console.log('clicked on', clickEmoji)
-          isHavingInteraction = false;
+      for (var m = 0; m < 2; m++) {
+        for (var n = 0; n < 5; n++) {
+          let btnz = newMessage?.components[m].components[n];
+          let btnLabel = btnz.label;
+          let btnEmoji = btnz.emoji;
           await wait(200);
-        }
-        if (clickEmoji.includes(btnz2?.label || btnz2?.emoji)) {
-          buttonToClick = btnz;
-          clickButton(newMessage, buttonToClick);
-          console.log('clicked on', clickEmoji)
-          isHavingInteraction = false;
-          await wait(200);
+          if (btnLabel.includes(clickEmoji) || btnEmoji.includes(clickEmoji)) {
+            await clickButton(newMessage, btnz);
+            console.log("clicked on", emoji, clickEmoji);
+            isHavingInteraction = false;
+          }
         }
       }
     }
@@ -355,7 +348,6 @@ async function start(token, channelId) {
       const emojiBlack = "<:Black:863886248431190066>";
       const emojiWhite = "<:White:863886248689926204>";
       //parsing and responding block
-      var buttonToClick = undefined;
       var wordAsked = newMessage?.embeds[0]?.description.split("`")[1];
       var line = "";
       var colorAsked = "";
@@ -374,13 +366,12 @@ async function start(token, channelId) {
 
       for (var j = 0; j < 4; j++) {
         await wait(300);
-        let btnz = newMessage?.components[0]?.components[j];
-        if (colorAsked.includes(btnz?.label.toLowerCase())) {
-          buttonToClick = btnz;
-          clickButton(newMessage, buttonToClick);
+        let btnz = newMessage?.components[0].components[j];
+        let btnLabel = btnz.label.toLowerCase();
+        if (btnLabel.includes(colorAsked)) {
+          await clickButton(newMessage, btnz);
           console.log("clicked on color", colorAsked)
           isHavingInteraction = false;
-          await wait(200);
         }
       }
     }
