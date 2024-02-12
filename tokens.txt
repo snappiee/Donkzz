@@ -1,0 +1,2 @@
+channelID1 token1
+channelID2 token2
