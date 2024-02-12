@@ -495,25 +495,15 @@ async function start(token, channelId) {
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You don't have a shovel") && config.autoBuy) {
       console.log("Preparing to buy a shovel");
-      var missingItems = ["Shovel"];
-      missingItems.forEach(async (item) => {
-        if (message?.embeds[0]?.description?.includes(item.toLocaleLowerCase())) {
-          buyShovel = true;
-          openShop();
-        }
-      })
-    }
+      buyShovel = true;
+      openShop();
+      }
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You don't have a rifle") && config.autoBuy) {
       console.log("Preparing to buy a rifle");
-      var missingItems = ["Rifle"];
-      missingItems.forEach(async (item) => {
-        if (message?.embeds[0]?.description?.includes(item.toLocaleLowerCase())) {
-          buyRifle = true;
-          openShop();
-        }
-      })
-    }
+      buyRifle = true;
+      openShop();
+      }
 
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("Hold tight! Maintenance in progress.")) {
