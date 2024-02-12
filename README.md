@@ -1,8 +1,9 @@
 # Donkzz
 Advanced Dank Memer self-bot! Supports slash commands, incredibly strong, reliable and easy to use.
 
-# Notifications!
-I do bugfixing frequently, and make sure to use the latest stable version (2.3.0) until the next stable version is on. Thanks a lot!
+# Notifications! 
+I do bugfixing frequently, and make sure to use the latest stable version (2.3.0) until the next stable version is on. Thanks a lot! \n
+By the way, i'm working as a backend devs 😂 so the code will look a bit unclean lol, excuse me 😭
 
 # Instructions
   1. Fill the information in config.json and tokens.txt, as in the file.
