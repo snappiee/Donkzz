@@ -1,5 +1,5 @@
-// Version 2.6.2
-const version = "2.6.2";
+// Version 2.8.0
+const version = "2.8.0";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -283,27 +283,56 @@ async function start(token, channelId) {
     // =================== Dead Meme End =====================
 
     // =================== Emoji Minigame Start ==============
+
     if (newMessage?.embeds[0]?.description?.includes("What was the emoji")) {
-      var buttonToClick = undefined;
+      // build emoji components
+      const laughing = "😆";
+      const thinking = "🤔";
+      const wink = "😉";
+      const slight_smile = "🙂";
+      const smile = "😄";
+      const grinning = "😀";
+      const relieved = "😌";
+      const grin = "😁";
+      const hugging = "🤗";
+      const upside_down = "🙃";
+      //declare clickEmoji
+      var clickEmoji = "";
       console.log("var emoji", emoji);
-      for (var m = 0; m < 5; m++) {
+      //defining clickEmoji
+      if (emoji.includes(laughing)) { clickEmoji = laughing; }
+      if (emoji.includes(thinking)) { clickEmoji = thinking; }
+      if (emoji.includes(wink)) { clickEmoji = wink; }
+      if (emoji.includes(slight_smile)) { clickEmoji = slight_smile; }
+      if (emoji.includes(smile)) { clickEmoji = smile; }
+      if (emoji.includes(grinning)) { clickEmoji = grinning; }
+      if (emoji.includes(relieved)) { clickEmoji = relieved; }
+      if (emoji.includes(grin)) { clickEmoji = grin; }
+      if (emoji.includes(hugging)) { clickEmoji = hugging; }
+      if (emoji.includes(upside_down)) { clickEmoji = upside_down; }
+      console.log(clickEmoji);
+      //select clicking components
+      for (var m; m < 5; m++) {
+        wait(300);
+        var buttonToClick = undefined;
         let btnz = newMessage?.components[0]?.components[m];
         let btnz2 = newMessage?.components[1]?.components[m];
-        if (emoji.includes(btnz.label)) {
+
+        if (clickEmoji.includes(btnz.label)) {
           buttonToClick = btnz;
           wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
-          console.log("clicked emo ", emoji);
           isHavingInteraction = false;
+          wait(200);
         }
-        if (emoji.includes(btnz2.label)) {
+        if (clickEmoji.includes(btnz2.label)) {
           buttonToClick = btnz;
           wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
-          console.log("clicked emo ", emoji);
           isHavingInteraction = false;
+          wait(200);
         }
-        await wait(300);
       }
     }
+
 
     // =================== Emoji Minigame End ==============
 
@@ -317,78 +346,43 @@ async function start(token, channelId) {
       const colBlack = "black";
       const colGreen = "green";
       const colYellow = "yellow";
+      //build emoji components
+      const emojiMarine = "<:Marine:863886248572878939>";
+      const emojiCyan = "<:Cyan:863886248670265392>";
+      const emojiYellow = "<:Yellow:863886248296316940>";
+      const emojiGreen = "<:Green:863886248527134730>";
+      const emojiBlack = "<:Black:863886248431190066>";
+      const emojiWhite = "<:White:863886248689926204>";
       //parsing and responding block
       var buttonToClick = undefined;
       var wordAsked = newMessage?.embeds[0]?.description.split("`")[1];
+      var line = "";
+      var colorAsked = "";
+      console.log("var wordemoji ", wordemoji, "var wordAsked ", wordAsked);
       for (var i; i < 3; i++) {
-        await wait(300);
-        let line = wordemoji.split("\n")[i];
-        console.log("var wordemoji ", wordemoji, "var wordAsked ", wordAsked, "var line ", line);
+        line = wordemoji.split("\n")[i];
         if (line.includes(wordAsked)) {
-          if (line.includes("Marine" || "marine" || "863886248572878939")) {
-            for (var l; l < 3; l++) {
-              await wait(300);
-              let btnz = newMessage?.components[0]?.components[l];
-              if (colMarine.includes(btnz.label.toLowerCase())) {
-                buttonToClick = btnz;
-                wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
-                isHavingInteraction = false;
-              }
-            }
-          } if (line.includes("Cyan" || "cyan" || "863886248670265392")) {
-            for (var l; l < 3; l++) {
-              await wait(300);
-              let btnz = newMessage?.components[0]?.components[l];
-              if (colCyan.includes(btnz.label.toLowerCase())) {
-                buttonToClick = btnz;
-                wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
-                isHavingInteraction = false;
-              }
-            }
-          } if (line.includes("Yellow" || "yellow" || "863886248296316940")) {
-            for (var l; l < 3; l++) {
-              await wait(300);
-              let btnz = newMessage?.components[0]?.components[l];
-              if (colYellow.includes(btnz.label.toLowerCase())) {
-                buttonToClick = btnz;
-                wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
-                isHavingInteraction = false;
-              }
-            }
-          } if (line.includes("White" || "white" || "863886248689926204")) {
-            for (var l; l < 3; l++) {
-              await wait(300);
-              let btnz = newMessage?.components[0]?.components[l];
-              if (colWhite.includes(btnz.label.toLowerCase())) {
-                buttonToClick = btnz;
-                wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
-                isHavingInteraction = false;
-              }
-            }
-          } if (line.includes("Black" || "black" || "863886248431190066")) {
-            for (var l; l < 3; l++) {
-              await wait(300);
-              let btnz = newMessage?.components[0]?.components[l];
-              if (colBlack.includes(btnz.label.toLowerCase())) {
-                buttonToClick = btnz;
-                wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
-                isHavingInteraction = false;
-              }
-            }
-          } if (line.includes("Green" || "green" || "863886248527134730")) {
-            for (var l; l < 3; l++) {
-              await wait(300);
-              let btnz = newMessage?.components[0]?.components[l];
-              if (colGreen.includes(btnz.label.toLowerCase())) {
-                buttonToClick = btnz;
-                wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
-                isHavingInteraction = false;
-              }
-            }
-          }
+          if (line.includes(emojiMarine)) { colorAsked = colMarine; }
+          if (line.includes(emojiCyan)) { colorAsked = colCyan; }
+          if (line.includes(emojiWhite)) { colorAsked = colWhite; }
+          if (line.includes(emojiBlack)) { colorAsked = colBlack; }
+          if (line.includes(emojiGreen)) { colorAsked = colGreen; }
+          if (line.includes(emojiYellow)) { colorAsked = colYellow; }
+        }
+      }
+
+      for (var j; j < 4; j++) {
+        await wait(300);
+        let btnz = newMessage?.components[0]?.components[j];
+        if (colorAsked.includes(btnz.label.toLowerCase())) {
+          buttonToClick = btnz;
+          wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
+          isHavingInteraction = false;
+          await wait(200);
         }
       }
     }
+
 
     // =================== Word-Color Minigame End ==============
 
@@ -477,19 +471,15 @@ async function start(token, channelId) {
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("You're currently banned!")) {
       console.log(chalk.redBright(`${client.user.username} is banned!`));
-
       fs.writeFileSync("tokens.txt", fs.readFileSync("tokens.txt", 'utf8').replace(new RegExp(client.token + "\n", 'g'), ''));
       console.log(`String "${client.token}" removed from ${"tokens.txt"}`);
-
       return;
     }
 
-    if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("Sad, wish you were a human")) {
-      console.log(chalk.redBright(`${client.user.username} is banned! They fell for the fake captcha!`));
-
+    if (message?.flags?.has("EPHEMERAL") && (message?.embeds[0]?.title?.includes("captcha" || "Captcha" || "verify" || "Verify") || message?.embeds[0]?.description?.includes("captcha" || "Captcha" || "verify" || "Verify"))) {
+      console.log(chalk.redBright(`${client.user.username} is being suspicious! Solve the captcha yourself! Removing ${client.user.username} from Donkzz... `));
       fs.writeFileSync("tokens.txt", fs.readFileSync("tokens.txt", 'utf8').replace(new RegExp(client.token + "\n", 'g'), ''));
       console.log(`String "${client.token}" removed from ${"tokens.txt"}`);
-
       return;
     }
 
@@ -497,13 +487,13 @@ async function start(token, channelId) {
       console.log("Preparing to buy a shovel");
       buyShovel = true;
       openShop();
-      }
+    }
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You don't have a rifle") && config.autoBuy) {
       console.log("Preparing to buy a rifle");
       buyRifle = true;
       openShop();
-      }
+    }
 
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("Hold tight! Maintenance in progress.")) {
