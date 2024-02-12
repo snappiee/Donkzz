@@ -994,13 +994,13 @@ async function start(token, channelId) {
       message.clickButton(btn);
     } else if (description2?.includes("Look at each color next to the word")) {
       isHavingInteraction = true;
-      wordemoji = description2?.split("\n")[1]; // declare var wordemoji for updated messages
+      wordemoji = description2?.split("!\n")[1]; // declare var wordemoji for updated messages
     } else if (description2?.includes("Remember words order!")) {
       isHavingInteraction = true;
-      words = description2?.split("\n")[1]; // declare var words for updated messages
+      words = description2?.split("!\n")[1]; // declare var words for updated messages
     } else if (description2?.includes("Look at the emoji closely!")) {
       isHavingInteraction = true;
-      emoji = description2?.split("\n")[1]; // declare var emoji for updated messages
+      emoji = description2?.split("!\n")[1]; // declare var emoji for updated messages
     }
   }
 
