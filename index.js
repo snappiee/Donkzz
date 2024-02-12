@@ -61,7 +61,10 @@ const db = new SimplDB();
 
 axios.get("https://raw.githubusercontent.com/snappiee/Donkzz/main/index.js").then((res) => {
   let v = res.data.match(/Version ([0-9]*\.?)+/)[0]?.replace("Version ", "");
-  if (v && v !== version) console.log(chalk.bold.bgRed("There is a new version available: " + v + "\t\nPlease update. " + chalk.underline("https://github.com/snappiee/Donkzz")));
+  if (v && v !== version) 
+    { console.log(chalk.bold.bgRed("There is a new version available: " + v + "\t\nPlease update by running the updater. \n" + chalk.underline("https://github.com/snappiee/Donkzz\n")));
+
+  }
 }).catch((error) => {
   console.log(error);
 });
@@ -284,7 +287,7 @@ async function start(token, channelId) {
 
     // =================== Emoji Minigame Start ==============
 
-    if (newMessage?.embeds[0]?.description?.includes("What was the emoji")) {
+    if (newMessage?.embeds[0]?.description?.includes(" emoji?")) {
       // build emoji components
       const laughing = "😆";
       const thinking = "🤔";
@@ -332,7 +335,7 @@ async function start(token, channelId) {
 
     // =================== Word-Color Minigame Start ==============
 
-    if (newMessage?.embeds[0]?.description?.includes("What was the color")) {
+    if (newMessage?.embeds[0]?.description?.includes("What color was next to")) {
       //build color components
       const colMarine = "marine";
       const colCyan = "cyan";
