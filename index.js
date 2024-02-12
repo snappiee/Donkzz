@@ -1,5 +1,5 @@
-// Version 2.8.2
-const version = "2.8.2";
+// Version 2.8.5
+const version = "2.8.5";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -313,7 +313,7 @@ async function start(token, channelId) {
       if (emoji.includes(upside_down)) { clickEmoji = upside_down; }
       console.log(clickEmoji);
       //select clicking components
-      for (var m; m < 5; m++) {
+      for (var m = 0; m < 5; m++) {
         let btnz = newMessage?.components[0]?.components[m];
         let btnz2 = newMessage?.components[1]?.components[m];
 
@@ -360,7 +360,7 @@ async function start(token, channelId) {
       var line = "";
       var colorAsked = "";
       console.log("var wordemoji ", wordemoji, "var wordAsked ", wordAsked);
-      for (var i; i < 3; i++) {
+      for (var i = 0; i < 3; i++) {
         line = wordemoji.split("\n")[i];
         if (line.includes(wordAsked)) {
           if (line.includes(emojiMarine)) { colorAsked = colMarine; }
@@ -372,7 +372,7 @@ async function start(token, channelId) {
         }
       }
 
-      for (var j; j < 4; j++) {
+      for (var j = 0; j < 4; j++) {
         await wait(300);
         let btnz = newMessage?.components[0]?.components[j];
         if (colorAsked.includes(btnz?.label.toLowerCase())) {
