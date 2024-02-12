@@ -1,5 +1,5 @@
-// Version 2.8.1
-const version = "2.8.1";
+// Version 2.8.2
+const version = "2.8.2";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -297,6 +297,7 @@ async function start(token, channelId) {
       const hugging = "🤗";
       const upside_down = "🙃";
       //declare clickEmoji
+      var buttonToClick = undefined;
       var clickEmoji = "";
       console.log("var emoji", emoji);
       //defining clickEmoji
@@ -313,20 +314,20 @@ async function start(token, channelId) {
       console.log(clickEmoji);
       //select clicking components
       for (var m; m < 5; m++) {
-        await wait(300);
-        var buttonToClick = undefined;
         let btnz = newMessage?.components[0]?.components[m];
         let btnz2 = newMessage?.components[1]?.components[m];
 
-        if (clickEmoji.includes(btnz.label)) {
+        if (clickEmoji.includes(btnz?.label || btnz?.emoji)) {
           buttonToClick = btnz;
-          wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
+          clickButton(newMessage, buttonToClick);
+          console.log('clicked on', clickEmoji)
           isHavingInteraction = false;
           await wait(200);
         }
-        if (clickEmoji.includes(btnz2.label)) {
+        if (clickEmoji.includes(btnz2?.label || btnz2?.emoji)) {
           buttonToClick = btnz;
-          wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
+          clickButton(newMessage, buttonToClick);
+          console.log('clicked on', clickEmoji)
           isHavingInteraction = false;
           await wait(200);
         }
@@ -374,9 +375,10 @@ async function start(token, channelId) {
       for (var j; j < 4; j++) {
         await wait(300);
         let btnz = newMessage?.components[0]?.components[j];
-        if (colorAsked.includes(btnz.label.toLowerCase())) {
+        if (colorAsked.includes(btnz?.label.toLowerCase())) {
           buttonToClick = btnz;
-          wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
+          clickButton(newMessage, buttonToClick);
+          console.log("clicked on color", colorAsked)
           isHavingInteraction = false;
           await wait(200);
         }
