@@ -1,5 +1,5 @@
-// Version 2.9.0
-const version = "2.9.0";
+// Version 2.9.1
+const version = "2.9.1";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -63,7 +63,7 @@ axios.get("https://raw.githubusercontent.com/snappiee/Donkzz/main/index.js").the
   let v = res.data.match(/Version ([0-9]*\.?)+/)[0]?.replace("Version ", "");
   if (v && v !== version) 
     { console.log(chalk.bold.bgRed("There is a new version available: " + v + "\t\nPlease update by running the updater. \n" + chalk.underline("https://github.com/snappiee/Donkzz\n")));
-
+    
   }
 }).catch((error) => {
   console.log(error);
@@ -301,6 +301,7 @@ async function start(token, channelId) {
       const upside_down = "🙃";
       //declare clickEmoji
       var clickEmoji = "";
+      var toClickEmoji = "";
       console.log("var emoji", emoji);
       //defining clickEmoji
       if (emoji.includes(laughing)) { clickEmoji = laughing; }
@@ -313,17 +314,18 @@ async function start(token, channelId) {
       if (emoji.includes(grin)) { clickEmoji = grin; }
       if (emoji.includes(hugging)) { clickEmoji = hugging; }
       if (emoji.includes(upside_down)) { clickEmoji = upside_down; }
+      toClickEmoji = clickEmoji.toLowerCase();
       console.log("var clickEmoji", clickEmoji);
       //select clicking components
       for (var m = 0; m < 2; m++) {
         for (var n = 0; n < 5; n++) {
           let btnz = newMessage?.components[m].components[n];
-          let btnLabel = btnz.label;
-          let btnEmoji = btnz.emoji;
+          let btnLabel = newMessage?.components[m]?.components[n]?.label?.toLowerCase();
+          let btnEmoji = newMessage?.components[m]?.components[n]?.emoji?.toLowerCase();
           await wait(200);
-          if (btnLabel.includes(clickEmoji) || btnEmoji.includes(clickEmoji)) {
+          if (btnLabel.includes(toClickEmoji) || btnEmoji.includes(toClickEmoji)) {
             await clickButton(newMessage, btnz);
-            console.log("clicked on", emoji, clickEmoji);
+            console.log("clicked on", emoji, toClickEmoji);
             isHavingInteraction = false;
           }
         }
@@ -472,9 +474,10 @@ async function start(token, channelId) {
       return;
     }
 
-    if (message?.flags?.has("EPHEMERAL") && (message?.embeds[0]?.title?.includes("captcha" || "Captcha" || "verify" || "Verify") || message?.embeds[0]?.description?.includes("captcha" || "Captcha" || "verify" || "Verify"))) {
+    if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("captcha" || "Captcha" || "verify" || "Verify")) {
       console.log(chalk.redBright(`${client.user.username} is being suspicious! Solve the captcha yourself!`));
-      return;
+      await wait(20000);
+      process.exit(0);
     }
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You don't have a shovel") && config.autoBuy) {
@@ -493,7 +496,6 @@ async function start(token, channelId) {
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("Hold tight! Maintenance in progress.")) {
       console.log(chalk.redBright(`${client.user.username} got maintenance! Stopping Donkzz; restart it later.`));
       process.exit(0);
-      return;
     }
 
 

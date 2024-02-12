@@ -1,5 +1,5 @@
 {
-	"version": "2.9.0",
+	"version": "2.9.1",
 	"updater": "0.0.1",
-	"note": "V2.9.0: bugfix, added updater."
+	"note": "V2.9.1: bugfix on emoji minigames"
 }
