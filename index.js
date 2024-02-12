@@ -1,5 +1,5 @@
-// Version 2.9.3
-const version = "2.9.3";
+// Version 2.9.5
+const version = "2.9.5";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -300,12 +300,7 @@ async function start(token, channelId) {
       const hugging = "🤗";
       const upside_down = "🙃";
       //declare clickEmoji
-      var btnLabel = "";
-      var btnEmoji = "";
-      var btnLabel2 = "";
-      var btnEmoji2 = "";
       var clickEmoji = "";
-      var toClickEmoji = "";
       console.log("var emoji", emoji);
       //defining clickEmoji
       if (emoji.includes(laughing)) { clickEmoji = laughing; }
@@ -318,21 +313,21 @@ async function start(token, channelId) {
       if (emoji.includes(grin)) { clickEmoji = grin; }
       if (emoji.includes(hugging)) { clickEmoji = hugging; }
       if (emoji.includes(upside_down)) { clickEmoji = upside_down; }
-      toClickEmoji = clickEmoji;
       console.log("var clickEmoji", clickEmoji);
       //select clicking components
       for (var m = 0; m < 2; m++) {
         for (var n = 0; n < 5; n++) {
           let btnz = newMessage?.components[m].components[n];
-          btnLabel = btnz.label;
-          btnEmoji = btnz.emoji;
+          let btnLabel = btnz.label.toString();
+          let btnEmoji = btnz.emoji.toString();
+          console.log("btnLabel is", btnLabel, "btnEmoji is", btnEmoji);
           //duhhh
           await wait(200);
-          if (btnLabel.includes(toClickEmoji) || btnEmoji.includes(toClickEmoji)) {
+          if (btnLabel.includes(clickEmoji) || btnEmoji.includes(clickEmoji)) {
             await clickButton(newMessage, btnz);
-            console.log("clicked on", emoji, toClickEmoji);
+            console.log("clicked on", emoji, clickEmoji);
             isHavingInteraction = false;
-          }
+          } else console.log("couldn't click on any emojis");
         }
       }
     }
