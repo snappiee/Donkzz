@@ -1,5 +1,5 @@
-// Version 2.8.6
-const version = "2.8.6";
+// Version 2.9.0
+const version = "2.9.0";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -473,9 +473,7 @@ async function start(token, channelId) {
     }
 
     if (message?.flags?.has("EPHEMERAL") && (message?.embeds[0]?.title?.includes("captcha" || "Captcha" || "verify" || "Verify") || message?.embeds[0]?.description?.includes("captcha" || "Captcha" || "verify" || "Verify"))) {
-      console.log(chalk.redBright(`${client.user.username} is being suspicious! Solve the captcha yourself! Removing ${client.user.username} from Donkzz... `));
-      fs.writeFileSync("tokens.txt", fs.readFileSync("tokens.txt", 'utf8').replace(new RegExp(client.token + "\n", 'g'), ''));
-      console.log(`String "${client.token}" removed from ${"tokens.txt"}`);
+      console.log(chalk.redBright(`${client.user.username} is being suspicious! Solve the captcha yourself!`));
       return;
     }
 
