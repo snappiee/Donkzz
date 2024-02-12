@@ -4,6 +4,7 @@ Advanced Dank Memer self-bot! Supports slash commands, incredibly strong, reliab
 # Instructions
   1. Fill the information in config.json and tokens.txt, as in the file.
   2. Run the bot and have it ready for you.
+  3. To use the autoBuy function, you must open the Shop View embed and select the menu to Coin Shop. Otherwise, the bot won't work correctly!
 
 # Credits
   1. This bot is forked, and rewritten from TahaGorme/slashy. Give them some credit.
