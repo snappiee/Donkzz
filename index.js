@@ -1,5 +1,5 @@
-// Version 2.6.1
-const version = "2.6.1";
+// Version 2.6.2
+const version = "2.6.2";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -266,7 +266,7 @@ async function start(token, channelId) {
       modal.components[0].components[0].setValue("1");
       modal.reply();
     }
-  })
+  });
 
   client.on("messageUpdate", async (oldMessage, newMessage) => {
     if (newMessage?.interaction?.user !== client.user) return;
@@ -289,13 +289,13 @@ async function start(token, channelId) {
       for (var m = 0; m < 5; m++) {
         let btnz = newMessage?.components[0]?.components[m];
         let btnz2 = newMessage?.components[1]?.components[m];
-        if (btnz.label.includes(emoji)) {
+        if (emoji.includes(btnz.label)) {
           buttonToClick = btnz;
           wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
           console.log("clicked emo ", emoji);
           isHavingInteraction = false;
         }
-        if (btnz2.label.includes(emoji)) {
+        if (emoji.includes(btnz2.label)) {
           buttonToClick = btnz;
           wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
           console.log("clicked emo ", emoji);
@@ -329,7 +329,7 @@ async function start(token, channelId) {
             for (var l; l < 3; l++) {
               await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
-              if ((btnz.label.toLowerCase()).includes(colMarine)) {
+              if (colMarine.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
                 wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
                 isHavingInteraction = false;
@@ -339,7 +339,7 @@ async function start(token, channelId) {
             for (var l; l < 3; l++) {
               await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
-              if ((btnz.label.toLowerCase()).includes(colCyan)) {
+              if (colCyan.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
                 wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
                 isHavingInteraction = false;
@@ -349,7 +349,7 @@ async function start(token, channelId) {
             for (var l; l < 3; l++) {
               await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
-              if ((btnz.label.toLowerCase()).includes(colYellow)) {
+              if (colYellow.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
                 wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
                 isHavingInteraction = false;
@@ -359,7 +359,7 @@ async function start(token, channelId) {
             for (var l; l < 3; l++) {
               await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
-              if ((btnz.label.toLowerCase()).includes(colWhite)) {
+              if (colWhite.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
                 wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
                 isHavingInteraction = false;
@@ -369,7 +369,7 @@ async function start(token, channelId) {
             for (var l; l < 3; l++) {
               await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
-              if ((btnz.label.toLowerCase()).includes(colBlack)) {
+              if (colBlack.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
                 wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
                 isHavingInteraction = false;
@@ -379,7 +379,7 @@ async function start(token, channelId) {
             for (var l; l < 3; l++) {
               await wait(300);
               let btnz = newMessage?.components[0]?.components[l];
-              if ((btnz.label.toLocaleLowerCase()).includes(colGreen)) {
+              if (colGreen.includes(btnz.label.toLowerCase())) {
                 buttonToClick = btnz;
                 wait(2000).then(() => { clickButton(newMessage, buttonToClick); });
                 isHavingInteraction = false;
