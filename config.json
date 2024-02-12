@@ -1,7 +1,5 @@
 {
-  "playInDms": false,
   "discordStatus": "invisible",
-  "password": "password",
   "loginDelay": 1500,
   "commands": [
     {
@@ -57,11 +55,10 @@
   "streamGame": "",
   "devMode": true,
   "webhookLogging": true,
-  "webhook": "https://discord.com/api/webhooks/1204392397770067969/ZI9i_HrFarv-rv0s0Lga-Lw4qtCe-QeBR2ycaQI3TwmyCEbJWQNHSJIG4xjt7YD23NvR",
-  "autoVote": false,
+  "webhook": "",
+  "autoBuy": true,
   "triviaOdds": 0.65,
   "autoDeposit": true,
-  "autoFishingBait": false,
   "autoAmmo": false,
   "searchLocations": [],
   "crimeLocations": [],
@@ -101,8 +98,8 @@
       "frequency": 0.0075
     },
     "longBreak": {
-      "minDelay": 125000,
-      "maxDelay": 175000,
+      "minDelay": 1250000,
+      "maxDelay": 1750000,
       "frequency": 0.00010
     },
     "commandInterval": {
