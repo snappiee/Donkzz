@@ -1,5 +1,5 @@
-// Version 2.9.8
-const version = "2.9.8";
+// Version 2.9.9
+const version = "2.9.9";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -318,11 +318,11 @@ async function start(token, channelId) {
       for (var m = 0; m < 2; m++) {
         for (var n = 0; n < 5; n++) {
           let btnz = newMessage?.components[m].components[n];
-          let btnEmoji = btnz?.emoji.toString();
-          console.log("btnEmoji is", btnEmoji);
+          let btnLabel = btnz.label;
+          console.log("btnLabel is", btnLabel);
           //duhhh
           await wait(200);
-          if (btnEmoji.includes(clickEmoji)) {
+          if (clickEmoji.includes(btnLabel)) {
             await clickButton(newMessage, btnz);
             console.log("clicked on", emoji, clickEmoji);
             isHavingInteraction = false;
