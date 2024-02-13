@@ -791,7 +791,6 @@ async function start(token, channelId) {
     // =================== Giveaway Command Start =================== 
 
     if (message?.embeds[0]?.title?.includes("Giveaway")) {
-      webhook.send("<@" + config.mainUserId + ">");
       await clickButton(message, message.components[0].components[0]);
       console.log("Successfully joined giveaway");
     }
