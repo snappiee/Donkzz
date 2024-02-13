@@ -19,7 +19,7 @@
       "cooldown": 3600000
     },
     { "command": "giveaway view",
-      "cooldown": 10000
+      "cooldown": 30000
     },
     {
       "command": "search",
