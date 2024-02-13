@@ -1,5 +1,5 @@
-// Version 3.0.4
-const version = "3.0.4";
+// Version 3.0.5
+const version = "3.0.5";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -268,6 +268,7 @@ async function start(token, channelId) {
     if (modal.title == "Dank Memer Shop") {
       modal.components[0].components[0].setValue("1");
       modal.reply();
+      console.log("Successfully buy an item (shovel/rifle)");
     }
   });
 
@@ -301,7 +302,6 @@ async function start(token, channelId) {
       const upside_down = "🙃";
       //declare clickEmoji
       var clickEmoji = "";
-      console.log("var emoji", emoji);
       //defining clickEmoji
       if (emoji.includes(laughing)) { clickEmoji = laughing;}
       if (emoji.includes(thinking)) { clickEmoji = thinking;}
@@ -313,21 +313,19 @@ async function start(token, channelId) {
       if (emoji.includes(grin)) { clickEmoji = grin;}
       if (emoji.includes(hugging)) { clickEmoji = hugging;}
       if (emoji.includes(upside_down)) { clickEmoji = upside_down;}
-      console.log("var clickEmoji", clickEmoji);
       //select clicking components
       for (var m = 0; m < 2; m++) {
         for (var n = 0; n < 5; n++) {
           let btnz = newMessage?.components[m].components[n];
           let btnEmojiName = btnz?.emoji?.name;
           let btnEmojiName2 = btnz?.emoji?.name?.toString();
-          console.log("btnEmojiName is", btnEmojiName);
           //duhhh
           await wait(200);
           if (btnEmojiName.includes(clickEmoji) || btnEmojiName2.includes(clickEmoji)) {
             await clickButton(newMessage, btnz);
-            console.log("clicked on", emoji, clickEmoji);
+            console.log("Successfully played the emoji minigame.");
             isHavingInteraction = false;
-          } else console.log("couldn't click on any emojis");
+          }
         }
       }
     }
@@ -356,7 +354,6 @@ async function start(token, channelId) {
       var wordAsked = newMessage?.embeds[0]?.description.split("`")[1];
       var line = "";
       var colorAsked = "";
-      console.log("var wordemoji ", wordemoji, "var wordAsked ", wordAsked);
       for (var i = 0; i < 3; i++) {
         line = wordemoji.split("\n")[i];
         if (line.includes(wordAsked)) {
@@ -375,7 +372,7 @@ async function start(token, channelId) {
         let btnLabel = btnz.label.toLowerCase();
         if (btnLabel.includes(colorAsked)) {
           await clickButton(newMessage, btnz);
-          console.log("clicked on color", colorAsked)
+          console.log("Successfully played the word-color matching game.");
           isHavingInteraction = false;
         }
       }
@@ -391,7 +388,6 @@ async function start(token, channelId) {
       for (var i = 0; i < 5; i++) {
         var word = words.split("\n")[i];
         var word2 = word.split("`")[1];
-        console.log("var word", word, "var word2", word2);
         for (var k = 0; k < 5; k++) {
           let btnz = newMessage?.components[0]?.components[k];
           await wait(1000);
@@ -399,7 +395,7 @@ async function start(token, channelId) {
             buttonToClick = btnz;
             setTimeout(() => { clickButton(newMessage, buttonToClick); }, 2000);
             await wait(1000);
-            console.log("clicked on ", word2);
+            console.log("Successfully played the word order minigame.");
           }
         } isHavingInteraction = false;
       }
@@ -479,7 +475,6 @@ async function start(token, channelId) {
       if (config?.webhookLogging && config?.webhook) {
           webhook.send("@", client.user.id, " @", config.mainUserId);
         }
-
       process.exit(0);
     }
 
@@ -784,6 +779,7 @@ async function start(token, channelId) {
 
     if (message?.embeds[0]?.title?.includes("Giveaway")) {
       await clickButton(message, message.components[0].components[0]);
+      console.log("Successfully joined giveaway");
     }
 
     // =================== Giveaway Command End =================== 
