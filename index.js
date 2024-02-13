@@ -1,5 +1,5 @@
-// Version 2.9.9
-const version = "2.9.9";
+// Version 3.0.0
+const version = "3.0.0";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -301,30 +301,41 @@ async function start(token, channelId) {
       const upside_down = "🙃";
       //declare clickEmoji
       var clickEmoji = "";
+      var emojiName = "";
       console.log("var emoji", emoji);
       //defining clickEmoji
-      if (emoji.includes(laughing)) { clickEmoji = laughing; }
-      if (emoji.includes(thinking)) { clickEmoji = thinking; }
-      if (emoji.includes(wink)) { clickEmoji = wink; }
-      if (emoji.includes(slight_smile)) { clickEmoji = slight_smile; }
-      if (emoji.includes(smile)) { clickEmoji = smile; }
-      if (emoji.includes(grinning)) { clickEmoji = grinning; }
-      if (emoji.includes(relieved)) { clickEmoji = relieved; }
-      if (emoji.includes(grin)) { clickEmoji = grin; }
-      if (emoji.includes(hugging)) { clickEmoji = hugging; }
-      if (emoji.includes(upside_down)) { clickEmoji = upside_down; }
-      console.log("var clickEmoji", clickEmoji);
+      if (emoji.includes(laughing)) { clickEmoji = laughing; 
+      emojiName = "laughing"; }
+      if (emoji.includes(thinking)) { clickEmoji = thinking; 
+      emojiName = "thinking"; }
+      if (emoji.includes(wink)) { clickEmoji = wink; 
+      emojiName = "wink"; }
+      if (emoji.includes(slight_smile)) { clickEmoji = slight_smile; 
+      emojiName = "slight_smile";}
+      if (emoji.includes(smile)) { clickEmoji = smile; 
+      emojiName = "smile"; }
+      if (emoji.includes(grinning)) { clickEmoji = grinning; 
+      emojiName = "grinning"; }
+      if (emoji.includes(relieved)) { clickEmoji = relieved; 
+      emojiName = "relieved"; }
+      if (emoji.includes(grin)) { clickEmoji = grin; 
+      emojiName = "grin"; }
+      if (emoji.includes(hugging)) { clickEmoji = hugging; 
+      emojiName = "hugging"; }
+      if (emoji.includes(upside_down)) { clickEmoji = upside_down;
+      emojiName = "upside_down"; }
+      console.log("var clickEmoji", clickEmoji, "var emojiName", emojiName);
       //select clicking components
       for (var m = 0; m < 2; m++) {
         for (var n = 0; n < 5; n++) {
           let btnz = newMessage?.components[m].components[n];
-          let btnLabel = btnz.label;
-          console.log("btnLabel is", btnLabel);
+          let btnEmoji = btnz.emoji;
+          console.log("btnLabel is", btnLabel, "emojiName is", emojiName);
           //duhhh
           await wait(200);
-          if (clickEmoji.includes(btnLabel)) {
+          if (btnEmoji.includes(emojiName || clickEmoji)) {
             await clickButton(newMessage, btnz);
-            console.log("clicked on", emoji, clickEmoji);
+            console.log("clicked on", emoji, clickEmoji, emojiName);
             isHavingInteraction = false;
           } else console.log("couldn't click on any emojis");
         }
