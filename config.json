@@ -1,4 +1,5 @@
 {
+  "mainUserID": "youruseridhere",
   "discordStatus": "invisible",
   "loginDelay": 1500,
   "commands": [
