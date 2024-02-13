@@ -1,5 +1,5 @@
-// Version 3.0.5
-const version = "3.0.5";
+// Version 3.1.0
+const version = "3.1.0";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -61,9 +61,9 @@ const db = new SimplDB();
 
 axios.get("https://raw.githubusercontent.com/snappiee/Donkzz/main/index.js").then((res) => {
   let v = res.data.match(/Version ([0-9]*\.?)+/)[0]?.replace("Version ", "");
-  if (v && v !== version) 
-    { console.log(chalk.bold.bgRed("There is a new version available: " + v + "\t\nPlease update by running the updater. \n" + chalk.underline("https://github.com/snappiee/Donkzz\n")));
-    
+  if (v && v !== version) {
+    console.log(chalk.bold.bgRed("There is a new version available: " + v + "\t\nPlease update by running the updater. \n" + chalk.underline("https://github.com/snappiee/Donkzz\n")));
+
   }
 }).catch((error) => {
   console.log(error);
@@ -71,11 +71,9 @@ axios.get("https://raw.githubusercontent.com/snappiee/Donkzz/main/index.js").the
 
 var logs = [];
 
-
-
-
 const {
-  Client, BaseSelectMenuInteraction
+  Client,
+  BaseSelectMenuInteraction
 } = require("discord.js-selfbot-v13");
 const tokens = process.env.tokens ? process.env.tokens.split("\n") : fs.readFileSync("tokens.txt", "utf-8").split("\n");
 const botid = "270904126974590976";
@@ -161,7 +159,6 @@ async function start(token, channelId) {
   var emoji = "";
   var words = "";
 
-
   const client = new Client({
     checkUpdate: false
   });
@@ -179,7 +176,6 @@ async function start(token, channelId) {
     console.log(`${chalk.green("Logged in as")} ${chalk.blue(client.user.username)}`);
 
     const user = await client.users.fetch(botid);
-
 
     channel = await client.channels.fetch(channelId);
 
@@ -201,17 +197,17 @@ async function start(token, channelId) {
 
       if (db.get(client.user.id + ".daily") && Date.now() - db.get(client.user.id + ".daily") > remainingTime) {
         await channel.sendSlash(botid, "daily").then(() => {
-          db.set(client.user.id + ".daily", Date.now());
-          console.log(chalk.yellow(`${client.user.username} claimed daily`));
-
-          setInterval(async () => {
-            queueCommands.push({
-              command: "daily"
-            });
             db.set(client.user.id + ".daily", Date.now());
             console.log(chalk.yellow(`${client.user.username} claimed daily`));
-          }, remainingTime + randomInt(10000, 60000));
-        })
+
+            setInterval(async () => {
+              queueCommands.push({
+                command: "daily"
+              });
+              db.set(client.user.id + ".daily", Date.now());
+              console.log(chalk.yellow(`${client.user.username} claimed daily`));
+            }, remainingTime + randomInt(10000, 60000));
+          })
           .catch((e) => {
             return console.log(e);
           });
@@ -247,7 +243,6 @@ async function start(token, channelId) {
       }
     }
 
-
     if (!db.get(client.user.id + ".ammo") || Date.now() - db.get(client.user.id + ".ammo") > 1 * 60 * 60 * 1000) {
       if (config.autoAmmo) {
         setTimeout(async () => {
@@ -268,7 +263,7 @@ async function start(token, channelId) {
     if (modal.title == "Dank Memer Shop") {
       modal.components[0].components[0].setValue("1");
       modal.reply();
-      console.log("Successfully buy an item (shovel/rifle)");
+      console.log(client.user.username, ", Successfully buy an item (shovel/rifle)");
     }
   });
 
@@ -303,16 +298,36 @@ async function start(token, channelId) {
       //declare clickEmoji
       var clickEmoji = "";
       //defining clickEmoji
-      if (emoji.includes(laughing)) { clickEmoji = laughing;}
-      if (emoji.includes(thinking)) { clickEmoji = thinking;}
-      if (emoji.includes(wink)) { clickEmoji = wink;}
-      if (emoji.includes(slight_smile)) { clickEmoji = slight_smile;}
-      if (emoji.includes(smile)) { clickEmoji = smile;}
-      if (emoji.includes(grinning)) { clickEmoji = grinning;}
-      if (emoji.includes(relieved)) { clickEmoji = relieved;}
-      if (emoji.includes(grin)) { clickEmoji = grin;}
-      if (emoji.includes(hugging)) { clickEmoji = hugging;}
-      if (emoji.includes(upside_down)) { clickEmoji = upside_down;}
+      if (emoji.includes(laughing)) {
+        clickEmoji = laughing;
+      }
+      if (emoji.includes(thinking)) {
+        clickEmoji = thinking;
+      }
+      if (emoji.includes(wink)) {
+        clickEmoji = wink;
+      }
+      if (emoji.includes(slight_smile)) {
+        clickEmoji = slight_smile;
+      }
+      if (emoji.includes(smile)) {
+        clickEmoji = smile;
+      }
+      if (emoji.includes(grinning)) {
+        clickEmoji = grinning;
+      }
+      if (emoji.includes(relieved)) {
+        clickEmoji = relieved;
+      }
+      if (emoji.includes(grin)) {
+        clickEmoji = grin;
+      }
+      if (emoji.includes(hugging)) {
+        clickEmoji = hugging;
+      }
+      if (emoji.includes(upside_down)) {
+        clickEmoji = upside_down;
+      }
       //select clicking components
       for (var m = 0; m < 2; m++) {
         for (var n = 0; n < 5; n++) {
@@ -323,13 +338,12 @@ async function start(token, channelId) {
           await wait(200);
           if (btnEmojiName.includes(clickEmoji) || btnEmojiName2.includes(clickEmoji)) {
             await clickButton(newMessage, btnz);
-            console.log("Successfully played the emoji minigame.");
+            console.log(client.user.username, ", Successfully played the emoji minigame.");
             isHavingInteraction = false;
           }
         }
       }
     }
-
 
     // =================== Emoji Minigame End ==============
 
@@ -357,12 +371,24 @@ async function start(token, channelId) {
       for (var i = 0; i < 3; i++) {
         line = wordemoji.split("\n")[i];
         if (line.includes(wordAsked)) {
-          if (line.includes(emojiMarine)) { colorAsked = colMarine; }
-          if (line.includes(emojiCyan)) { colorAsked = colCyan; }
-          if (line.includes(emojiWhite)) { colorAsked = colWhite; }
-          if (line.includes(emojiBlack)) { colorAsked = colBlack; }
-          if (line.includes(emojiGreen)) { colorAsked = colGreen; }
-          if (line.includes(emojiYellow)) { colorAsked = colYellow; }
+          if (line.includes(emojiMarine)) {
+            colorAsked = colMarine;
+          }
+          if (line.includes(emojiCyan)) {
+            colorAsked = colCyan;
+          }
+          if (line.includes(emojiWhite)) {
+            colorAsked = colWhite;
+          }
+          if (line.includes(emojiBlack)) {
+            colorAsked = colBlack;
+          }
+          if (line.includes(emojiGreen)) {
+            colorAsked = colGreen;
+          }
+          if (line.includes(emojiYellow)) {
+            colorAsked = colYellow;
+          }
         }
       }
 
@@ -372,12 +398,11 @@ async function start(token, channelId) {
         let btnLabel = btnz.label.toLowerCase();
         if (btnLabel.includes(colorAsked)) {
           await clickButton(newMessage, btnz);
-          console.log("Successfully played the word-color matching game.");
+          console.log(client.user.username, ", Successfully played the word-color matching game.");
           isHavingInteraction = false;
         }
       }
     }
-
 
     // =================== Word-Color Minigame End ==============
 
@@ -391,13 +416,16 @@ async function start(token, channelId) {
         for (var k = 0; k < 5; k++) {
           let btnz = newMessage?.components[0]?.components[k];
           await wait(1000);
-          if (word2.includes(btnz.label.toLowerCase())) {
+          if (word2.includes(btnz.label.toLowerCase()) && !btnz.disabled) {
             buttonToClick = btnz;
-            setTimeout(() => { clickButton(newMessage, buttonToClick); }, 2000);
+            setTimeout(() => {
+              clickButton(newMessage, buttonToClick);
+            }, 2000);
             await wait(1000);
-            console.log("Successfully played the word order minigame.");
+            console.log(client.user.username, ", Successfully played the word order minigame. (", k, "/5)");
           }
-        } isHavingInteraction = false;
+        }
+        isHavingInteraction = false;
       }
     }
 
@@ -431,7 +459,6 @@ async function start(token, channelId) {
 
     playMinigames(newMessage);
 
-
     if (config.serverEventsDonate.enabled && newMessage?.embeds[0]?.author?.name?.includes(`${client.user.username}'s inventory`)) {
       var inputString = newMessage.embeds[0].description;
       const regex = /([a-zA-Z0-9 ☭']+)\*\* ─ ([0-9,]+)/gm;
@@ -447,7 +474,6 @@ async function start(token, channelId) {
           quantity: itemQuantity
         });
       });
-
 
       if (allItemsInInventory.length <= 0) {
         if (!isOneAccPayingOut && config.serverEventsDonate.payout && client.token.includes(config.serverEventsDonate.tokenWhichWillPayout)) {
@@ -473,30 +499,27 @@ async function start(token, channelId) {
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("captcha" || "Captcha")) {
       console.log(chalk.redBright(`${client.user.username} is being suspicious! Solve the captcha yourself!`));
       if (config?.webhookLogging && config?.webhook) {
-          webhook.send("@", client.user.id, " @", config.mainUserId);
-        }
+        webhook.send("@", client.user.id, " @", config.mainUserId);
+      }
       process.exit(0);
     }
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You don't have a shovel") && config.autoBuy) {
-      console.log("Preparing to buy a shovel");
+      console.log(client.user.username, ", Preparing to buy a shovel");
       buyShovel = true;
       openShop();
     }
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You don't have a rifle") && config.autoBuy) {
-      console.log("Preparing to buy a rifle");
+      console.log(client.user.username, ", Preparing to buy a rifle");
       buyRifle = true;
       openShop();
     }
-
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("Hold tight! Maintenance in progress.")) {
       console.log(chalk.redBright(`${client.user.username} got maintenance! Stopping Donkzz; restart it later.`));
       process.exit(0);
     }
-
-
 
     // =================== Autoalerts Start ===================
 
@@ -509,9 +532,6 @@ async function start(token, channelId) {
     }
 
     // =================== Autoalerts End ===================
-
-
-
 
     // =================== Click Minigame Start ===================
 
@@ -548,7 +568,6 @@ async function start(token, channelId) {
       db.set(client.user.id + ".ammo", Date.now());
       console.log(chalk.yellow(`${client.user.username} used ammo`));
     }
-
 
     // =================== Auto Upgrades End ===================
 
@@ -638,8 +657,6 @@ async function start(token, channelId) {
 
     // =================== Stream End ===================
 
-
-
     // =================== Serverevents Donate Start ===================
     if (message?.interaction?.commandName?.includes("serverevents donate") && message?.embeds[0]?.title?.includes("Pending Confirmation")) {
       if (!message.components[0].components[1]) return;
@@ -649,7 +666,6 @@ async function start(token, channelId) {
       if (allItemsInInventory.length <= 0) return message.channel.sendSlash(botid, "inventory")
       await message.channel.sendSlash(botid, "serverevents donate", allItemsInInventory[0].quantity, allItemsInInventory[0].item)
     }
-
 
     if (message?.embeds[0]?.title?.includes("Server Pool")) {
       if (!config.serverEventsDonate.payout) return;
@@ -690,7 +706,6 @@ async function start(token, channelId) {
           quantity: itemQuantity
         });
       });
-
 
       if (allItemsInInventory.length <= 0) {
         if (!isOneAccPayingOut && config.serverEventsDonate.payout && client.token.includes(config.serverEventsDonate.tokenWhichWillPayout)) {
@@ -739,9 +754,6 @@ async function start(token, channelId) {
 
     autoAdventure(message);
     // =================== Autoadventure End ===================
-
-
-
 
     // =================== Crime Command Start ===================
 
@@ -820,8 +832,6 @@ async function start(token, channelId) {
     }
 
     // =================== Scratch Command End =================//
-
-
 
     // =================== Search Command Start ===================
 
@@ -917,7 +927,6 @@ async function start(token, channelId) {
     // =================== Minigame Start ===================
 
     playMinigames(message);
-
 
     // =================== Minigame End ===================
 
@@ -1122,8 +1131,6 @@ async function start(token, channelId) {
     }
   }
 
-
-
   async function main(onGoingCommands, channel, client, queueCommands, isOnBreak) {
     var commandCooldown = randomInt(config.cooldowns.commandInterval.minDelay, config.cooldowns.commandInterval.maxDelay);
     var shortBreakCooldown = randomInt(config.cooldowns.shortBreak.minDelay, config.cooldowns.shortBreak.maxDelay);
@@ -1152,7 +1159,6 @@ async function start(token, channelId) {
     }, actualDelay);
   }
 }
-
 
 async function wait(ms) {
   return new Promise((resolve) => {
@@ -1193,7 +1199,7 @@ function formatConsoleDate(date) {
 
 var log = console.log;
 
-console.log = function () {
+console.log = function() {
   var first_parameter = arguments[0];
   var other_parameters = Array.prototype.slice.call(arguments, 1);
 
@@ -1211,10 +1217,9 @@ console.log = function () {
   log.apply(console, [formatConsoleDate(new Date()) + first_parameter].concat(other_parameters));
 };
 
-
 var error = console.error;
 
-console.error = function () {
+console.error = function() {
   var first_parameter = arguments[0];
   var other_parameters = Array.prototype.slice.call(arguments, 1);
 
