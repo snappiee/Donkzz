@@ -6,7 +6,8 @@ Advanced Dank Memer self-bot! Supports slash commands, incredibly strong, reliab
 
 # Notifications! 
 I do bugfixing frequently, and make sure to use the latest stable version (3.0.0) until the next stable version is on. Thanks a lot!
-By the way, i'm working as a backend devs 😂 so the code will look a bit unclean lol, excuse me 😭
+By the way, i'm working as a backend devs 😂 so the code will look a bit unclean lol, excuse me 😭 (i hate you dank devs).
+
 
 # Instructions
   1. Fill the information in config.json and tokens.txt, as in the file.
