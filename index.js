@@ -1,5 +1,5 @@
-// Version 3.1.0
-const version = "3.1.0";
+// Version 3.1.1
+const version = "3.1.1";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -204,6 +204,7 @@ async function start(token, channelId) {
               queueCommands.push({
                 command: "daily"
               });
+
               db.set(client.user.id + ".daily", Date.now());
               console.log(chalk.yellow(`${client.user.username} claimed daily`));
             }, remainingTime + randomInt(10000, 60000));
@@ -496,10 +497,10 @@ async function start(token, channelId) {
       return;
     }
 
-    if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("captcha" || "Captcha")) {
+    if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.footer?.text?.includes("Select matching item image.")) {
       console.log(chalk.redBright(`${client.user.username} is being suspicious! Solve the captcha yourself!`));
       if (config?.webhookLogging && config?.webhook) {
-        webhook.send("@", client.user.id, " @", config.mainUserId);
+        webhook.send("<@" + config.mainUserId + ">");
       }
       process.exit(0);
     }
@@ -790,6 +791,7 @@ async function start(token, channelId) {
     // =================== Giveaway Command Start =================== 
 
     if (message?.embeds[0]?.title?.includes("Giveaway")) {
+      webhook.send("<@" + config.mainUserId + ">");
       await clickButton(message, message.components[0].components[0]);
       console.log("Successfully joined giveaway");
     }
