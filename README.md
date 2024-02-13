@@ -1,3 +1,6 @@
+# STARRRRRRR
+Hey, visitors? Consider giving me a star and helping for devs? A big W for you!
+
 # Donkzz
 Advanced Dank Memer self-bot! Supports slash commands, incredibly strong, reliable and easy to use.
 
