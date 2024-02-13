@@ -1,5 +1,5 @@
-// Version 3.0.2
-const version = "3.0.2";
+// Version 3.0.3
+const version = "3.0.3";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -287,7 +287,7 @@ async function start(token, channelId) {
 
     // =================== Emoji Minigame Start ==============
 
-    if (newMessage?.embeds[0]?.description?.includes(" emoji?")) {
+    if (newMessage?.embeds[0]?.description?.includes("the emoji?")) {
       // build emoji components
       const laughing = "😆";
       const thinking = "🤔";
@@ -322,18 +322,20 @@ async function start(token, channelId) {
       emojiName = "grin"; }
       if (emoji.includes(hugging)) { clickEmoji = hugging; 
       emojiName = "hugging"; }
-      if (emoji.includes(upside_down)) { clickEmoji = upside_down;
+      if (emoji.includes(upside_down)) { clickEmoji = upside_down; 
       emojiName = "upside_down"; }
       console.log("var clickEmoji", clickEmoji, "var emojiName", emojiName);
       //select clicking components
       for (var m = 0; m < 2; m++) {
         for (var n = 0; n < 5; n++) {
           let btnz = newMessage?.components[m].components[n];
-          let btnEmojiName = btnz.emoji.name;
-          console.log("btnEmoji is", btnEmojiName, "emojiName is", emojiName);
+          let btnEmoji = btnz?.emoji;
+          let btnEmojiName = btnz?.emoji?.name;
+          let btnEmojiName2 = btnz?.emoji?.name?.toString();
+          console.log("btnEmojiName is", btnEmojiName, "emojiName is", emojiName, "btnEmoji is", btnEmoji);
           //duhhh
           await wait(200);
-          if (btnEmojiName.includes(emojiName || clickEmoji)) {
+          if (btnEmojiName.includes(emojiName) || btnEmojiName2.includes(emojiName) ||btnEmoji.includes(clickEmoji)) {
             await clickButton(newMessage, btnz);
             console.log("clicked on", emoji, clickEmoji, emojiName);
             isHavingInteraction = false;
