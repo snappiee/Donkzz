@@ -1,5 +1,5 @@
-// Version 3.1.3
-const version = "3.1.3";
+// Version 3.1.4
+const version = "3.1.4";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -189,8 +189,6 @@ async function start(token, channelId) {
       } else remainingTime = gmt0 - now;
 
       if (!db.has(client.user.id + ".daily")) {	      
-        await channel.sendSlash(botid, "remove", "apple");
-        await wait(400);
         await channel.sendSlash(botid, "daily");
         console.log(chalk.yellow(`${client.user.username} claimed daily`));
 
@@ -198,8 +196,7 @@ async function start(token, channelId) {
       }
 
       if (db.get(client.user.id + ".daily") && Date.now() - db.get(client.user.id + ".daily") > remainingTime) {
-        await channel.sendSlash(botid, "remove", "apple");
-        await wait(400);
+
         await channel.sendSlash(botid, "daily").then(() => {
             db.set(client.user.id + ".daily", Date.now());
             console.log(chalk.yellow(`${client.user.username} claimed daily`));
