@@ -1,5 +1,5 @@
-// Version 3.1.2
-const version = "3.1.2";
+// Version 3.1.3
+const version = "3.1.3";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -188,14 +188,18 @@ async function start(token, channelId) {
         remainingTime = nextGmt0 - now;
       } else remainingTime = gmt0 - now;
 
-      if (!db.has(client.user.id + ".daily")) {
-        await channel.sendSlash(botid, "daily")
+      if (!db.has(client.user.id + ".daily")) {	      
+        await channel.sendSlash(botid, "remove", "apple");
+        await wait(400);
+        await channel.sendSlash(botid, "daily");
         console.log(chalk.yellow(`${client.user.username} claimed daily`));
 
         db.set(client.user.id + ".daily", Date.now());
       }
 
       if (db.get(client.user.id + ".daily") && Date.now() - db.get(client.user.id + ".daily") > remainingTime) {
+        await channel.sendSlash(botid, "remove", "apple");
+        await wait(400);
         await channel.sendSlash(botid, "daily").then(() => {
             db.set(client.user.id + ".daily", Date.now());
             console.log(chalk.yellow(`${client.user.username} claimed daily`));
@@ -788,11 +792,18 @@ async function start(token, channelId) {
 
     // =================== Crime Command End ==================
 
+    // =================== Work Applying =================
+
+    if (message?.embeds[0]?.title?.includes("You don't currently have a job")) {
+      await channel.sendSlash(botid, "work apply", "Discord Mod");
+      console.log(client.user.username + "Successfully applied a job.");
+    }
+
     // =================== Giveaway Command Start =================== 
 
     if (message?.embeds[0]?.title?.includes("Giveaway")) {
       await clickButton(message, message.components[0].components[0]);
-      console.log("Successfully joined giveaway");
+      console.log(client.user.username + "Successfully joined giveaway");
     }
 
     // =================== Giveaway Command End =================== 
