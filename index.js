@@ -1,5 +1,5 @@
-// Version 3.1.6
-const version = "3.1.6";
+// Version 3.1.7
+const version = "3.1.7";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -447,7 +447,7 @@ async function start(token, channelId) {
         const i = randomInt(0, 2);
         let btn = newMessage.components[m].components[i];
         await clickButton(newMessage, btn);
-        console.log("Successfully scratching (Remaining: " + m + "/4)");
+        console.log(client.user.username + ", Successfully scratching (Remaining: " + m + "/4)");
       }
       isBotFree = true;
     }
