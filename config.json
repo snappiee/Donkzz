@@ -50,6 +50,7 @@
   "autoAdventure": true,
   "adventure": "west",
   "autoApple": true,
+  "RemoveAppleWhenUse": true,
   "autoDaily": true,
   "autoHorseshoe": true,
   "postMemesPlatforms": ["tiktok", "discord"],
