@@ -1,5 +1,5 @@
-// Version 3.1.5
-const version = "3.1.5";
+// Version 3.1.6
+const version = "3.1.6";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -227,9 +227,11 @@ async function start(token, channelId) {
     if (config.serverEventsDonate.enabled) return channel.sendSlash(botid, "inventory")
 
     if (config.autoApple) {
-      await channel.sendSlash(botid, "remove", "apple");
-      await wait(400);
-      console.log(client.user.username + ", Successfully removed Apple before using");
+      if (config.RemoveAppleWhenUse) {
+        await channel.sendSlash(botid, "remove", "apple");
+        await wait(400);
+        console.log(client.user.username + ", Successfully removed Apple before using");
+      }
       await channel.sendSlash(botid, "use", "apple");
       console.log(client.user.username + ", Successfully used Apple!");
     }
