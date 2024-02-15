@@ -5,7 +5,9 @@
   "main": "index.js",
   "author": "snappiee",
   "license": "ISC",
+  "start": "forever start index.js",
   "dependencies": {
+    "forever": "4.0.3",
     "axios": "0.27.2",
     "chalk": "4.1.2",
     "discord-webhook-node": "^1.1.8",
