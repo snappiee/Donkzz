@@ -1,5 +1,5 @@
-// Version 3.1.4
-const version = "3.1.4";
+// Version 3.1.5
+const version = "3.1.5";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -20,7 +20,7 @@ var itemsToPayout = [];
 const config = process.env.config ? JSON.parse(process.env.config) : require("./config.json");
 if (config.webhookLogging && config.webhook) webhook = new Webhook(config.webhook);
 
-if (config.serverEventsDonate.enabled) console.log(chalk.redBright('SeverEvents Donate is VERY risky at the moment. Bot admins are monitoring server pools usage. You may want to turn this off.'))
+if (config.serverEventsDonate.enabled) console.log(chalk.redBright('ServerEvents Donate is VERY risky at the moment. Bot admins are monitoring server pools usage. You may want to turn this off.'))
 if (config.commands.filter(a => a.command === 'trivia').length > 0) console.log(chalk.redBright('Trivia is VERY risky at the moment. Bot admins are monitoring trivia bots. You may want to turn this off.'))
 
 process.on("unhandledRejection", (error) => {
@@ -56,6 +56,9 @@ const fs = require("fs-extra");
 const axios = require("axios");
 const SimplDB = require("simpl.db");
 const stripAnsi = require("strip-ansi");
+
+const express = require("express");
+const app = express();
 
 const db = new SimplDB();
 
@@ -158,6 +161,8 @@ async function start(token, channelId) {
   var wordemoji = "";
   var emoji = "";
   var words = "";
+  var scratchRemaining = 0;
+  var tempToken = "";
 
   const client = new Client({
     checkUpdate: false
@@ -174,9 +179,6 @@ async function start(token, channelId) {
     client.user.setStatus(config.discordStatus);
 
     console.log(`${chalk.green("Logged in as")} ${chalk.blue(client.user.username)}`);
-
-    const user = await client.users.fetch(botid);
-
     channel = await client.channels.fetch(channelId);
 
     if (config.autoDaily) {
@@ -189,6 +191,7 @@ async function start(token, channelId) {
       } else remainingTime = gmt0 - now;
 
       if (!db.has(client.user.id + ".daily")) {	      
+
         await channel.sendSlash(botid, "daily");
         console.log(chalk.yellow(`${client.user.username} claimed daily`));
 
@@ -223,15 +226,12 @@ async function start(token, channelId) {
 
     if (config.serverEventsDonate.enabled) return channel.sendSlash(botid, "inventory")
 
-    if (!db.get(client.user.id + ".apple") || Date.now() - db.get(client.user.id + ".apple") > 24 * 60 * 60 * 1000) {
-      if (config.autoApple) {
-        setTimeout(async () => {
-          await channel.sendSlash(botid, "use", "apple")
-            .catch((e) => {
-              return console.error(e);
-            });
-        }, randomInt(5000, 150000))
-      }
+    if (config.autoApple) {
+      await channel.sendSlash(botid, "remove", "apple");
+      await wait(400);
+      console.log(client.user.username + ", Successfully removed Apple before using");
+      await channel.sendSlash(botid, "use", "apple");
+      console.log(client.user.username + ", Successfully used Apple!");
     }
 
     if (!db.get(client.user.id + ".horseshoe") || Date.now() - db.get(client.user.id + ".horseshoe") > 0.25 * 60 * 60 * 1000) {
@@ -424,7 +424,7 @@ async function start(token, channelId) {
               clickButton(newMessage, buttonToClick);
             }, 2000);
             await wait(1000);
-            console.log(client.user.username, ", Successfully played the word order minigame. (", k, "/5)");
+            console.log(client.user.username, ", Successfully played the word order minigame. ("+i+"/5)");
           }
         }
         isHavingInteraction = false;
@@ -434,10 +434,20 @@ async function start(token, channelId) {
     // =================== Word Order Minigame End ==============
 
     // =================== Scratch Prompt Start ================
-
-    if (newMessage?.embeds[0]?.description?.includes("Next Scratch-Off available")) {
-      let btnz = newMessage?.components[4].components[3];
-      await clickButton(newMessage, btnz);
+    if (newMessage?.embeds[0]?.description?.includes("You can scratch")) {
+      scratchRemaining = newMessage?.embeds[0]?.description?.split("**")[1];
+      var m = scratchRemaining - 1;
+      if (m == -1) {
+        let btn = newMessage?.components[4].components[3];
+        await clickButton(newMessage, btn);
+      }
+      else {
+        const i = randomInt(0, 2);
+        let btn = newMessage.components[m].components[i];
+        await clickButton(newMessage, btn);
+        console.log("Successfully scratching (Remaining: " + m + "/4)");
+      }
+      isBotFree = true;
     }
     // =================== Scratch Prompt End ================
 
@@ -493,17 +503,26 @@ async function start(token, channelId) {
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("You're currently banned!")) {
       console.log(chalk.redBright(`${client.user.username} is banned!`));
+      tempToken = client.token;
+      fs.writeFileSync("tokensOld.txt", client.token + "\n");
       fs.writeFileSync("tokens.txt", fs.readFileSync("tokens.txt", 'utf8').replace(new RegExp(client.token + "\n", 'g'), ''));
-      console.log(`String "${client.token}" removed from ${"tokens.txt"}`);
+      console.log(`String "${client.token}" removed from ${"tokens.txt"} and wrote on ${"tokensOld.txt"}`);
       return;
     }
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.footer?.text?.includes("Select matching item image.")) {
       console.log(chalk.redBright(`${client.user.username} is being suspicious! Solve the captcha yourself!`));
+      tempToken = client.token;
+      fs.writeFileSync("tokensOld.txt", tempToken + "\n");
+      fs.writeFileSync("tokens.txt", fs.readFileSync("tokens.txt", 'utf8').replace(new RegExp(tempToken + "\n", 'g'), ''));
+      console.log(`String "${client.token}" removed from ${"tokens.txt"} and wrote on ${"tokensOld.txt"}`);
       if (config?.webhookLogging && config?.webhook) {
-        webhook.send("<@" + config.mainUserId + ">");
+        webhook.send("<@" + config.mainUserId + ">" + "<@" + client.user.id + ">" );
       }
-      process.exit(0);
+      await wait(3000);
+      app.get("/system/reboot", (req, res)=> {
+        process.exit(1)
+      });
     }
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You don't have a shovel") && config.autoBuy) {
@@ -618,7 +637,7 @@ async function start(token, channelId) {
 
               setTimeout(async () => {
                 const components2 = message.components[1]?.components;
-                await message.clickButton(components2[0].customId)
+                await message.clickButton(components2[0].customId);
               }, config.cooldowns.buttonClickDelay.minDelay, config.cooldowns.buttonClickDelay.maxDelay);
 
               setTimeout(async () => {
@@ -793,14 +812,14 @@ async function start(token, channelId) {
 
     if (message?.embeds[0]?.title?.includes("You don't currently have a job")) {
       await channel.sendSlash(botid, "work apply", "Discord Mod");
-      console.log(client.user.username + "Successfully applied a job.");
+      console.log(client.user.username + " Successfully applied a job.");
     }
 
     // =================== Giveaway Command Start =================== 
 
     if (message?.embeds[0]?.title?.includes("Giveaway")) {
       await clickButton(message, message.components[0].components[0]);
-      console.log(client.user.username + "Successfully joined giveaway");
+      console.log(client.user.username + " Successfully joined giveaway");
     }
 
     // =================== Giveaway Command End =================== 
@@ -825,19 +844,10 @@ async function start(token, channelId) {
     // =================== Scratch Command Start =================
 
     if (message?.embeds[0]?.description?.includes("You can scratch")) {
-      await clickRandomButton(message, 0);
-      await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay, config.cooldowns.buttonClickDelay.maxDelay * 2));
-
-      await clickRandomButton(message, 1);
-      await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay * 2, config.cooldowns.buttonClickDelay.maxDelay * 4));
-
-      await clickRandomButton(message, 2);
-      await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay * 3, config.cooldowns.buttonClickDelay.maxDelay * 6));
-
-      await clickRandomButton(message, 3);
-      await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay * 3, config.cooldowns.buttonClickDelay.maxDelay * 6));
-
-      isBotFree = true;
+      const i = randomInt(0, 2);
+      let btn = message?.components[4]?.components[i];
+      await clickButton(message, btn);
+      console.log(client.user.username + ", Successfully started scratching (Remaining: 3/4)");
     }
 
     // =================== Scratch Command End =================//
