@@ -11,7 +11,7 @@ After v3.1.0 was released, i can go to sleep now, tysm dudes helping me on the w
 Advanced Dank Memer self-bot! Supports slash commands, incredibly strong, reliable and easy to use.
 
 # Notifications! 
-I do bugfixing frequently, and make sure to use the latest stable version (3.0.0) until the next stable version is on. Thanks a lot!
+I do bugfixing frequently, and make sure to use the latest stable version (3.0.7) until the next stable version is on. Thanks a lot!
 By the way, i'm working as a backend devs 😂 so the code will look a bit unclean lol, excuse me 😭 (i hate you dank devs).
 
 
