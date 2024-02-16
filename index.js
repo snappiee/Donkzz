@@ -1,5 +1,5 @@
-// Version 3.1.7
-const version = "3.1.7";
+// Version 3.1.8
+const version = "3.1.8";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -161,6 +161,8 @@ async function start(token, channelId) {
   var wordemoji = "";
   var emoji = "";
   var words = "";
+  var MolePosition = "";
+  var UpcomingPosition = "";
   var scratchRemaining = 0;
   var tempToken = "";
 
@@ -230,10 +232,10 @@ async function start(token, channelId) {
       if (config.RemoveAppleWhenUse) {
         await channel.sendSlash(botid, "remove", "apple");
         await wait(400);
-        console.log(client.user.username + ", Successfully removed Apple before using");
+        console.log(chalk.cyan(`${client.user.username}: Successfully removed Apple before using`));
       }
       await channel.sendSlash(botid, "use", "apple");
-      console.log(client.user.username + ", Successfully used Apple!");
+      console.log(chalk.cyan(`${client.user.username}: Successfully used Apple!`));
     }
 
     if (!db.get(client.user.id + ".horseshoe") || Date.now() - db.get(client.user.id + ".horseshoe") > 0.25 * 60 * 60 * 1000) {
@@ -267,7 +269,7 @@ async function start(token, channelId) {
     if (modal.title == "Dank Memer Shop") {
       modal.components[0].components[0].setValue("1");
       modal.reply();
-      console.log(client.user.username, ", Successfully buy an item (shovel/rifle)");
+      console.log(chalk.cyan(`${client.user.username}: Successfully bought an item (shovel/rifle)`));
     }
   });
 
@@ -284,6 +286,26 @@ async function start(token, channelId) {
       }, 3.02 * 1000 * 60);
     }
     // =================== Dead Meme End =====================
+
+    // =================== MoleMan Update Message ============
+
+    if (newMessage?.embeds[0]?.description?.includes("Dodge the Worms!")) {
+      playMoleMan(newMessage);
+    }
+
+    // ================== MoleMan Minigame End
+
+    // ================== Loot Notifications
+
+    if (newMessage?.embeds[0]?.description?.includes("Mole Man, nice catch!")) {
+      console.log(chalk.cyan(`${client.user.username}: Successfully caught a Mole Man!`));
+    }
+
+    if (newMessage?.embeds[0]?.description?.includes("Dragon, nice shot!")) {
+      console.log(chalk.cyan(`${client.user.username}: Successfully caught a Dragon!`));
+    }
+
+    // =================== Loot Notifications End
 
     // =================== Emoji Minigame Start ==============
 
@@ -342,7 +364,7 @@ async function start(token, channelId) {
           await wait(200);
           if (btnEmojiName.includes(clickEmoji) || btnEmojiName2.includes(clickEmoji)) {
             await clickButton(newMessage, btnz);
-            console.log(client.user.username, ", Successfully played the emoji minigame.");
+            console.log(chalk.cyan(`${client.user.username}: Successfully played the emoji minigame.`));
             isHavingInteraction = false;
           }
         }
@@ -402,7 +424,7 @@ async function start(token, channelId) {
         let btnLabel = btnz.label.toLowerCase();
         if (btnLabel.includes(colorAsked)) {
           await clickButton(newMessage, btnz);
-          console.log(client.user.username, ", Successfully played the word-color matching game.");
+          console.log(chalk.cyan(`${client.user.username}: Successfully played the word-color matching game.`));
           isHavingInteraction = false;
         }
       }
@@ -415,6 +437,7 @@ async function start(token, channelId) {
     if (newMessage?.embeds[0]?.description?.includes("Click the buttons in correct order")) {
       var buttonToClick = undefined;
       for (var i = 0; i < 5; i++) {
+        var attempts = i + 1;
         var word = words.split("\n")[i];
         var word2 = word.split("`")[1];
         for (var k = 0; k < 5; k++) {
@@ -426,7 +449,7 @@ async function start(token, channelId) {
               clickButton(newMessage, buttonToClick);
             }, 2000);
             await wait(1000);
-            console.log(client.user.username, ", Successfully played the word order minigame. ("+i+"/5)");
+            console.log(chalk.cyan(`${client.user.username}: Successfully played the word order minigame. (${attempts}/5)`));
           }
         }
         isHavingInteraction = false;
@@ -447,7 +470,7 @@ async function start(token, channelId) {
         const i = randomInt(0, 2);
         let btn = newMessage.components[m].components[i];
         await clickButton(newMessage, btn);
-        console.log(client.user.username + ", Successfully scratching (Remaining: " + m + "/4)");
+        console.log(chalk.cyan(`${client.user.username}: Successfully scratching (Remaining: ${m}/4)`));
       }
       isBotFree = true;
     }
@@ -457,11 +480,6 @@ async function start(token, channelId) {
 
     autoAdventure(newMessage);
 
-    let isCaught = newMessage.embeds[0]?.description?.match(/(Dragon), nice (shot|catch)!/);
-    if (isCaught) {
-      let [_, item, action] = isCaught;
-      console.log(chalk.magentaBright(`${client.user.username} caught ${item}`));
-    }
 
     if (newMessage?.embeds[0]?.title?.includes(client.user.username + ", choose items you want to bring along")) {
       if (newMessage.components[1]?.components[0].disabled) return (isPlayingAdventure = false);
@@ -814,14 +832,14 @@ async function start(token, channelId) {
 
     if (message?.embeds[0]?.title?.includes("You don't currently have a job")) {
       await channel.sendSlash(botid, "work apply", "Discord Mod");
-      console.log(client.user.username + " Successfully applied a job.");
+      console.log(chalk.cyan(`${client.user.username}: Successfully applied a job.`));
     }
 
     // =================== Giveaway Command Start =================== 
 
     if (message?.embeds[0]?.title?.includes("Giveaway")) {
       await clickButton(message, message.components[0].components[0]);
-      console.log(client.user.username + " Successfully joined giveaway");
+      console.log(chalk.cyan(`${client.user.username}: Successfully joined giveaway`));
     }
 
     // =================== Giveaway Command End =================== 
@@ -849,7 +867,7 @@ async function start(token, channelId) {
       const i = randomInt(0, 2);
       let btn = message?.components[4]?.components[i];
       await clickButton(message, btn);
-      console.log(client.user.username + ", Successfully started scratching (Remaining: 3/4)");
+      console.log(chalk.cyan(`${client.user.username}: Successfully started scratching (Remaining: 3/4)`));
     }
 
     // =================== Scratch Command End =================//
@@ -1016,6 +1034,8 @@ async function start(token, channelId) {
     } else if (description2?.includes("Look at the emoji closely!")) {
       isHavingInteraction = true;
       emoji = description2?.split("!\n")[1]; // declare var emoji for updated messages
+    } else if (description2?.includes("Dodge the Worms!")) {
+      playMoleMan(message);
     }
   }
 
@@ -1085,6 +1105,74 @@ async function start(token, channelId) {
     await channel.sendSlash(botid, "withdraw", "50k");
     await wait(400);
     await channel.sendSlash(botid, "shop view");
+  }
+
+  async function playMoleMan(message) {
+    // defining positions
+    const moleman_loc = [
+      "<a:MoleMan:1022972147175526441><:emptyspace:827651824739156030><:emptyspace:827651824739156030>",
+      "<:emptyspace:827651824739156030><a:MoleMan:1022972147175526441><:emptyspace:827651824739156030>",
+      "<:emptyspace:827651824739156030><:emptyspace:827651824739156030><a:MoleMan:1022972147175526441>"
+    ];
+    const worms_loc = [
+      "<:emptyspace:827651824739156030><:Worm:864261394920898600><:Worm:864261394920898600>",
+      "<:Worm:864261394920898600><:emptyspace:827651824739156030><:Worm:864261394920898600>",
+      "<:Worm:864261394920898600><:Worm:864261394920898600><:emptyspace:827651824739156030>"
+    ];
+    
+    // defining game components
+    let btnLeft = message?.components[0].components[0];
+    let btnRight = message?.components[0].components[1];
+
+    MolePosition = message?.embeds[0]?.description?.split("\n")[5];
+    UpcomingPosition = message?.embeds[0]?.description?.split("\n")[4];
+
+    // dodge the worms:
+    switch(UpcomingPosition) {
+      case worms_loc[0]:
+        switch(MolePosition) {
+          case moleman_loc[1]:
+            await clickButton(message, btnLeft);
+            console.log(client.user.username + ": Playing MoleMan: moved Left once.");
+          case moleman_loc[2]:
+            await clickButton(message, btnLeft);
+            await wait(800);
+            await clickButton(message, btnLeft);
+            console.log(client.user.username + ": Playing MoleMan: moved Left twice.");
+          default: 
+            console.log(client.user.username + ": Playing MoleMan: stayed still.");
+            break;
+        }
+      case worms_loc[1]:
+        switch(MolePosition) {
+          case moleman_loc[0]:
+            await clickButton(message, btnRight);
+            console.log(client.user.username + ": Playing MoleMan: moved Right once.");
+          case moleman_loc[2]:
+            await clickButton(message, btnLeft);
+            console.log(client.user.username + ": Playing MoleMan: moved Left once.");
+          default: 
+            console.log(client.user.username + ": Playing MoleMan: stayed still.");
+            break;
+        }
+      case worms_loc[2]:
+        switch(MolePosition) {
+          case moleman_loc[1]:
+            await clickButton(message, btnRight);
+            await wait(800);
+            await clickButton(message, btnRight);
+            console.log(client.user.username + ": Playing MoleMan: moved Right twice.");
+          case moleman_loc[0]:
+            await clickButton(message, btnRight);
+            console.log(client.user.username + ": Playing MoleMan: moved Right once.");
+          default:
+            console.log(client.user.username + ": Playing MoleMan: stayed still.");
+            break;
+        }
+      default:
+        console.log(client.user.username + ": Playing MoleMan: stayed still.");
+        break;
+    }
   }
 
   async function randomCommand(onGoingCommands, channel, client, queueCommands) {
