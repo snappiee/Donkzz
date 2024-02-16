@@ -5,7 +5,7 @@ request is out of date and deprecated, i knew, but i still use it. any problems?
 
 # STARRRRRRR
 Hey, visitors? Consider giving me a star and helping for devs? A big W for you!
-After v3.1.0 was released, i can go to sleep now, tysm dudes helping me on the way.
+After v3.0.1 was released, i can go to sleep now, tysm dudes helping me on the way.
 
 # Donkzz
 Advanced Dank Memer self-bot! Supports slash commands, incredibly strong, reliable and easy to use.
