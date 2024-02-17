@@ -1,5 +1,5 @@
-// Version 3.2.0
-const version = "3.2.0";
+// Version 3.2.1
+const version = "3.2.1";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -853,12 +853,10 @@ async function start(token, channelId) {
       if (buyRifle == true) {
         await clickButton(message, message.components[2].components[1]);
         buyRifle = false;
-        await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay, config.cooldowns.buttonClickDelay.maxDelay * 2));
       }
       if (buyShovel == true) {
         await clickButton(message, message.components[2].components[0]);
         buyShovel = false;
-        await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay, config.cooldowns.buttonClickDelay.maxDelay * 2));
       }
     }
 
@@ -868,7 +866,8 @@ async function start(token, channelId) {
 
     if (message?.embeds[0]?.description?.includes("You can scratch")) {
       const i = randomInt(0, 2);
-      let btn = message?.components[4]?.components[i];
+      const j = randomInt(3, 4);
+      let btn = message?.components[j].components[i];
       await clickButton(message, btn);
       console.log(chalk.cyan(`${client.user.username}: Successfully started scratching (Remaining: 3/4)`));
     }
