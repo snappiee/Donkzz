@@ -1,5 +1,5 @@
-// Version 3.2.2
-const version = "3.2.2";
+// Version 3.2.3
+const version = "3.2.3";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -554,7 +554,7 @@ async function start(token, channelId) {
       openShop();
     }
 
-    if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You don't have a rifle") && config.autoBuy) {
+    if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You don't have a hunting rifle") && config.autoBuy) {
       console.log(client.user.username, ", Preparing to buy a rifle");
       buyRifle = true;
       openShop();
