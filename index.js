@@ -1,5 +1,5 @@
-// Version 3.1.9
-const version = "3.1.9";
+// Version 3.2.0
+const version = "3.2.0;
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -1146,7 +1146,7 @@ async function start(token, channelId) {
           MolePositionID = i;
         }
         if (findSpace[i].includes(blank_emojiID)) {
-          UpcomingPositionID = j;
+          UpcomingPositionID = i;
         }
       }
       switch (UpcomingPositionID) {
