@@ -1,5 +1,5 @@
-// Version 3.2.5
-const version = "3.2.5";
+// Version 3.2.6
+const version = "3.2.6";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -923,7 +923,7 @@ async function start(token, channelId) {
 
     // =================== Shop Coupon confirmation ==============
 
-    if (message.embeds[0]?.description?.includes("Would you like to use your") || message.embeds[0]?.fields.values?.includes("Would you like to use your")) {
+    if (message.embeds[0]?.description?.includes("Would you like to use your") || message.embeds[0]?.fields?.value?.includes("Would you like to use your")) {
       await clickButton(message, message.components[0].components[0]);
       console.log(client.user.username + ": Skipped using Shop Coupon");
     }
