@@ -864,9 +864,9 @@ async function start(token, channelId) {
 
     // =================== Scratch Command Start =================
 
-    if (message?.embeds[0]?.description?.includes("You can scratch")) {
+    if (message?.embeds[0]?.description?.includes("You can scratch") && !message?.flags?.has("EPHEMERAL")) {
       const i = randomInt(0, 2);
-      let btn = message?.components[4]?.components[i];
+      let btn = message?.components[4].components[i];
       await clickButton(message, btn);
       console.log(chalk.cyan(`${client.user.username}: Successfully started scratching (Remaining: 3/4)`));
     }
