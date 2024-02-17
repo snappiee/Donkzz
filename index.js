@@ -1,5 +1,5 @@
 // Version 3.2.0
-const version = "3.2.0;
+const version = "3.2.0";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
