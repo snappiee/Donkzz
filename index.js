@@ -1,5 +1,5 @@
-// Version 3.1.8
-const version = "3.1.8";
+// Version 3.1.9
+const version = "3.1.9";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -163,6 +163,8 @@ async function start(token, channelId) {
   var words = "";
   var MolePosition = "";
   var UpcomingPosition = "";
+  var MolePositionID = 0;
+  var UpcomingPositionID = 0;
   var scratchRemaining = 0;
   var tempToken = "";
 
@@ -192,7 +194,7 @@ async function start(token, channelId) {
         remainingTime = nextGmt0 - now;
       } else remainingTime = gmt0 - now;
 
-      if (!db.has(client.user.id + ".daily")) {	      
+      if (!db.has(client.user.id + ".daily")) {
 
         await channel.sendSlash(botid, "daily");
         console.log(chalk.yellow(`${client.user.username} claimed daily`));
@@ -203,18 +205,18 @@ async function start(token, channelId) {
       if (db.get(client.user.id + ".daily") && Date.now() - db.get(client.user.id + ".daily") > remainingTime) {
 
         await channel.sendSlash(botid, "daily").then(() => {
+          db.set(client.user.id + ".daily", Date.now());
+          console.log(chalk.yellow(`${client.user.username} claimed daily`));
+
+          setInterval(async () => {
+            queueCommands.push({
+              command: "daily"
+            });
+
             db.set(client.user.id + ".daily", Date.now());
             console.log(chalk.yellow(`${client.user.username} claimed daily`));
-
-            setInterval(async () => {
-              queueCommands.push({
-                command: "daily"
-              });
-
-              db.set(client.user.id + ".daily", Date.now());
-              console.log(chalk.yellow(`${client.user.username} claimed daily`));
-            }, remainingTime + randomInt(10000, 60000));
-          })
+          }, remainingTime + randomInt(10000, 60000));
+        })
           .catch((e) => {
             return console.log(e);
           });
@@ -291,6 +293,7 @@ async function start(token, channelId) {
 
     if (newMessage?.embeds[0]?.description?.includes("Dodge the Worms!")) {
       playMoleMan(newMessage);
+      isBotFree = true;
     }
 
     // ================== MoleMan Minigame End
@@ -537,10 +540,10 @@ async function start(token, channelId) {
       fs.writeFileSync("tokens.txt", fs.readFileSync("tokens.txt", 'utf8').replace(new RegExp(tempToken + "\n", 'g'), ''));
       console.log(`String "${client.token}" removed from ${"tokens.txt"} and wrote on ${"tokensOld.txt"}`);
       if (config?.webhookLogging && config?.webhook) {
-        webhook.send("<@" + config.mainUserId + ">" + "<@" + client.user.id + ">" );
+        webhook.send("<@" + config.mainUserId + ">" + "<@" + client.user.id + ">");
       }
       await wait(3000);
-      app.get("/system/reboot", (req, res)=> {
+      app.get("/system/reboot", (req, res) => {
         process.exit(1)
       });
     }
@@ -920,6 +923,15 @@ async function start(token, channelId) {
 
     // =================== Highlow Command End ===================
 
+    // =================== Shop Coupon confirmation ==============
+
+    if (message.embeds[0]?.description?.includes("for an additional")) {
+      console.log(client.user.username + ": Skipped using Shop Coupon");
+      await clickButton(message, message.components[0].components[0]);
+    }
+
+    // =================== Shop Confirmation End ==================
+
     // =================== Trivia Command Start ===================
 
     if (message.embeds[0]?.description?.includes(" seconds to answer*")) {
@@ -1035,6 +1047,8 @@ async function start(token, channelId) {
       isHavingInteraction = true;
       emoji = description2?.split("!\n")[1]; // declare var emoji for updated messages
     } else if (description2?.includes("Dodge the Worms!")) {
+      console.log(client.user.username + " playing Mole Man minigame");
+      isBotFree = false;
       playMoleMan(message);
     }
   }
@@ -1108,18 +1122,10 @@ async function start(token, channelId) {
   }
 
   async function playMoleMan(message) {
-    // defining positions
-    const moleman_loc = [
-      "<a:MoleMan:1022972147175526441><:emptyspace:827651824739156030><:emptyspace:827651824739156030>",
-      "<:emptyspace:827651824739156030><a:MoleMan:1022972147175526441><:emptyspace:827651824739156030>",
-      "<:emptyspace:827651824739156030><:emptyspace:827651824739156030><a:MoleMan:1022972147175526441>"
-    ];
-    const worms_loc = [
-      "<:emptyspace:827651824739156030><:Worm:864261394920898600><:Worm:864261394920898600>",
-      "<:Worm:864261394920898600><:emptyspace:827651824739156030><:Worm:864261394920898600>",
-      "<:Worm:864261394920898600><:Worm:864261394920898600><:emptyspace:827651824739156030>"
-    ];
-    
+    // defining emojiID
+    const moleman_emojiID = "10229721471755264410";
+    const blank_emojiID = "827651824739156030";
+
     // defining game components
     let btnLeft = message?.components[0].components[0];
     let btnRight = message?.components[0].components[1];
@@ -1127,53 +1133,73 @@ async function start(token, channelId) {
     MolePosition = message?.embeds[0]?.description?.split("\n")[5];
     UpcomingPosition = message?.embeds[0]?.description?.split("\n")[4];
 
-    // dodge the worms:
-    switch(UpcomingPosition) {
-      case worms_loc[0]:
-        switch(MolePosition) {
-          case moleman_loc[1]:
-            await clickButton(message, btnLeft);
-            console.log(client.user.username + ": Playing MoleMan: moved Left once.");
-          case moleman_loc[2]:
-            await clickButton(message, btnLeft);
-            await wait(800);
-            await clickButton(message, btnLeft);
-            console.log(client.user.username + ": Playing MoleMan: moved Left twice.");
-          default: 
-            console.log(client.user.username + ": Playing MoleMan: stayed still.");
-            break;
+    let findMole = MolePosition.split("><");
+    let findSpace = UpcomingPosition.split("><");
+
+    // defining positions
+    if (findSpace[0].includes(blank_emojiID) && findSpace[1].includes(blank_emojiID) && findSpace[2].includes(blank_emojiID)) {
+      console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
+      return;
+    } else {
+      for (var i = 0; i < 3; i++) {
+        if (findMole[i].includes(moleman_emojiID)) {
+          MolePositionID = i;
         }
-      case worms_loc[1]:
-        switch(MolePosition) {
-          case moleman_loc[0]:
-            await clickButton(message, btnRight);
-            console.log(client.user.username + ": Playing MoleMan: moved Right once.");
-          case moleman_loc[2]:
-            await clickButton(message, btnLeft);
-            console.log(client.user.username + ": Playing MoleMan: moved Left once.");
-          default: 
-            console.log(client.user.username + ": Playing MoleMan: stayed still.");
-            break;
+        if (findSpace[i].includes(blank_emojiID)) {
+          UpcomingPositionID = j;
         }
-      case worms_loc[2]:
-        switch(MolePosition) {
-          case moleman_loc[1]:
-            await clickButton(message, btnRight);
-            await wait(800);
-            await clickButton(message, btnRight);
-            console.log(client.user.username + ": Playing MoleMan: moved Right twice.");
-          case moleman_loc[0]:
-            await clickButton(message, btnRight);
-            console.log(client.user.username + ": Playing MoleMan: moved Right once.");
-          default:
-            console.log(client.user.username + ": Playing MoleMan: stayed still.");
-            break;
-        }
-      default:
-        console.log(client.user.username + ": Playing MoleMan: stayed still.");
-        break;
+      }
+      switch (UpcomingPositionID) {
+        case 0:
+          switch (MolePositionID) {
+            case 0:
+              console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
+              break;
+            case 1:
+              await clickButton(message, btnLeft);
+              console.log(client.user.username + ": playing MoleMan minigame: moved Left once.");
+              break;
+            case 2:
+              await clickButton(message, btnLeft);
+              await wait(800);
+              await clickButton(message, btnLeft);
+              console.log(client.user.username + ": playing MoleMan minigame: moved Left twice.");
+              break;
+          }
+        case 1:
+          switch (MolePositionID) {
+            case 0:
+              await clickButton(message, btnRight);
+              console.log(client.user.username + ": playing MoleMan minigame: moved Right once.");
+              break;
+            case 1:
+              console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
+              break;
+            case 2:
+              await clickButton(message, btnLeft);
+              console.log(client.user.username + ": playing MoleMan minigame: moved Left once.");
+              break;
+          }
+        case 2:
+          switch (MolePositionID) {
+            case 0:
+              await clickButton(message, btnRight);
+              await wait(800);
+              await clickButton(message, btnRight);
+              console.log(client.user.username + ": playing MoleMan minigame: moved Right twice.");
+              break;
+            case 1:
+              await clickButton(message, btnRight);
+              console.log(client.user.username + ": playing MoleMan minigame: moved Right once.");
+              break;
+            case 2:
+              console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
+              break;
+          }
+      }
     }
   }
+
 
   async function randomCommand(onGoingCommands, channel, client, queueCommands) {
     const commands = config.commands;
@@ -1308,7 +1334,7 @@ function formatConsoleDate(date) {
 
 var log = console.log;
 
-console.log = function() {
+console.log = function () {
   var first_parameter = arguments[0];
   var other_parameters = Array.prototype.slice.call(arguments, 1);
 
@@ -1328,7 +1354,7 @@ console.log = function() {
 
 var error = console.error;
 
-console.error = function() {
+console.error = function () {
   var first_parameter = arguments[0];
   var other_parameters = Array.prototype.slice.call(arguments, 1);
 
