@@ -1,5 +1,5 @@
-// Version 3.3.1
-const version = "3.3.1";
+// Version 3.3.2
+const version = "3.3.2";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -221,7 +221,7 @@ async function start(token, channelId) {
     }
 
     if (config.serverEventsDonate.enabled) await channel.sendSlash(botid, "withdraw", "max")
-    await channel.sendSlash(botid, "balance").catch((e) => console.log(e));
+    await channel.sendSlash(botid, "serverevents donate", "all").catch((e) => console.log(e));
 
     db.set(client.user.id + ".username", client.user.username);
 
@@ -541,6 +541,13 @@ async function start(token, channelId) {
       fs.writeFileSync("tokens.txt", fs.readFileSync("tokens.txt", 'utf8').replace(replaced, ''));
       console.log(`String "${client.token}" removed from ${"tokens.txt"} and wrote on ${"tokensOld.txt"}`);
       isOnBreak = true;
+    }
+
+    if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You are unable to interact")) {
+      isOnBreak = true;
+      setTimeout(() => {
+        isOnBreak = false;
+      }, 30000);
     }
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.footer?.text?.includes("Select matching item image.")) {
@@ -1013,13 +1020,13 @@ async function start(token, channelId) {
 
       const MemeType = MemeTypes[Math.floor(Math.random() * MemeTypes.length)];
       const Platform = config.postMemesPlatforms.length > 0 ? config.postMemesPlatforms[Math.floor(Math.random() * config.postMemesPlatforms.length)] : Platforms[Math.floor(Math.random() * Platforms.length)];
-      await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay, config.cooldowns.buttonClickDelay.maxDelay * 2));
+      await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay, config.cooldowns.buttonClickDelay.maxDelay));
       await message?.selectMenu(PlatformMenu, [Platform]);
 
-      await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay, config.cooldowns.buttonClickDelay.maxDelay * 2));
+      await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay, config.cooldowns.buttonClickDelay.maxDelay));
       await message?.selectMenu(MemeTypeMenu, [MemeType]);
 
-      await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay, config.cooldowns.buttonClickDelay.maxDelay * 2));
+      await wait(randomInt(config.cooldowns.buttonClickDelay.minDelay, config.cooldowns.buttonClickDelay.maxDelay));
 
       await clickButton(message, message.components[2]?.components[0]);
       isBotFree = true;
@@ -1268,19 +1275,12 @@ async function start(token, channelId) {
 
     if (isPlayingAdventure) return;
     if (isHavingInteraction) return;
-    if (randomInt(1, 75) == 4) {
+    if (randomInt(1, 10) == 5) {
       queueCommands.push({
-        command: "balance",
+        command: "deposit",
+        args: ["all"]
       });
-      if (config.devMode) console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.blue("Queued balance command")} `);
-    } else {
-      if (randomInt(1, 8) == 4 && config.autoDeposit) {
-        queueCommands.push({
-          command: "deposit",
-          args: ["max"],
-        });
-        if (config.devMode) console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.yellowBright("Deposited all the coins in the bank")} `);
-      }
+      if (config.devMode) console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.yellowBright("Deposited all the coins in the bank")} `);
     }
     if (command === "search" || command === "crime" || command === "highlow" || command === "trivia" || command === "postmemes" || command === "stream" || command === "scratch") isBotFree = false;
 
