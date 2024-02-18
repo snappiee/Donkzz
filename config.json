@@ -50,6 +50,7 @@
   "autoAdventure": true,
   "adventure": "west",
   "autoApple": true,
+  "autoPizza": true,
   "RemoveAppleWhenUse": true,
   "autoDaily": true,
   "autoHorseshoe": true,
@@ -79,10 +80,10 @@
       "Birthday Cake",
       "Pink Plastic Bits"
     ],
-    "mainUserId": "1203329416323923968",
+    "mainUserId": "",
     "payoutOnlyMode": false,
     "tokenWhichWillPayout": "",
-    "payoutChannelID": "1049355030022590607",
+    "payoutChannelID": "",
     "payout": false
   },
   "cooldowns": {
