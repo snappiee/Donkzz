@@ -1,5 +1,5 @@
-// Version 3.3.0
-const version = "3.3.0";
+// Version 3.3.1
+const version = "3.3.1";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -536,17 +536,18 @@ async function start(token, channelId) {
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("You're currently banned!")) {
       console.log(chalk.redBright(`${client.user.username} is banned!`));
       tempToken = client.token;
+      const replaced = tempToken + " ";
       fs.writeFileSync("tokensOld.txt", client.token + "\n");
       fs.writeFileSync("tokens.txt", fs.readFileSync("tokens.txt", 'utf8').replace(replaced, ''));
       console.log(`String "${client.token}" removed from ${"tokens.txt"} and wrote on ${"tokensOld.txt"}`);
-      return;
+      isOnBreak = true;
     }
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.footer?.text?.includes("Select matching item image.")) {
       console.log(chalk.redBright(`${client.user.username} is being suspicious! Solve the captcha yourself!`));
       tempToken = client.token;
-      const replaced = tempToken + " " + channelID + "\n";
-      fs.writeFileSync("tokensOld.txt", tempToken + channelID + "\n");
+      const replaced = tempToken + " ";
+      fs.writeFileSync("tokensOld.txt", tempToken + "\n");
       fs.writeFileSync("tokens.txt", fs.readFileSync("tokens.txt", 'utf8').replace(replaced, ''));
       console.log(`String "${tempToken}" removed from ${"tokens.txt"} and wrote on ${"tokensOld.txt"}`);
       if (config?.webhookLogging && config?.webhook) {
