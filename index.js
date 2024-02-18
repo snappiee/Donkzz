@@ -262,7 +262,7 @@ async function start(token, channelId) {
       }
     }
 
-    if (!db.get(client.user.id + ".pizza") || Date.now() - db.get(client.user.id + ".ammo") > 2 * 60 * 60 * 1000) {
+    if (!db.get(client.user.id + ".pizza") || Date.now() - db.get(client.user.id + ".ammo") > 0.5 * 60 * 60 * 1000) {
       if (config.autoPizza) {
         setTimeout(async () => {
           await channel.sendSlash(botid, "use", "pizza")
@@ -624,6 +624,13 @@ async function start(token, channelId) {
       db.set(client.user.id + ".ammo", Date.now());
       console.log(chalk.yellow(`${client.user.username} used ammo`));
     }
+
+    if (message?.embeds[0]?.description?.includes("You eat the perfect slice of pizza.")) {
+      db.set(client.user.id + ".pizza", Date.now());
+      console.log(chalk.yellow(`${client.user.username} used pizza`));
+    }
+
+    
 
     // =================== Auto Upgrades End ===================
 
