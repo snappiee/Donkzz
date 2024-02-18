@@ -1,5 +1,5 @@
-// Version 3.2.9
-const version = "3.2.9";
+// Version 3.3.0
+const version = "3.3.0";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -56,9 +56,6 @@ const fs = require("fs-extra");
 const axios = require("axios");
 const SimplDB = require("simpl.db");
 const stripAnsi = require("strip-ansi");
-
-const express = require("express");
-const app = express();
 
 const db = new SimplDB();
 
@@ -305,7 +302,7 @@ async function start(token, channelId) {
 
     if (newMessage?.embeds[0]?.description?.includes("Dodge the Worms!")) {
       playMoleMan(newMessage);
-      isBotFree = true;
+      isHavingInteraction = false;
     }
 
     // ================== MoleMan Minigame End
@@ -540,7 +537,7 @@ async function start(token, channelId) {
       console.log(chalk.redBright(`${client.user.username} is banned!`));
       tempToken = client.token;
       fs.writeFileSync("tokensOld.txt", client.token + "\n");
-      fs.writeFileSync("tokens.txt", fs.readFileSync("tokens.txt", 'utf8').replace(new RegExp(client.token + "\n", 'g'), ''));
+      fs.writeFileSync("tokens.txt", fs.readFileSync("tokens.txt", 'utf8').replace(replaced, ''));
       console.log(`String "${client.token}" removed from ${"tokens.txt"} and wrote on ${"tokensOld.txt"}`);
       return;
     }
@@ -548,16 +545,14 @@ async function start(token, channelId) {
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.footer?.text?.includes("Select matching item image.")) {
       console.log(chalk.redBright(`${client.user.username} is being suspicious! Solve the captcha yourself!`));
       tempToken = client.token;
-      fs.writeFileSync("tokensOld.txt", tempToken + "\n");
-      fs.writeFileSync("tokens.txt", fs.readFileSync("tokens.txt", 'utf8').replace(new RegExp(tempToken + "\n", 'g'), ''));
-      console.log(`String "${client.token}" removed from ${"tokens.txt"} and wrote on ${"tokensOld.txt"}`);
+      const replaced = tempToken + " " + channelID + "\n";
+      fs.writeFileSync("tokensOld.txt", tempToken + channelID + "\n");
+      fs.writeFileSync("tokens.txt", fs.readFileSync("tokens.txt", 'utf8').replace(replaced, ''));
+      console.log(`String "${tempToken}" removed from ${"tokens.txt"} and wrote on ${"tokensOld.txt"}`);
       if (config?.webhookLogging && config?.webhook) {
         webhook.send("<@" + config.mainUserId + ">" + "<@" + client.user.id + ">");
       }
-      await wait(3000);
-      app.get("/system/reboot", (req, res) => {
-        process.exit(1)
-      });
+      isOnBreak = true;
     }
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You don't have a shovel") && config.autoBuy) {
@@ -1074,7 +1069,7 @@ async function start(token, channelId) {
       emoji = description2?.split("!\n")[1]; // declare var emoji for updated messages
     } else if (description2?.includes("Dodge the Worms!")) {
       console.log(client.user.username + " playing Mole Man minigame");
-      isBotFree = false;
+      isHavingInteraction = true;
       playMoleMan(message);
     }
   }
@@ -1191,7 +1186,10 @@ async function start(token, channelId) {
               await clickButton(message, btnLeft);
               console.log(client.user.username + ": playing MoleMan minigame: moved Left twice.");
               break;
+            default:
+              break;
           }
+          break;
         case 1:
           switch (MolePositionID) {
             case 0:
@@ -1205,7 +1203,10 @@ async function start(token, channelId) {
               await clickButton(message, btnLeft);
               console.log(client.user.username + ": playing MoleMan minigame: moved Left once.");
               break;
+            default:
+              break;
           }
+          break;
         case 2:
           switch (MolePositionID) {
             case 0:
@@ -1221,7 +1222,12 @@ async function start(token, channelId) {
             case 2:
               console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
               break;
+            default:
+              break;
           }
+          break;
+        default:
+          break;
       }
     }
   }
