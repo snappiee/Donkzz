@@ -1,5 +1,5 @@
-// Version 3.2.6
-const version = "3.2.6";
+// Version 3.2.7
+const version = "3.2.7";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -247,7 +247,7 @@ async function start(token, channelId) {
             .catch((e) => {
               return console.error(e);
             });
-        }, randomInt(5000, 150000))
+        }, randomInt(5000, 15000))
       }
     }
 
@@ -258,9 +258,21 @@ async function start(token, channelId) {
             .catch((e) => {
               return console.error(e);
             });
-        }, randomInt(5000, 150000))
+        }, randomInt(5000, 15000))
       }
     }
+
+    if (!db.get(client.user.id + ".pizza") || Date.now() - db.get(client.user.id + ".ammo") > 2 * 60 * 60 * 1000) {
+      if (config.autoPizza) {
+        setTimeout(async () => {
+          await channel.sendSlash(botid, "use", "pizza")
+            .catch((e) => {
+              return console.error(e);
+            });
+        }, randomInt(5000, 15000))
+      }
+    }
+
 
     if (config.autoAdventure) await channel.sendSlash(botid, "adventure").then(() => isPlayingAdventure = true);
 
