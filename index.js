@@ -1,5 +1,5 @@
-// Version 3.3.3
-const version = "3.3.3";
+// Version 3.3.4
+const version = "3.3.4";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -620,7 +620,7 @@ async function start(token, channelId) {
     if (message?.embeds[0]?.description?.includes("Lucky Horseshoe, giving you slightly better luck in a few commands")) {
       db.set(client.user.id + ".horseshoe", Date.now());
       setTimeout(() => {
-        sendSlash(botid, "use", "horseshoe");
+        channel.sendSlash(botid, "use", "horseshoe");
       }, 900000 + randomInt(8000, 15000));
       console.log(chalk.yellow(`${client.user.username} used horseshoe`));
     }
@@ -628,7 +628,7 @@ async function start(token, channelId) {
     if (message?.embeds[0]?.description?.includes("You load ammo into your hunting rifle. For the next 60 minutes, you cannot hunt and run into nothing.")) {
       db.set(client.user.id + ".ammo", Date.now());
       setTimeout(() => {
-        sendSlash(botid, "use", "ammo");
+        channel.sendSlash(botid, "use", "ammo");
       }, 3600000 + randomInt(8000, 15000));
       console.log(chalk.yellow(`${client.user.username} used ammo`));
     }
@@ -636,7 +636,7 @@ async function start(token, channelId) {
     if (message?.embeds[0]?.description?.includes("You eat the perfect slice of pizza.")) {
       db.set(client.user.id + ".pizza", Date.now());
       setTimeout(() => {
-        sendSlash(botid, "use", "pizza");
+        channel.sendSlash(botid, "use", "pizza");
       }, 1800000 + randomInt(8000, 15000));
       console.log(chalk.yellow(`${client.user.username} used pizza`));
     }
