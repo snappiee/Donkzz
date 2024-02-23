@@ -1,5 +1,5 @@
-// Version 3.3.2
-const version = "3.3.2";
+// Version 3.3.3
+const version = "3.3.3";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -220,8 +220,10 @@ async function start(token, channelId) {
       }
     }
 
-    if (config.serverEventsDonate.enabled) await channel.sendSlash(botid, "withdraw", "max")
+    if (config.serverEventsDonate.enabled) {
+    await channel.sendSlash(botid, "withdraw", "max")
     await channel.sendSlash(botid, "serverevents donate", "all").catch((e) => console.log(e));
+    }
 
     db.set(client.user.id + ".username", client.user.username);
 
@@ -302,7 +304,6 @@ async function start(token, channelId) {
 
     if (newMessage?.embeds[0]?.description?.includes("Dodge the Worms!")) {
       playMoleMan(newMessage);
-      isHavingInteraction = false;
     }
 
     // ================== MoleMan Minigame End
@@ -311,6 +312,7 @@ async function start(token, channelId) {
 
     if (newMessage?.embeds[0]?.description?.includes("Mole Man, nice catch!")) {
       console.log(chalk.cyan(`${client.user.username}: Successfully caught a Mole Man!`));
+   
     }
 
     if (newMessage?.embeds[0]?.description?.includes("Dragon, nice shot!")) {
@@ -544,10 +546,7 @@ async function start(token, channelId) {
     }
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You are unable to interact")) {
-      isOnBreak = true;
-      setTimeout(() => {
-        isOnBreak = false;
-      }, 30000);
+      await wait(10000);
     }
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.footer?.text?.includes("Select matching item image.")) {
@@ -1077,7 +1076,6 @@ async function start(token, channelId) {
       emoji = description2?.split("!\n")[1]; // declare var emoji for updated messages
     } else if (description2?.includes("Dodge the Worms!")) {
       console.log(client.user.username + " playing Mole Man minigame");
-      isHavingInteraction = true;
       playMoleMan(message);
     }
   }
@@ -1165,77 +1163,69 @@ async function start(token, channelId) {
     let findMole = MolePosition.split("><");
     let findSpace = UpcomingPosition.split("><");
 
+    for (var i = 0; i < 3; i++) {
+      if (findMole[i].includes(moleman_emojiID)) {
+        MolePositionID = i;
+      }
+      if (findSpace[i].includes(blank_emojiID)) {
+        UpcomingPositionID = i;
+      }
+    }
     // defining positions
     if (findSpace[0].includes(blank_emojiID) && findSpace[1].includes(blank_emojiID) && findSpace[2].includes(blank_emojiID)) {
       console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
       return;
-    } else {
-      for (var i = 0; i < 3; i++) {
-        if (findMole[i].includes(moleman_emojiID)) {
-          MolePositionID = i;
-        }
-        if (findSpace[i].includes(blank_emojiID)) {
-          UpcomingPositionID = i;
-        }
-      }
+    } 
+    if (findSpace[0].includes(blank_emojiID) || findSpace[1].includes(blank_emojiID) || findSpace[2].includes(blank_emojiID)) {
       switch (UpcomingPositionID) {
         case 0:
           switch (MolePositionID) {
-            case 0:
+            default:
               console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
-              break;
+              return;
             case 1:
               await clickButton(message, btnLeft);
               console.log(client.user.username + ": playing MoleMan minigame: moved Left once.");
-              break;
+              return;
             case 2:
               await clickButton(message, btnLeft);
-              await wait(800);
+              await wait(1000);
               await clickButton(message, btnLeft);
               console.log(client.user.username + ": playing MoleMan minigame: moved Left twice.");
-              break;
-            default:
-              break;
+              return;
           }
-          break;
         case 1:
           switch (MolePositionID) {
             case 0:
               await clickButton(message, btnRight);
               console.log(client.user.username + ": playing MoleMan minigame: moved Right once.");
-              break;
-            case 1:
+              return;
+            default:
               console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
-              break;
+              return;
             case 2:
               await clickButton(message, btnLeft);
               console.log(client.user.username + ": playing MoleMan minigame: moved Left once.");
-              break;
-            default:
-              break;
+              return;
           }
-          break;
         case 2:
           switch (MolePositionID) {
             case 0:
               await clickButton(message, btnRight);
-              await wait(800);
+              await wait(1000);
               await clickButton(message, btnRight);
               console.log(client.user.username + ": playing MoleMan minigame: moved Right twice.");
-              break;
+              return;
             case 1:
               await clickButton(message, btnRight);
               console.log(client.user.username + ": playing MoleMan minigame: moved Right once.");
-              break;
-            case 2:
-              console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
-              break;
+              return;
             default:
-              break;
+              console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
+              return;
           }
-          break;
         default:
-          break;
+          return;
       }
     }
   }
@@ -1244,9 +1234,11 @@ async function start(token, channelId) {
   async function randomCommand(onGoingCommands, channel, client, queueCommands) {
     const commands = config.commands;
     const randomCommand = commands[Math.floor(Math.random() * commands.length)];
-    if (botNotFreeCount > 6) {
+    if (botNotFreeCount > 7) {
       botNotFreeCount = 0;
       isBotFree = true;
+      await channel.sendSlash(botid, "deposit", "max");
+      console.log(client.user.username + ": Deposited all coins.")
     }
     if (!isBotFree) return botNotFreeCount++;
     let command = randomCommand.command;
@@ -1275,15 +1267,7 @@ async function start(token, channelId) {
 
     if (isPlayingAdventure) return;
     if (isHavingInteraction) return;
-    if (randomInt(1, 10) == 5) {
-      queueCommands.push({
-        command: "deposit",
-        args: ["all"]
-      });
-      if (config.devMode) console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.yellowBright("Deposited all the coins in the bank")} `);
-    }
     if (command === "search" || command === "crime" || command === "highlow" || command === "trivia" || command === "postmemes" || command === "stream" || command === "scratch") isBotFree = false;
-
     await channel.sendSlash(botid, command);
     if (config.devMode) console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.blue(command)}`);
     onGoingCommands.push(command);
