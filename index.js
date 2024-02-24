@@ -1,5 +1,5 @@
-// Version 3.3.7
-const version = "3.3.7";
+// Version 3.3.8
+const version = "3.3.8";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -1314,7 +1314,7 @@ async function start(token, channelId) {
     let command = randomCommand.command;
     if (isDeadMeme && command == "postmemes") return;
     if (onGoingCommands.includes(command)) return;
-    if (queueCommands.length > 1 && queueCommands[0]?.command == queueCommands[1]?.command) return (queueCommands = []);
+    if (queueCommands.length > 1 && queueCommands[0]?.command == queueCommands[1]?.command) return (queueCommands.shift());
     if (queueCommands.length > 0) {
       if (queueCommands[0]?.command) {
         if (queueCommands.length <= 0) return queueCommands.shift();
