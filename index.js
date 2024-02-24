@@ -1,5 +1,5 @@
-// Version 3.3.6
-const version = "3.3.6";
+// Version 3.3.7
+const version = "3.3.7";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -805,6 +805,16 @@ async function start(token, channelId) {
       await message.selectMenu(PlatformMenu, [config.adventure]);
 
       if (message.components[1].components[0].disabled) {
+        if (!message.embeds[0]?.description?.match(/<t:\d+:t>/)[0]) {
+          isPlayingAdventure = false;
+          console.log(client.user.username + ": Having no tickets, queued adventure for 24 minutes later.");
+          return setTimeout(() => {
+            queueCommands.push({
+              command: "adventure"
+            });
+            isPlayingAdventure = true;
+          }, randomInt(1440000, 1500000));
+        }
         isPlayingAdventure = false;
         const epochTimestamp = Number(message.embeds[0]?.description?.match(/<t:\d+:t>/)[0]?.replace("<t:", "")?.replace(":t>", ""));
         const remainingTime = epochTimestamp * 1000 - Date.now();
@@ -1304,10 +1314,8 @@ async function start(token, channelId) {
     let command = randomCommand.command;
     if (isDeadMeme && command == "postmemes") return;
     if (onGoingCommands.includes(command)) return;
+    if (queueCommands.length > 1 && queueCommands[0]?.command == queueCommands[1]?.command) return (queueCommands = []);
     if (queueCommands.length > 0) {
-      if (queueCommands[0] == queueCommands[1]) {
-        return (queueCommands = []);
-      }
       if (queueCommands[0]?.command) {
         if (queueCommands.length <= 0) return queueCommands.shift();
         else {
