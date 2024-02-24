@@ -1,5 +1,5 @@
-// Version 3.3.4
-const version = "3.3.4";
+// Version 3.3.5
+const version = "3.3.5";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -135,7 +135,6 @@ if (config.serverEventsDonate.payoutOnlyMode && config.serverEventsDonate.tokenW
 } else {
   tokens.forEach((token) => {
     i++;
-
     setTimeout(() => {
       if (!token.trim().split(" ")[1]) start(token.trim().split(" ")[0]);
       else start(token.trim().split(" ")[1], token.trim().split(" ")[0]);
@@ -160,8 +159,10 @@ async function start(token, channelId) {
   var words = "";
   var MolePosition = "";
   var UpcomingPosition = "";
+  var UpcomingPosition2 = "";
   var MolePositionID = 0;
   var UpcomingPositionID = 0;
+  var UpcomingPositionID2 = 0;
   var scratchRemaining = 0;
   var tempToken = "";
 
@@ -242,7 +243,7 @@ async function start(token, channelId) {
     if (!db.get(client.user.id + ".horseshoe") || Date.now() - db.get(client.user.id + ".horseshoe") > 0.25 * 60 * 60 * 1000) {
       if (config.autoHorseshoe) {
         setTimeout(async () => {
-          await channel.sendSlash(botid, "use", "lucky horseshoe")
+          channel.sendSlash(botid, "use", "lucky horseshoe")
             .catch((e) => {
               return console.error(e);
             });
@@ -253,7 +254,7 @@ async function start(token, channelId) {
     if (!db.get(client.user.id + ".ammo") || Date.now() - db.get(client.user.id + ".ammo") > 1 * 60 * 60 * 1000) {
       if (config.autoAmmo) {
         setTimeout(async () => {
-          await channel.sendSlash(botid, "use", "ammo")
+          channel.sendSlash(botid, "use", "ammo")
             .catch((e) => {
               return console.error(e);
             });
@@ -264,7 +265,7 @@ async function start(token, channelId) {
     if (!db.get(client.user.id + ".pizza") || Date.now() - db.get(client.user.id + ".ammo") > 0.5 * 60 * 60 * 1000) {
       if (config.autoPizza) {
         setTimeout(async () => {
-          await channel.sendSlash(botid, "use", "pizza")
+          channel.sendSlash(botid, "use", "pizza")
             .catch((e) => {
               return console.error(e);
             });
@@ -805,17 +806,24 @@ async function start(token, channelId) {
 
       if (message.components[1].components[0].disabled) {
         isPlayingAdventure = false;
-        if (!message.embeds[0]?.description?.match(/<t:\d+:t>/)[0]) return (isPlayingAdventure = false);
-        const epochTimestamp = Number(message.embeds[0]?.description?.match(/<t:\d+:t>/)[0]?.replace("<t:", "")?.replace(":t>", ""));
-        const remainingTime = epochTimestamp * 1000 - Date.now();
-        console.log(client.user.username + ": Adventure is on cooldown for " + remainingTime / 1000 + " seconds");
+        if (!message.embeds[0]?.description?.includes(" at ")) {
+          setTimeout(() => {
+            queueCommands.push({
+              command: "adventure"
+            });
+            isPlayingAdventure = true;
+          }, randomInt(1440000, 1500000));
+          return (isPlayingAdventure = false);
+          
+        }
+        console.log(client.user.username + ": Adventure is on cooldown.");
         isPlayingAdventure = false;
         return setTimeout(() => {
           queueCommands.push({
             command: "adventure"
           });
           isPlayingAdventure = true;
-        }, remainingTime + randomInt(8000, 15000));
+        }, randomInt(1440000, 1500000));
       }
 
       await clickButton(message, message.components[1].components[0]).then(() => {
@@ -1152,6 +1160,7 @@ async function start(token, channelId) {
     // defining emojiID
     const moleman_emojiID = "10229721471755264410";
     const blank_emojiID = "827651824739156030";
+    const worm_emojiID = "864261394920898600";
 
     // defining game components
     let btnLeft = message?.components[0].components[0];
@@ -1159,9 +1168,13 @@ async function start(token, channelId) {
 
     MolePosition = message?.embeds[0]?.description?.split("\n")[5];
     UpcomingPosition = message?.embeds[0]?.description?.split("\n")[4];
+    UpcomingPosition2 = message?.embeds[0]?.description?.split("\n")[3];
+
 
     let findMole = MolePosition.split("><");
     let findSpace = UpcomingPosition.split("><");
+    let findSpace2 = UpcomingPosition2.split("><");
+
 
     for (var i = 0; i < 3; i++) {
       if (findMole[i].includes(moleman_emojiID)) {
@@ -1170,11 +1183,64 @@ async function start(token, channelId) {
       if (findSpace[i].includes(blank_emojiID)) {
         UpcomingPositionID = i;
       }
+      if (findSpace2[i].includes(worm_emojiID)) {
+        if (findSpace2[i].includes(blank_emojiID)) {
+            UpcomingPositionID2 = i;
+        }
+      }
     }
     // defining positions
     if (findSpace[0].includes(blank_emojiID) && findSpace[1].includes(blank_emojiID) && findSpace[2].includes(blank_emojiID)) {
-      console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
-      return;
+        switch (UpcomingPositionID2) {
+            case 0:
+              switch (MolePositionID) {
+                default:
+                  console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
+                  return;
+                case 1:
+                  await clickButton(message, btnLeft);
+                  console.log(client.user.username + ": playing MoleMan minigame: moved Left once.");
+                  return;
+                case 2:
+                  await clickButton(message, btnLeft);
+                  await wait(300);
+                  await clickButton(message, btnLeft);
+                  console.log(client.user.username + ": playing MoleMan minigame: moved Left twice.");
+                  return;
+              }
+            case 1:
+              switch (MolePositionID) {
+                case 0:
+                  await clickButton(message, btnRight);
+                  console.log(client.user.username + ": playing MoleMan minigame: moved Right once.");
+                  return;
+                default:
+                  console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
+                  return;
+                case 2:
+                  await clickButton(message, btnLeft);
+                  console.log(client.user.username + ": playing MoleMan minigame: moved Left once.");
+                  return;
+              }
+            case 2:
+              switch (MolePositionID) {
+                case 0:
+                  await clickButton(message, btnRight);
+                  await wait(300);
+                  await clickButton(message, btnRight);
+                  console.log(client.user.username + ": playing MoleMan minigame: moved Right twice.");
+                  return;
+                case 1:
+                  await clickButton(message, btnRight);
+                  console.log(client.user.username + ": playing MoleMan minigame: moved Right once.");
+                  return;
+                default:
+                  console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
+                  return;
+              }
+            default:
+              return;
+          }
     } 
     if (findSpace[0].includes(blank_emojiID) || findSpace[1].includes(blank_emojiID) || findSpace[2].includes(blank_emojiID)) {
       switch (UpcomingPositionID) {
@@ -1189,7 +1255,7 @@ async function start(token, channelId) {
               return;
             case 2:
               await clickButton(message, btnLeft);
-              await wait(1000);
+              await wait(300);
               await clickButton(message, btnLeft);
               console.log(client.user.username + ": playing MoleMan minigame: moved Left twice.");
               return;
@@ -1212,7 +1278,7 @@ async function start(token, channelId) {
           switch (MolePositionID) {
             case 0:
               await clickButton(message, btnRight);
-              await wait(1000);
+              await wait(300);
               await clickButton(message, btnRight);
               console.log(client.user.username + ": playing MoleMan minigame: moved Right twice.");
               return;
@@ -1229,6 +1295,8 @@ async function start(token, channelId) {
       }
     }
   }
+
+
 
 
   async function randomCommand(onGoingCommands, channel, client, queueCommands) {
