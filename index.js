@@ -1,5 +1,5 @@
-// Version 3.3.8
-const version = "3.3.8";
+// Version 3.3.9
+const version = "3.3.9";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -152,6 +152,7 @@ async function start(token, channelId) {
   var isDeadMeme = false;
   var isPlayingAdventure = false;
   var isHavingInteraction = false;
+  var isHavingCaptcha = false;
   var buyShovel = false;
   var buyRifle = false;
   var wordemoji = "";
@@ -222,8 +223,8 @@ async function start(token, channelId) {
     }
 
     if (config.serverEventsDonate.enabled) {
-    await channel.sendSlash(botid, "withdraw", "max")
-    await channel.sendSlash(botid, "serverevents donate", "all").catch((e) => console.log(e));
+      await channel.sendSlash(botid, "withdraw", "max")
+      await channel.sendSlash(botid, "serverevents donate", "all").catch((e) => console.log(e));
     }
 
     db.set(client.user.id + ".username", client.user.username);
@@ -275,7 +276,7 @@ async function start(token, channelId) {
 
 
     if (config.autoAdventure) await channel.sendSlash(botid, "adventure").then(() => isPlayingAdventure = true);
-
+    if (config.autoWork) await channel.sendSlash(botid, "work shift").then(() => isHavingInteraction = true);
     main(onGoingCommands, channel, client, queueCommands, isOnBreak);
   });
 
@@ -313,77 +314,31 @@ async function start(token, channelId) {
 
     if (newMessage?.embeds[0]?.description?.includes("Mole Man, nice catch!")) {
       console.log(chalk.cyan(`${client.user.username}: Successfully caught a Mole Man!`));
-   
+
     }
 
     if (newMessage?.embeds[0]?.description?.includes("Dragon, nice shot!")) {
       console.log(chalk.cyan(`${client.user.username}: Successfully caught a Dragon!`));
     }
 
-    // =================== Loot Notifications End
+    // =================== Loot Notifications End ============
+
+    // =================== Work Notifications Start ==========
+
+    if (newMessage?.embeds[0]?.footer?.text?.includes("Working as")) {
+      return setTimeout(() => {
+        queueCommands.push({
+          command: "work shift"
+        });
+      }, randomInt(3600000, 3650000));
+    }
+
+    // =================== Work Notifications End ============
 
     // =================== Emoji Minigame Start ==============
 
     if (newMessage?.embeds[0]?.description?.includes("the emoji?")) {
-      // build emoji components
-      const laughing = "😆";
-      const thinking = "🤔";
-      const wink = "😉";
-      const slight_smile = "🙂";
-      const smile = "😄";
-      const grinning = "😀";
-      const relieved = "😌";
-      const grin = "😁";
-      const hugging = "🤗";
-      const upside_down = "🙃";
-      //declare clickEmoji
-      var clickEmoji = "";
-      //defining clickEmoji
-      if (emoji.includes(laughing)) {
-        clickEmoji = laughing;
-      }
-      if (emoji.includes(thinking)) {
-        clickEmoji = thinking;
-      }
-      if (emoji.includes(wink)) {
-        clickEmoji = wink;
-      }
-      if (emoji.includes(slight_smile)) {
-        clickEmoji = slight_smile;
-      }
-      if (emoji.includes(smile)) {
-        clickEmoji = smile;
-      }
-      if (emoji.includes(grinning)) {
-        clickEmoji = grinning;
-      }
-      if (emoji.includes(relieved)) {
-        clickEmoji = relieved;
-      }
-      if (emoji.includes(grin)) {
-        clickEmoji = grin;
-      }
-      if (emoji.includes(hugging)) {
-        clickEmoji = hugging;
-      }
-      if (emoji.includes(upside_down)) {
-        clickEmoji = upside_down;
-      }
-      //select clicking components
-      for (var m = 0; m < 2; m++) {
-        for (var n = 0; n < 5; n++) {
-          let btnz = newMessage?.components[m].components[n];
-          let btnEmojiName = btnz?.emoji?.name;
-          let btnEmojiName2 = btnz?.emoji?.name?.toString();
-          //duhhh
-          await wait(200);
-          if (btnEmojiName.includes(clickEmoji) || btnEmojiName2.includes(clickEmoji)) {
-            await clickButton(newMessage, btnz);
-            console.log(chalk.cyan(`${client.user.username}: Successfully played the emoji minigame.`));
-            isHavingInteraction = false;
-          }
-        }
-      }
+      playEmoji(newMessage);
     }
 
     // =================== Emoji Minigame End ==============
@@ -391,58 +346,7 @@ async function start(token, channelId) {
     // =================== Word-Color Minigame Start ==============
 
     if (newMessage?.embeds[0]?.description?.includes("What color was next to")) {
-      //build color components
-      const colMarine = "marine";
-      const colCyan = "cyan";
-      const colWhite = "white";
-      const colBlack = "black";
-      const colGreen = "green";
-      const colYellow = "yellow";
-      //build emoji components
-      const emojiMarine = "<:Marine:863886248572878939>";
-      const emojiCyan = "<:Cyan:863886248670265392>";
-      const emojiYellow = "<:Yellow:863886248296316940>";
-      const emojiGreen = "<:Green:863886248527134730>";
-      const emojiBlack = "<:Black:863886248431190066>";
-      const emojiWhite = "<:White:863886248689926204>";
-      //parsing and responding block
-      var wordAsked = newMessage?.embeds[0]?.description.split("`")[1];
-      var line = "";
-      var colorAsked = "";
-      for (var i = 0; i < 3; i++) {
-        line = wordemoji.split("\n")[i];
-        if (line.includes(wordAsked)) {
-          if (line.includes(emojiMarine)) {
-            colorAsked = colMarine;
-          }
-          if (line.includes(emojiCyan)) {
-            colorAsked = colCyan;
-          }
-          if (line.includes(emojiWhite)) {
-            colorAsked = colWhite;
-          }
-          if (line.includes(emojiBlack)) {
-            colorAsked = colBlack;
-          }
-          if (line.includes(emojiGreen)) {
-            colorAsked = colGreen;
-          }
-          if (line.includes(emojiYellow)) {
-            colorAsked = colYellow;
-          }
-        }
-      }
-
-      for (var j = 0; j < 4; j++) {
-        await wait(300);
-        let btnz = newMessage?.components[0].components[j];
-        let btnLabel = btnz.label.toLowerCase();
-        if (btnLabel.includes(colorAsked)) {
-          await clickButton(newMessage, btnz);
-          console.log(chalk.cyan(`${client.user.username}: Successfully played the word-color matching game.`));
-          isHavingInteraction = false;
-        }
-      }
+      playWordColor(newMessage);
     }
 
     // =================== Word-Color Minigame End ==============
@@ -450,25 +354,7 @@ async function start(token, channelId) {
     // =================== Word Order Minigame Start ==============
 
     if (newMessage?.embeds[0]?.description?.includes("Click the buttons in correct order")) {
-      var buttonToClick = undefined;
-      for (var i = 0; i < 5; i++) {
-        var attempts = i + 1;
-        var word = words.split("\n")[i];
-        var word2 = word.split("`")[1];
-        for (var k = 0; k < 5; k++) {
-          let btnz = newMessage?.components[0]?.components[k];
-          await wait(1000);
-          if (word2.includes(btnz.label.toLowerCase()) && !btnz.disabled) {
-            buttonToClick = btnz;
-            setTimeout(() => {
-              clickButton(newMessage, buttonToClick);
-            }, 2000);
-            await wait(1000);
-            console.log(chalk.cyan(`${client.user.username}: Successfully played the word order minigame. (${attempts}/5)`));
-          }
-        }
-        isHavingInteraction = false;
-      }
+      playWordOrder(newMessage);
     }
 
     // =================== Word Order Minigame End ==============
@@ -538,12 +424,9 @@ async function start(token, channelId) {
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("You're currently banned!")) {
       console.log(chalk.redBright(`${client.user.username} is banned!`));
-      tempToken = client.token;
-      const replaced = tempToken + " ";
       fs.writeFileSync("tokensOld.txt", client.token + "\n");
-      fs.writeFileSync("tokens.txt", fs.readFileSync("tokens.txt", 'utf8').replace(replaced, ''));
-      console.log(`String "${client.token}" removed from ${"tokens.txt"} and wrote on ${"tokensOld.txt"}`);
-      isOnBreak = true;
+      console.log(`String "${client.token}" wrote on ${"tokensOld.txt"}`);
+      isHavingCaptcha = true;
     }
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You are unable to interact")) {
@@ -552,15 +435,12 @@ async function start(token, channelId) {
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.footer?.text?.includes("Select matching item image.")) {
       console.log(chalk.redBright(`${client.user.username} is being suspicious! Solve the captcha yourself!`));
-      tempToken = client.token;
-      const replaced = tempToken + " ";
-      fs.writeFileSync("tokensOld.txt", tempToken + "\n");
-      fs.writeFileSync("tokens.txt", fs.readFileSync("tokens.txt", 'utf8').replace(replaced, ''));
-      console.log(`String "${tempToken}" removed from ${"tokens.txt"} and wrote on ${"tokensOld.txt"}`);
+      fs.writeFileSync("tokensOld.txt", client.token + "\n");
+      console.log(`String "${tempToken}" wrote on ${"tokensOld.txt"}`);
       if (config?.webhookLogging && config?.webhook) {
-        webhook.send("<@" + config.mainUserId + ">" + "<@" + client.user.id + ">");
+        webhook.send("<@" + config.mainUserId + ">" + "<@" + client.user.id + ">" + client.user.username + ": is having captcha!");
       }
-      isOnBreak = true;
+      isHavingCaptcha = true;
     }
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You don't have a shovel") && config.autoBuy) {
@@ -642,7 +522,7 @@ async function start(token, channelId) {
       console.log(chalk.yellow(`${client.user.username} used pizza`));
     }
 
-    
+
 
     // =================== Auto Upgrades End ===================
 
@@ -911,7 +791,22 @@ async function start(token, channelId) {
       console.log(chalk.cyan(`${client.user.username}: Successfully started scratching (Remaining: 3/4)`));
     }
 
-    // =================== Scratch Command End =================//
+    // =================== Scratch Command End ====================
+
+    // =================== Work Command Queue =====================
+
+    if (message?.embeds[0]?.description?.includes("You can work again at")) {
+      const epochTimestamp = Number(message.embeds[0]?.description?.match(/<t:\d+:t>/)[0]?.replace("<t:", "")?.replace(":t>", ""));
+      const remainingTime = epochTimestamp * 1000 - Date.now();
+      console.log(client.user.username + ": Work is on cooldown for " + remainingTime / 1000 + " seconds");
+      return setTimeout(() => {
+        queueCommands.push({
+          command: "work shift"
+        });
+      }, remainingTime + randomInt(8000, 15000));
+    }
+
+    // =================== Work Command Queued ====================
 
     // =================== Search Command Start ===================
 
@@ -1158,6 +1053,143 @@ async function start(token, channelId) {
     await channel.sendSlash(botid, "shop view");
   }
 
+  async function playWordOrder(message) {
+    for (var i = 0; i < 5; i++) {
+      var attempts = i + 1;
+      var word = words.split("\n")[i];
+      var word2 = word.split("`")[1];
+      for (var k = 0; k < 5; k++) {
+        let btnz = message?.components[0]?.components[k];
+        await wait(1000);
+        if (word2.includes(btnz.label.toLowerCase()) && !btnz.disabled) {
+          setTimeout(() => {
+            clickButton(message, btnz);
+          }, 2000);
+          await wait(1000);
+          console.log(chalk.cyan(`${client.user.username}: Successfully played the word order minigame. (${attempts}/5)`));
+        }
+      }
+      isHavingInteraction = false;
+    }
+  }
+
+  async function playWordColor(message) {
+    //build color components
+    const colMarine = "marine";
+    const colCyan = "cyan";
+    const colWhite = "white";
+    const colBlack = "black";
+    const colGreen = "green";
+    const colYellow = "yellow";
+    //build emoji components
+    const emojiMarine = "<:Marine:863886248572878939>";
+    const emojiCyan = "<:Cyan:863886248670265392>";
+    const emojiYellow = "<:Yellow:863886248296316940>";
+    const emojiGreen = "<:Green:863886248527134730>";
+    const emojiBlack = "<:Black:863886248431190066>";
+    const emojiWhite = "<:White:863886248689926204>";
+    //parsing and responding block
+    var wordAsked = message?.embeds[0]?.description.split("`")[1];
+    var line = "";
+    var colorAsked = "";
+    for (var i = 0; i < 3; i++) {
+      line = wordemoji.split("\n")[i];
+      if (line.includes(wordAsked)) {
+        if (line.includes(emojiMarine)) {
+          colorAsked = colMarine;
+        }
+        if (line.includes(emojiCyan)) {
+          colorAsked = colCyan;
+        }
+        if (line.includes(emojiWhite)) {
+          colorAsked = colWhite;
+        }
+        if (line.includes(emojiBlack)) {
+          colorAsked = colBlack;
+        }
+        if (line.includes(emojiGreen)) {
+          colorAsked = colGreen;
+        }
+        if (line.includes(emojiYellow)) {
+          colorAsked = colYellow;
+        }
+      }
+    }
+
+    for (var j = 0; j < 4; j++) {
+      await wait(300);
+      let btnz = message?.components[0].components[j];
+      let btnLabel = btnz.label.toLowerCase();
+      if (btnLabel.includes(colorAsked)) {
+        await clickButton(message, btnz);
+        console.log(chalk.cyan(`${client.user.username}: Successfully played the word-color matching game.`));
+        isHavingInteraction = false;
+      }
+    }
+  }
+
+  async function playEmoji(message) {
+    // build emoji components
+    const laughing = "😆";
+    const thinking = "🤔";
+    const wink = "😉";
+    const slight_smile = "🙂";
+    const smile = "😄";
+    const grinning = "😀";
+    const relieved = "😌";
+    const grin = "😁";
+    const hugging = "🤗";
+    const upside_down = "🙃";
+    //declare clickEmoji
+    var clickEmoji = "";
+    //defining clickEmoji
+    if (emoji.includes(laughing)) {
+      clickEmoji = laughing;
+    }
+    if (emoji.includes(thinking)) {
+      clickEmoji = thinking;
+    }
+    if (emoji.includes(wink)) {
+      clickEmoji = wink;
+    }
+    if (emoji.includes(slight_smile)) {
+      clickEmoji = slight_smile;
+    }
+    if (emoji.includes(smile)) {
+      clickEmoji = smile;
+    }
+    if (emoji.includes(grinning)) {
+      clickEmoji = grinning;
+    }
+    if (emoji.includes(relieved)) {
+      clickEmoji = relieved;
+    }
+    if (emoji.includes(grin)) {
+      clickEmoji = grin;
+    }
+    if (emoji.includes(hugging)) {
+      clickEmoji = hugging;
+    }
+    if (emoji.includes(upside_down)) {
+      clickEmoji = upside_down;
+    }
+    //select clicking components
+    for (var m = 0; m < 2; m++) {
+      for (var n = 0; n < 5; n++) {
+        let btnz = message?.components[m].components[n];
+        let btnEmojiName = btnz?.emoji?.name;
+        let btnEmojiName2 = btnz?.emoji?.name?.toString();
+        //duhhh
+        await wait(200);
+        if (btnEmojiName.includes(clickEmoji) || btnEmojiName2.includes(clickEmoji)) {
+          await clickButton(message, btnz);
+          console.log(chalk.cyan(`${client.user.username}: Successfully played the emoji minigame.`));
+          isHavingInteraction = false;
+        }
+      }
+    }
+  }
+
   async function playMoleMan(message) {
     // defining emojiID
     const moleman_emojiID = "10229721471755264410";
@@ -1187,63 +1219,63 @@ async function start(token, channelId) {
       }
       if (findSpace2[i].includes(worm_emojiID)) {
         if (findSpace2[i].includes(blank_emojiID)) {
-            UpcomingPositionID2 = i;
+          UpcomingPositionID2 = i;
         }
       }
     }
     // defining positions
     if (findSpace[0].includes(blank_emojiID) && findSpace[1].includes(blank_emojiID) && findSpace[2].includes(blank_emojiID)) {
-        switch (UpcomingPositionID2) {
-            case 0:
-              switch (MolePositionID) {
-                default:
-                  console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
-                  return;
-                case 1:
-                  await clickButton(message, btnLeft);
-                  console.log(client.user.username + ": playing MoleMan minigame: moved Left once.");
-                  return;
-                case 2:
-                  await clickButton(message, btnLeft);
-                  await wait(300);
-                  await clickButton(message, btnLeft);
-                  console.log(client.user.username + ": playing MoleMan minigame: moved Left twice.");
-                  return;
-              }
-            case 1:
-              switch (MolePositionID) {
-                case 0:
-                  await clickButton(message, btnRight);
-                  console.log(client.user.username + ": playing MoleMan minigame: moved Right once.");
-                  return;
-                default:
-                  console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
-                  return;
-                case 2:
-                  await clickButton(message, btnLeft);
-                  console.log(client.user.username + ": playing MoleMan minigame: moved Left once.");
-                  return;
-              }
-            case 2:
-              switch (MolePositionID) {
-                case 0:
-                  await clickButton(message, btnRight);
-                  await wait(300);
-                  await clickButton(message, btnRight);
-                  console.log(client.user.username + ": playing MoleMan minigame: moved Right twice.");
-                  return;
-                case 1:
-                  await clickButton(message, btnRight);
-                  console.log(client.user.username + ": playing MoleMan minigame: moved Right once.");
-                  return;
-                default:
-                  console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
-                  return;
-              }
+      switch (UpcomingPositionID2) {
+        case 0:
+          switch (MolePositionID) {
             default:
+              console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
+              return;
+            case 1:
+              await clickButton(message, btnLeft);
+              console.log(client.user.username + ": playing MoleMan minigame: moved Left once.");
+              return;
+            case 2:
+              await clickButton(message, btnLeft);
+              await wait(300);
+              await clickButton(message, btnLeft);
+              console.log(client.user.username + ": playing MoleMan minigame: moved Left twice.");
               return;
           }
-    } 
+        case 1:
+          switch (MolePositionID) {
+            case 0:
+              await clickButton(message, btnRight);
+              console.log(client.user.username + ": playing MoleMan minigame: moved Right once.");
+              return;
+            default:
+              console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
+              return;
+            case 2:
+              await clickButton(message, btnLeft);
+              console.log(client.user.username + ": playing MoleMan minigame: moved Left once.");
+              return;
+          }
+        case 2:
+          switch (MolePositionID) {
+            case 0:
+              await clickButton(message, btnRight);
+              await wait(300);
+              await clickButton(message, btnRight);
+              console.log(client.user.username + ": playing MoleMan minigame: moved Right twice.");
+              return;
+            case 1:
+              await clickButton(message, btnRight);
+              console.log(client.user.username + ": playing MoleMan minigame: moved Right once.");
+              return;
+            default:
+              console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
+              return;
+          }
+        default:
+          return;
+      }
+    }
     if (findSpace[0].includes(blank_emojiID) || findSpace[1].includes(blank_emojiID) || findSpace[2].includes(blank_emojiID)) {
       switch (UpcomingPositionID) {
         case 0:
@@ -1360,6 +1392,7 @@ async function start(token, channelId) {
 
     var longBreakCooldown = randomInt(config.cooldowns.longBreak.minDelay, config.cooldowns.longBreak.maxDelay);
     if (isOnBreak) return;
+    if (isHavingCaptcha) return;
     var actualDelay;
     randomCommand(onGoingCommands, channel, client, queueCommands);
 
