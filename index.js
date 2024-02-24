@@ -1,5 +1,5 @@
-// Version 3.3.9
-const version = "3.3.9";
+// Version 3.4.0
+const version = "3.4.0";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -327,9 +327,7 @@ async function start(token, channelId) {
 
     if (newMessage?.embeds[0]?.footer?.text?.includes("Working as")) {
       return setTimeout(() => {
-        queueCommands.push({
-          command: "work shift"
-        });
+        channel.sendSlash(botid, "work shift");
       }, randomInt(3600000, 3650000));
     }
 
@@ -689,9 +687,7 @@ async function start(token, channelId) {
           isPlayingAdventure = false;
           console.log(client.user.username + ": Having no tickets, queued adventure for 24 minutes later.");
           return setTimeout(() => {
-            queueCommands.push({
-              command: "adventure"
-            });
+            channel.sendSlash(botid, "adventure")
             isPlayingAdventure = true;
           }, randomInt(1440000, 1500000));
         }
@@ -701,9 +697,7 @@ async function start(token, channelId) {
         console.log(client.user.username + ": Adventure is on cooldown for " + remainingTime / 1000 + " seconds");
         isPlayingAdventure = false;
         return setTimeout(() => {
-          queueCommands.push({
-            command: "adventure"
-          });
+          channel.sendSlash(botid, "adventure")
           isPlayingAdventure = true;
         }, remainingTime + randomInt(8000, 15000));
       }
@@ -800,9 +794,7 @@ async function start(token, channelId) {
       const remainingTime = epochTimestamp * 1000 - Date.now();
       console.log(client.user.username + ": Work is on cooldown for " + remainingTime / 1000 + " seconds");
       return setTimeout(() => {
-        queueCommands.push({
-          command: "work shift"
-        });
+        channel.sendSlash(botid, "work shift");
       }, remainingTime + randomInt(8000, 15000));
     }
 
@@ -1000,9 +992,7 @@ async function start(token, channelId) {
       console.log(`${client.user.username}: Finished playing adventure. Next adventure in ${time} minutes`);
 
       setTimeout(() => {
-        queueCommands.push({
-          command: "adventure"
-        });
+        channel.sendSlash(botid, "adventure")
       }, randomInt(Number(time) * 60 * 1000, Number(time) * 1.1 * 60 * 1000));
     }
 
