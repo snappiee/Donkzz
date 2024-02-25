@@ -1,5 +1,5 @@
-// Version 3.4.3
-const version = "3.4.3";
+// Version 3.4.4
+const version = "3.4.4";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -103,6 +103,8 @@ if (config.serverEventsDonate.payoutOnlyMode && config.serverEventsDonate.tokenW
       if (itemsToPayout.length <= 0) return message.channel.sendSlash(botid, "serverevents pool")
       await message.channel.sendSlash(botid, "serverevents payout", config.serverEventsDonate.mainUserId, itemsToPayout[0].quantity, itemsToPayout[0].item)
     }
+
+
 
     if (message?.embeds[0]?.title?.includes("Server Pool")) {
       if (!config.serverEventsDonate.payout) return;
@@ -292,6 +294,7 @@ async function start(token, channelId) {
       modal.components[0].components[0].setValue("1");
       modal.reply();
       console.log(chalk.cyan(`${client.user.username}: Successfully bought an item (shovel/rifle)`));
+      isHavingInteraction = false;
     }
   });
 
@@ -371,6 +374,9 @@ async function start(token, channelId) {
       if (m == -1) {
         let btn = newMessage?.components[4].components[3];
         await clickButton(newMessage, btn);
+        return setTimeout(() => {
+          channel.sendSlash(botid, "scratch");
+        }, randomInt(10800000, 11000000));
       }
       else {
         const i = randomInt(0, 2);
@@ -450,12 +456,14 @@ async function start(token, channelId) {
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You don't have a shovel") && config.autoBuy) {
       console.log(client.user.username, ", Preparing to buy a shovel");
+      isHavingInteraction = true;
       buyShovel = true;
       openShop();
     }
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You don't have a hunting rifle") && config.autoBuy) {
       console.log(client.user.username, ", Preparing to buy a rifle");
+      isHavingInteraction = true;
       buyRifle = true;
       openShop();
     }
@@ -476,6 +484,15 @@ async function start(token, channelId) {
     }
 
     // =================== Autoalerts End ===================
+
+    // =================== Shop Coupon confirmation ==============
+
+    if (message.embeds[0]?.description?.includes("Would you like to use your") || message.embeds[0]?.fields?.value?.includes("Would you like to use your")) {
+      await clickButton(message, message.components[0].components[0]);
+      console.log(client.user.username + ": Skipped using Shop Coupon");
+    }
+
+    // =================== Shop Confirmation End ==================
 
     // =================== Click Minigame Start ===================
 
@@ -797,7 +814,7 @@ async function start(token, channelId) {
         console.log(client.user.username + ": Scratch is on cooldown for " + Math.round(remainingTime / 60000) + " minute(s)");
         return setTimeout(() => {
           channel.sendSlash(botid, "scratch");
-      }, remainingTime + randomInt(8000, 15000));
+        }, remainingTime + randomInt(8000, 15000));
       }
     }
 
@@ -864,14 +881,7 @@ async function start(token, channelId) {
 
     // =================== Highlow Command End ===================
 
-    // =================== Shop Coupon confirmation ==============
 
-    if (message.embeds[0]?.description?.includes("Would you like to use your") || message.embeds[0]?.fields?.value?.includes("Would you like to use your")) {
-      await clickButton(message, message.components[0].components[0]);
-      console.log(client.user.username + ": Skipped using Shop Coupon");
-    }
-
-    // =================== Shop Confirmation End ==================
 
     // =================== Trivia Command Start ===================
 
