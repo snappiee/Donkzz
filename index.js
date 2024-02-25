@@ -1,5 +1,5 @@
-// Version 3.4.0
-const version = "3.4.0";
+// Version 3.4.1
+const version = "3.4.1";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -145,7 +145,6 @@ if (config.serverEventsDonate.payoutOnlyMode && config.serverEventsDonate.tokenW
 async function start(token, channelId) {
   var onGoingCommands = [];
   var allItemsInInventory = [];
-  var queueCommands = [];
   var isBotFree = true;
   var isOnBreak = false;
   var botNotFreeCount = 0;
@@ -208,9 +207,7 @@ async function start(token, channelId) {
           console.log(chalk.yellow(`${client.user.username} claimed daily`));
 
           setInterval(async () => {
-            queueCommands.push({
-              command: "daily"
-            });
+            channel.sendSlash(botid, "daily");
 
             db.set(client.user.id + ".daily", Date.now());
             console.log(chalk.yellow(`${client.user.username} claimed daily`));
@@ -277,7 +274,8 @@ async function start(token, channelId) {
 
     if (config.autoAdventure) await channel.sendSlash(botid, "adventure").then(() => isPlayingAdventure = true);
     if (config.autoWork) await channel.sendSlash(botid, "work shift").then(() => isHavingInteraction = true);
-    main(onGoingCommands, channel, client, queueCommands, isOnBreak);
+    if (config.autoScratch) await channel.sendSlash(botid, "scratch").then(() => isBotFree = false);
+    main(onGoingCommands, channel, client, isOnBreak);
   });
 
   client.on('interactionModalCreate', modal => {
@@ -778,11 +776,20 @@ async function start(token, channelId) {
 
     // =================== Scratch Command Start =================
 
-    if (message?.embeds[0]?.description?.includes("You can scratch") && !message?.flags?.has("EPHEMERAL")) {
-      const i = randomInt(0, 2);
-      let btn = message?.components[4].components[i];
-      await clickButton(message, btn);
-      console.log(chalk.cyan(`${client.user.username}: Successfully started scratching (Remaining: 3/4)`));
+    if (message?.embeds[0]?.description?.includes("You can scratch")) {
+      if (!message?.flags?.has("EPHEMERAL")) {
+        const i = randomInt(0, 2);
+        let btn = message?.components[4].components[i];
+        await clickButton(message, btn);
+        console.log(chalk.cyan(`${client.user.username}: Successfully started scratching (Remaining: 3/4)`));
+      } else {
+        const epochTimestamp = Number(message.embeds[0]?.description?.match(/<t:\d+:t>/)[0]?.replace("<t:", "")?.replace(":R>", ""));
+        const remainingTime = epochTimestamp * 1000 - Date.now();
+        console.log(client.user.username + ": Scratch is on cooldown for " + remainingTime / 1000 + " seconds");
+        return setTimeout(() => {
+          channel.sendSlash(botid, "scratch");
+      }, remainingTime + randomInt(8000, 15000));
+      }
     }
 
     // =================== Scratch Command End ====================
@@ -1323,7 +1330,7 @@ async function start(token, channelId) {
 
 
 
-  async function randomCommand(onGoingCommands, channel, client, queueCommands) {
+  async function randomCommand(onGoingCommands, channel, client) {
     const commands = config.commands;
     const randomCommand = commands[Math.floor(Math.random() * commands.length)];
     if (botNotFreeCount > 7) {
@@ -1336,27 +1343,6 @@ async function start(token, channelId) {
     let command = randomCommand.command;
     if (isDeadMeme && command == "postmemes") return;
     if (onGoingCommands.includes(command)) return;
-    if (queueCommands.length > 1 && queueCommands[0]?.command == queueCommands[1]?.command) return (queueCommands.shift());
-    if (queueCommands.length > 0) {
-      if (queueCommands[0]?.command) {
-        if (queueCommands.length <= 0) return queueCommands.shift();
-        else {
-          return channel.sendSlash(botid, queueCommands[0].command, queueCommands[0].args ? queueCommands[0].args : []).then(() => {
-            queueCommands.shift();
-
-            console.log(
-              `${chalk.magentaBright(client.user.username)}: ${chalk.blue(
-                "Sent queued command"
-              )} - ${chalk.green(queueCommands[0].command)} `
-            );
-          }).catch((err) => {
-            queueCommands.shift();
-          });
-        }
-      } else {
-        return queueCommands.shift();
-      }
-    }
 
     if (isPlayingAdventure) return;
     if (isHavingInteraction) return;
@@ -1376,7 +1362,7 @@ async function start(token, channelId) {
     }
   }
 
-  async function main(onGoingCommands, channel, client, queueCommands, isOnBreak) {
+  async function main(onGoingCommands, channel, client, isOnBreak) {
     var commandCooldown = randomInt(config.cooldowns.commandInterval.minDelay, config.cooldowns.commandInterval.maxDelay);
     var shortBreakCooldown = randomInt(config.cooldowns.shortBreak.minDelay, config.cooldowns.shortBreak.maxDelay);
 
@@ -1384,7 +1370,7 @@ async function start(token, channelId) {
     if (isOnBreak) return;
     if (isHavingCaptcha) return;
     var actualDelay;
-    randomCommand(onGoingCommands, channel, client, queueCommands);
+    randomCommand(onGoingCommands, channel, client);
 
     if (Math.random() < config.cooldowns.shortBreak.frequency) {
       actualDelay = shortBreakCooldown;
@@ -1401,7 +1387,7 @@ async function start(token, channelId) {
 
     setTimeout(() => {
       isOnBreak = false;
-      main(onGoingCommands, channel, client, queueCommands, isOnBreak);
+      main(onGoingCommands, channel, client, isOnBreak);
     }, actualDelay);
   }
 }
