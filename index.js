@@ -1,5 +1,5 @@
-// Version 3.4.4
-const version = "3.4.4";
+// Version 3.4.5
+const version = "3.4.5";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -286,7 +286,7 @@ async function start(token, channelId) {
       await channel.sendSlash(botid, "scratch");
       await wait(300);
     }
-    main(onGoingCommands, channel, client, isOnBreak);
+    main(onGoingCommands, channel, client, isOnBreak, isHavingCaptcha);
   });
 
   client.on('interactionModalCreate', modal => {
@@ -1381,7 +1381,7 @@ async function start(token, channelId) {
     }
   }
 
-  async function main(onGoingCommands, channel, client, isOnBreak) {
+  async function main(onGoingCommands, channel, client, isOnBreak, isHavingCaptcha) {
     var commandCooldown = randomInt(config.cooldowns.commandInterval.minDelay, config.cooldowns.commandInterval.maxDelay);
     var shortBreakCooldown = randomInt(config.cooldowns.shortBreak.minDelay, config.cooldowns.shortBreak.maxDelay);
 
@@ -1406,7 +1406,7 @@ async function start(token, channelId) {
 
     setTimeout(() => {
       isOnBreak = false;
-      main(onGoingCommands, channel, client, isOnBreak);
+      main(onGoingCommands, channel, client, isOnBreak, isHavingCaptcha);
     }, actualDelay);
   }
 }
