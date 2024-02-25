@@ -1,5 +1,5 @@
-// Version 3.4.1
-const version = "3.4.1";
+// Version 3.4.2
+const version = "3.4.2";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -782,8 +782,8 @@ async function start(token, channelId) {
         let btn = message?.components[4].components[i];
         await clickButton(message, btn);
         console.log(chalk.cyan(`${client.user.username}: Successfully started scratching (Remaining: 3/4)`));
-      } else {
-        const epochTimestamp = Number(message.embeds[0]?.description?.match(/<t:\d+:t>/)[0]?.replace("<t:", "")?.replace(":R>", ""));
+      } else if (message?.flags?.has("EPHEMERAL")) {
+        const epochTimestamp = Number(message.embeds[0]?.description?.match(/<t:\d+:R>/)[0]?.replace("<t:", "")?.replace(":R>", ""));
         const remainingTime = epochTimestamp * 1000 - Date.now();
         console.log(client.user.username + ": Scratch is on cooldown for " + remainingTime / 1000 + " seconds");
         return setTimeout(() => {
