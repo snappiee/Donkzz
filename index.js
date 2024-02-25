@@ -1,5 +1,5 @@
-// Version 3.4.2
-const version = "3.4.2";
+// Version 3.4.3
+const version = "3.4.3";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -272,9 +272,18 @@ async function start(token, channelId) {
     }
 
 
-    if (config.autoAdventure) await channel.sendSlash(botid, "adventure").then(() => isPlayingAdventure = true);
-    if (config.autoWork) await channel.sendSlash(botid, "work shift").then(() => isHavingInteraction = true);
-    if (config.autoScratch) await channel.sendSlash(botid, "scratch").then(() => isBotFree = false);
+    if (config.autoAdventure) {
+      await channel.sendSlash(botid, "adventure");
+      await wait(300);
+    }
+    if (config.autoWork) {
+      await channel.sendSlash(botid, "work shift");
+      await wait(300);
+    }
+    if (config.autoScratch) {
+      await channel.sendSlash(botid, "scratch");
+      await wait(300);
+    }
     main(onGoingCommands, channel, client, isOnBreak);
   });
 
@@ -683,7 +692,7 @@ async function start(token, channelId) {
       if (message.components[1].components[0].disabled) {
         if (!message.embeds[0]?.description?.match(/<t:\d+:t>/)[0]) {
           isPlayingAdventure = false;
-          console.log(client.user.username + ": Having no tickets, queued adventure for 24 minutes later.");
+          console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.cyan(": Having no tickets, queued adventure for 24 minutes later.")}`);
           return setTimeout(() => {
             channel.sendSlash(botid, "adventure")
             isPlayingAdventure = true;
@@ -692,7 +701,7 @@ async function start(token, channelId) {
         isPlayingAdventure = false;
         const epochTimestamp = Number(message.embeds[0]?.description?.match(/<t:\d+:t>/)[0]?.replace("<t:", "")?.replace(":t>", ""));
         const remainingTime = epochTimestamp * 1000 - Date.now();
-        console.log(client.user.username + ": Adventure is on cooldown for " + remainingTime / 1000 + " seconds");
+        console.log(client.user.username + ": Adventure is on cooldown for " + Math.round(remainingTime / 60000) + " minute(s)");
         isPlayingAdventure = false;
         return setTimeout(() => {
           channel.sendSlash(botid, "adventure")
@@ -785,7 +794,7 @@ async function start(token, channelId) {
       } else if (message?.flags?.has("EPHEMERAL")) {
         const epochTimestamp = Number(message.embeds[0]?.description?.match(/<t:\d+:R>/)[0]?.replace("<t:", "")?.replace(":R>", ""));
         const remainingTime = epochTimestamp * 1000 - Date.now();
-        console.log(client.user.username + ": Scratch is on cooldown for " + remainingTime / 1000 + " seconds");
+        console.log(client.user.username + ": Scratch is on cooldown for " + Math.round(remainingTime / 60000) + " minute(s)");
         return setTimeout(() => {
           channel.sendSlash(botid, "scratch");
       }, remainingTime + randomInt(8000, 15000));
@@ -799,7 +808,7 @@ async function start(token, channelId) {
     if (message?.embeds[0]?.description?.includes("You can work again at")) {
       const epochTimestamp = Number(message.embeds[0]?.description?.match(/<t:\d+:t>/)[0]?.replace("<t:", "")?.replace(":t>", ""));
       const remainingTime = epochTimestamp * 1000 - Date.now();
-      console.log(client.user.username + ": Work is on cooldown for " + remainingTime / 1000 + " seconds");
+      console.log(client.user.username + ": Work is on cooldown for " + Math.round(remainingTime / 60000) + " minute(s)");
       return setTimeout(() => {
         channel.sendSlash(botid, "work shift");
       }, remainingTime + randomInt(8000, 15000));
