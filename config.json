@@ -8,16 +8,8 @@
       "cooldown": 50000
     },
     {
-      "command": "scratch",
-      "cooldown": 10850000
-    },
-    {
       "command": "hunt",
       "cooldown": 40000
-    },
-    {
-      "command": "work shift",
-      "cooldown": 3600000
     },
     { "command": "giveaway view",
       "cooldown": 30000
@@ -48,6 +40,8 @@
     }
   ],
   "autoAdventure": true,
+  "autoWork": true,
+  "autoScratch": true,
   "adventure": "west",
   "autoApple": true,
   "autoPizza": true,
@@ -61,7 +55,6 @@
   "webhook": "",
   "autoBuy": true,
   "triviaOdds": 0.65,
-  "autoDeposit": true,
   "autoAmmo": false,
   "searchLocations": [],
   "crimeLocations": [],
