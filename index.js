@@ -1,5 +1,5 @@
-// Version 3.4.5
-const version = "3.4.5";
+// Version 3.4.6
+const version = "3.4.6";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -304,7 +304,7 @@ async function start(token, channelId) {
 
     // =================== Dead Meme Start ===================
 
-    if (newMessage?.embeds[0]?.description?.includes("dead meme")) {
+    if (newMessage?.embeds[0]?.description?.includes("dead meme") || newMessage.embeds[0]?.fields[0]?.value?.includes("dead meme")) {
       isDeadMeme = true;
       setTimeout(() => {
         isDeadMeme = false;
