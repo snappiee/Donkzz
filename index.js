@@ -1,5 +1,5 @@
-// Version 3.4.6
-const version = "3.4.6";
+// Version 4.0.0
+const version = "4.0.0";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -20,6 +20,7 @@ var itemsToPayout = [];
 const config = process.env.config ? JSON.parse(process.env.config) : require("./config.json");
 if (config.webhookLogging && config.webhook) webhook = new Webhook(config.webhook);
 
+if (config.flowMode) console.log(chalk.redBright('Flow Mode is experimental. You may want to turn this off.'))
 if (config.serverEventsDonate.enabled) console.log(chalk.redBright('ServerEvents Donate is VERY risky at the moment. Bot admins are monitoring server pools usage. You may want to turn this off.'))
 if (config.commands.filter(a => a.command === 'trivia').length > 0) console.log(chalk.redBright('Trivia is VERY risky at the moment. Bot admins are monitoring trivia bots. You may want to turn this off.'))
 
@@ -151,9 +152,14 @@ async function start(token, channelId) {
   var isOnBreak = false;
   var botNotFreeCount = 0;
   var isDeadMeme = false;
-  var isPlayingAdventure = false;
   var isHavingInteraction = false;
   var isHavingCaptcha = false;
+
+  var flowChecking = false;
+  var flowStarted = false;
+  var isHavingCooldown = false;
+  var timeoutID = null;
+
   var buyShovel = false;
   var buyRifle = false;
   var wordemoji = "";
@@ -166,7 +172,6 @@ async function start(token, channelId) {
   var UpcomingPositionID = 0;
   var UpcomingPositionID2 = 0;
   var scratchRemaining = 0;
-  var tempToken = "";
 
   const client = new Client({
     checkUpdate: false
@@ -286,7 +291,7 @@ async function start(token, channelId) {
       await channel.sendSlash(botid, "scratch");
       await wait(300);
     }
-    main(onGoingCommands, channel, client, isOnBreak, isHavingCaptcha);
+    main(onGoingCommands, channel, client, flowChecking);
   });
 
   client.on('interactionModalCreate', modal => {
@@ -294,6 +299,13 @@ async function start(token, channelId) {
       modal.components[0].components[0].setValue("1");
       modal.reply();
       console.log(chalk.cyan(`${client.user.username}: Successfully bought an item (shovel/rifle)`));
+      isHavingInteraction = false;
+    }
+    if (modal.title == "Provide flow ID") {
+      let flowID = config.flowID.toString();
+      modal.components[0].components[0].setValue(flowID);
+      modal.reply();
+      console.log(client.user.username + ": Successfully imported flowID: " + config.flowID);
       isHavingInteraction = false;
     }
   });
@@ -394,10 +406,10 @@ async function start(token, channelId) {
 
 
     if (newMessage?.embeds[0]?.title?.includes(client.user.username + ", choose items you want to bring along")) {
-      if (newMessage.components[1]?.components[0].disabled) return (isPlayingAdventure = false);
+      if (newMessage.components[1]?.components[0].disabled) return (isHavingInteraction = false);
       await clickButton(newMessage, newMessage.components[1]?.components[0]);
       setTimeout(async () => {
-        isPlayingAdventure = false;
+        isHavingInteraction = false;
       }, 300000)
     }
 
@@ -440,6 +452,35 @@ async function start(token, channelId) {
       isHavingCaptcha = true;
     }
 
+    if (message?.flags?.has("EPHEMERAL") && isHavingInteraction == false && isOnBreak == false && (message?.embeds[0]?.title?.includes("Upcoming Commands") || message?.embeds[0]?.footer?.text.includes("flow - "))) {
+      if (!config.flowMode) {
+        await clickButton(message, message?.components[0]?.components[2]);
+        return;
+      }
+      if (isHavingCaptcha) return;
+      if (isOnBreak) return;
+      let NextButton = message?.components[0].components[0];
+      let skipToNextButton = message?.components[0].components[1];
+      let commandRunning = message?.components[0]?.components[0]?.label?.split(" ")[1];
+
+      if (isHavingCooldown == true) {
+        await clickButton(message, skipToNextButton);
+        console.log(client.user.username + ": Skipped command: " + commandRunning);
+        isHavingCooldown = false;
+        return;
+      }
+      await wait(randomInt(config.cooldowns.commandInterval.minDelay, config.cooldowns.commandInterval.maxDelay));
+      await clickButton(message, NextButton);
+      if (timeoutID) {
+        clearTimeout(timeoutID);
+      }
+      timeoutID = setTimeout(() => {
+        channel.sendSlash(botid, "flow start", config.flowID);
+        console.log(client.user.username + ": Resent flow start.");
+      }, 30000);
+      console.log(chalk.cyan(`${client.user.username}: Successfully ran the command: ` + `${commandRunning}`))
+    }
+
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You are unable to interact")) {
       await wait(10000);
     }
@@ -447,11 +488,12 @@ async function start(token, channelId) {
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.footer?.text?.includes("Select matching item image.")) {
       console.log(chalk.redBright(`${client.user.username} is being suspicious! Solve the captcha yourself!`));
       fs.writeFileSync("tokensOld.txt", client.token + "\n");
-      console.log(`String "${tempToken}" wrote on ${"tokensOld.txt"}`);
+      console.log(`String "${client.token}" wrote on ${"tokensOld.txt"}`);
+      isHavingCaptcha = true;
       if (config?.webhookLogging && config?.webhook) {
         webhook.send("<@" + config.mainUserId + ">" + "<@" + client.user.id + ">" + client.user.username + ": is having captcha!");
       }
-      isHavingCaptcha = true;
+
     }
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You don't have a shovel") && config.autoBuy) {
@@ -547,6 +589,30 @@ async function start(token, channelId) {
 
 
     // =================== Auto Upgrades End ===================
+
+    //==================== Flow Check Start ====================
+    if (message?.embeds[0]?.footer?.text?.includes("GRIND") && message?.embeds[0]?.title?.includes("Flows")) {
+      await clickButton(message, message.components[1].components[1]);
+      console.log(client.user.username + ": Importing the flowID: " + config.flowID);
+      isHavingInteraction = true;
+    } else if (message?.embeds[0]?.footer?.text?.includes("Empty") && message?.components[0]?.components[3]?.disabled) {
+      await clickButton(message, message.components[1].components[0]);
+      console.log(client.user.username + ": Importing the flowID: " + config.flowID);
+      isHavingInteraction = true;
+    } else if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("invalid")) {
+      await message?.channel.sendSlash(botid, "flow list");
+      if (!message?.components[1]?.components[1].disabled) clickButton(message, message?.components[1]?.components[1]);
+      console.log(client.user.username + ": Importing the flowID: " + config.flowID);
+      isHavingInteraction = true;
+    } else if (flowStarted == false && message?.embeds[0]?.title?.includes("Flows")) {
+      message.channel.sendSlash(botid, "flow start", config.flowID);
+      flowStarted = true;
+    }
+    if (message?.embeds[0]?.description?.includes("cooldown is")) {
+      await channel.sendSlash(botid, "balance");
+      isHavingCooldown = true;
+    }
+    // =================== Flow Check End ======================
 
     // =================== Stream Start ===================
     if (message?.embeds[0]?.author?.name.includes(" Stream Manager")) {
@@ -708,28 +774,28 @@ async function start(token, channelId) {
 
       if (message.components[1].components[0].disabled) {
         if (!message.embeds[0]?.description?.match(/<t:\d+:t>/)[0]) {
-          isPlayingAdventure = false;
+          isHavingInteraction = false;
           console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.cyan(": Having no tickets, queued adventure for 24 minutes later.")}`);
           return setTimeout(() => {
             channel.sendSlash(botid, "adventure")
-            isPlayingAdventure = true;
+            isHavingInteraction = true;
           }, randomInt(1440000, 1500000));
         }
-        isPlayingAdventure = false;
+        isHavingInteraction = false;
         const epochTimestamp = Number(message.embeds[0]?.description?.match(/<t:\d+:t>/)[0]?.replace("<t:", "")?.replace(":t>", ""));
         const remainingTime = epochTimestamp * 1000 - Date.now();
         console.log(client.user.username + ": Adventure is on cooldown for " + Math.round(remainingTime / 60000) + " minute(s)");
-        isPlayingAdventure = false;
+        isHavingInteraction = false;
         return setTimeout(() => {
           channel.sendSlash(botid, "adventure")
-          isPlayingAdventure = true;
+          isHavingInteraction = true;
         }, remainingTime + randomInt(8000, 15000));
       }
 
       await clickButton(message, message.components[1].components[0]).then(() => {
-        isPlayingAdventure = true;
+        isHavingInteraction = true;
         setTimeout(async () => {
-          isPlayingAdventure = false;
+          isHavingInteraction = false;
         }, 300000)
       });
     }
@@ -809,12 +875,16 @@ async function start(token, channelId) {
         await clickButton(message, btn);
         console.log(chalk.cyan(`${client.user.username}: Successfully started scratching (Remaining: 3/4)`));
       } else if (message?.flags?.has("EPHEMERAL")) {
-        const epochTimestamp = Number(message.embeds[0]?.description?.match(/<t:\d+:R>/)[0]?.replace("<t:", "")?.replace(":R>", ""));
-        const remainingTime = epochTimestamp * 1000 - Date.now();
-        console.log(client.user.username + ": Scratch is on cooldown for " + Math.round(remainingTime / 60000) + " minute(s)");
-        return setTimeout(() => {
-          channel.sendSlash(botid, "scratch");
-        }, remainingTime + randomInt(8000, 15000));
+        if (message?.embeds[0]?.description?.includes("again")) {
+          const epochTimestamp = Number(message.embeds[0]?.description?.match(/<t:\d+:R>/)[0]?.replace("<t:", "")?.replace(":R>", ""));
+          const remainingTime = epochTimestamp * 1000 - Date.now();
+          console.log(client.user.username + ": Scratch is on cooldown for " + Math.round(remainingTime / 60000) + " minute(s)");
+          return setTimeout(() => {
+            channel.sendSlash(botid, "scratch");
+          }, remainingTime + randomInt(8000, 15000));
+        } else if (message?.embeds[0]?.description?.includes("if you have voted")) {
+          console.log(client.user.username + ": Scratch is not ready, you have to vote first.")
+        }
       }
     }
 
@@ -1009,7 +1079,7 @@ async function start(token, channelId) {
     if (!newMessage.components[0]) return;
     if (newMessage?.embeds[0]?.title?.includes(client.user.username + ", choose items you want to bring along")) return;
     if (newMessage?.embeds[0]?.author?.name?.includes("Adventure Summary")) {
-      isPlayingAdventure = false;
+      isHavingInteraction = false;
 
       let btn = newMessage.components[0].components[0];
       let btnLabel = btn.label;
@@ -1047,7 +1117,7 @@ async function start(token, channelId) {
       if (!found) {
         await clickButton(newMessage, newMessage.components[0].components[randomInt(0, newMessage.components[0].components.length - 1)]).then(() => {
           setTimeout(async () => {
-            isPlayingAdventure = false;
+            isHavingInteraction = false;
           }, 300000)
         });
       }
@@ -1349,7 +1419,9 @@ async function start(token, channelId) {
 
 
 
-  async function randomCommand(onGoingCommands, channel, client) {
+  async function randomCommand(onGoingCommands, channel, client, isOnBreak, isHavingCaptcha) {
+    if (isHavingCaptcha) return;
+    if (isOnBreak) return;
     const commands = config.commands;
     const randomCommand = commands[Math.floor(Math.random() * commands.length)];
     if (botNotFreeCount > 7) {
@@ -1363,7 +1435,6 @@ async function start(token, channelId) {
     if (isDeadMeme && command == "postmemes") return;
     if (onGoingCommands.includes(command)) return;
 
-    if (isPlayingAdventure) return;
     if (isHavingInteraction) return;
     if (command === "search" || command === "crime" || command === "highlow" || command === "trivia" || command === "postmemes" || command === "stream" || command === "scratch") isBotFree = false;
     await channel.sendSlash(botid, command);
@@ -1381,15 +1452,17 @@ async function start(token, channelId) {
     }
   }
 
-  async function main(onGoingCommands, channel, client, isOnBreak, isHavingCaptcha) {
+  async function main(onGoingCommands, channel, client, flowChecking) {
+    if (flowChecking == false && config.flowChecking == true && config.flowMode == true) {
+      await channel.sendSlash(botid, "flow list");
+      console.log(client.user.username + ": Checked flow list (ID/Name): (" + config.flowID + ")")
+      flowChecking = true;
+    }
     var commandCooldown = randomInt(config.cooldowns.commandInterval.minDelay, config.cooldowns.commandInterval.maxDelay);
     var shortBreakCooldown = randomInt(config.cooldowns.shortBreak.minDelay, config.cooldowns.shortBreak.maxDelay);
-
     var longBreakCooldown = randomInt(config.cooldowns.longBreak.minDelay, config.cooldowns.longBreak.maxDelay);
-    if (isOnBreak) return;
-    if (isHavingCaptcha) return;
     var actualDelay;
-    randomCommand(onGoingCommands, channel, client);
+    if (!config.flowMode) randomCommand(onGoingCommands, channel, client, isOnBreak, isHavingCaptcha);
 
     if (Math.random() < config.cooldowns.shortBreak.frequency) {
       actualDelay = shortBreakCooldown;
@@ -1406,7 +1479,8 @@ async function start(token, channelId) {
 
     setTimeout(() => {
       isOnBreak = false;
-      main(onGoingCommands, channel, client, isOnBreak, isHavingCaptcha);
+      main(onGoingCommands, channel, client, flowChecking);
+      if (config.flowMode) channel.sendSlash(botid, "flow start", config.flowID);
     }, actualDelay);
   }
 }
