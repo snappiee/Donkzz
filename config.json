@@ -1,7 +1,4 @@
 {
-  "mainUserID": "youruseridhere",
-  "discordStatus": "invisible",
-  "loginDelay": 1500,
   "commands": [
     {
       "command": "beg",
@@ -39,20 +36,26 @@
       "cooldown": 350000
     }
   ],
+  "mainUserID": "DUMBDANKDEVS",
+  "flowChecking": false,
+  "flowID": "DUMBFLOWID",
+  "flowMode": false,
+  "discordStatus": "invisible",
+  "loginDelay": 1500,
   "autoAdventure": true,
   "autoWork": true,
   "autoScratch": true,
   "adventure": "west",
   "autoApple": true,
   "autoPizza": true,
-  "RemoveAppleWhenUse": true,
+  "RemoveAppleWhenUse": false,
   "autoDaily": true,
   "autoHorseshoe": true,
-  "postMemesPlatforms": ["tiktok", "discord"],
+  "postMemesPlatforms": ["tiktok", "discord", "reddit", "twitter", "facebook"],
   "streamGame": "",
   "devMode": true,
   "webhookLogging": true,
-  "webhook": "",
+  "webhook": "DUMBDANKDEVS",
   "autoBuy": true,
   "triviaOdds": 0.65,
   "autoAmmo": false,
@@ -91,16 +94,16 @@
     "shortBreak": {
       "minDelay": 45000,
       "maxDelay": 75000,
-      "frequency": 0.0075
+      "frequency": 0.0002
     },
     "longBreak": {
       "minDelay": 1250000,
       "maxDelay": 1750000,
-      "frequency": 0.00010
+      "frequency": 0.00002
     },
     "commandInterval": {
-      "minDelay": 1500,
-      "maxDelay": 3000
+      "minDelay": 2000,
+      "maxDelay": 4000
     }
   }
 }
