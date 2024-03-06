@@ -1,6 +1,10 @@
+# Notifications! 
+WTF FLOW MODE RELEASED I NEED TEST ON THEM AND SEND BUGS TO THE DISCORD SERVER PLEASE
+DID I FIX THE CAPTCHA PAUSE OR ISONBREAK THING SMH?
+JOIN AND TELL ME THE BUGS PLEASE FOR YOUR SAKE OF BOTTING BRUH
+
 # desparations
 request is out of date and deprecated, i knew, but i still use it. any problems?
-
 
 
 # STARRRRRRR
@@ -9,10 +13,6 @@ After v3.0.1 was released, i can go to sleep now, tysm dudes helping me on the w
 
 # Donkzz
 Advanced Dank Memer self-bot! Supports slash commands, incredibly strong, reliable and easy to use.
-
-# Notifications! 
-Auto Pet Care on development (not soon, it's hard to do)
-MoleMan minigame released! i need testers.
 
 
 # Instructions
