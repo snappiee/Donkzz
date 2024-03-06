@@ -1,5 +1,5 @@
-// Version 4.0.0
-const version = "4.0.0";
+// Version 4.0.1
+const version = "4.0.1";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -311,6 +311,7 @@ async function start(token, channelId) {
   });
 
   client.on("messageUpdate", async (oldMessage, newMessage) => {
+    
     if (newMessage?.interaction?.user !== client.user) return;
     if (newMessage?.author?.id !== botid) return;
 
@@ -443,7 +444,8 @@ async function start(token, channelId) {
   });
 
   client.on("messageCreate", async (message) => {
-    if (message.author.id != botid) return;
+    if (message.channel.id !== channelId && config.flowMode) return;
+    if (message.author.id != botid && !config.flowMode) return;
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("You're currently banned!")) {
       console.log(chalk.redBright(`${client.user.username} is banned!`));
