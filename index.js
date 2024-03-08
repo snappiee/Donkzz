@@ -1,5 +1,5 @@
-// Version 4.0.1
-const version = "4.0.1";
+// Version 4.0.2
+const version = "4.0.2";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -154,6 +154,7 @@ async function start(token, channelId) {
   var isDeadMeme = false;
   var isHavingInteraction = false;
   var isHavingCaptcha = false;
+  var beingNormal = true;
 
   var flowChecking = false;
   var flowStarted = false;
@@ -291,7 +292,7 @@ async function start(token, channelId) {
       await channel.sendSlash(botid, "scratch");
       await wait(300);
     }
-    main(onGoingCommands, channel, client, flowChecking);
+    main(onGoingCommands, channel, client, flowChecking, beingNormal);
   });
 
   client.on('interactionModalCreate', modal => {
@@ -444,8 +445,8 @@ async function start(token, channelId) {
   });
 
   client.on("messageCreate", async (message) => {
-    if (message.channel.id !== channelId && config.flowMode) return;
-    if (message.author.id != botid && !config.flowMode) return;
+    if (message.channel.id != channelId && config.flowMode == true) return;
+    if (message.author.id != botid && config.flowMode == false) return;
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("You're currently banned!")) {
       console.log(chalk.redBright(`${client.user.username} is banned!`));
@@ -1429,8 +1430,10 @@ async function start(token, channelId) {
     if (botNotFreeCount > 7) {
       botNotFreeCount = 0;
       isBotFree = true;
+      if (config.flowMode == false && config.autoDeposit == true) {
       await channel.sendSlash(botid, "deposit", "max");
       console.log(client.user.username + ": Deposited all coins.")
+      }
     }
     if (!isBotFree) return botNotFreeCount++;
     let command = randomCommand.command;
@@ -1454,7 +1457,7 @@ async function start(token, channelId) {
     }
   }
 
-  async function main(onGoingCommands, channel, client, flowChecking) {
+  async function main(onGoingCommands, channel, client, flowChecking, beingNormal) {
     if (flowChecking == false && config.flowChecking == true && config.flowMode == true) {
       await channel.sendSlash(botid, "flow list");
       console.log(client.user.username + ": Checked flow list (ID/Name): (" + config.flowID + ")")
@@ -1469,10 +1472,12 @@ async function start(token, channelId) {
     if (Math.random() < config.cooldowns.shortBreak.frequency) {
       actualDelay = shortBreakCooldown;
       isOnBreak = true;
+      beingNormal = false;
       console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.gray("Short break for")} ${chalk.yellowBright((shortBreakCooldown / 1000).toFixed(1))} seconds`);
     } else if (Math.random() < config.cooldowns.longBreak.frequency) {
       actualDelay = longBreakCooldown;
       isOnBreak = true;
+      beingNormal = false;
       console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.gray("Long break for")} ${chalk.yellowBright((longBreakCooldown / 1000).toFixed(1))} seconds`);
     } else {
       isOnBreak = false;
@@ -1481,8 +1486,11 @@ async function start(token, channelId) {
 
     setTimeout(() => {
       isOnBreak = false;
-      main(onGoingCommands, channel, client, flowChecking);
-      if (config.flowMode) channel.sendSlash(botid, "flow start", config.flowID);
+      main(onGoingCommands, channel, client, flowChecking, beingNormal);
+      if (config.flowMode && !beingNormal) {
+        channel.sendSlash(botid, "flow start", config.flowID);
+        beingNormal = true;
+      }
     }, actualDelay);
   }
 }
