@@ -1,5 +1,5 @@
-// Version 4.0.2
-const version = "4.0.2";
+// Version 4.0.3
+const version = "4.0.3";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -456,7 +456,7 @@ async function start(token, channelId) {
     }
 
     if (message?.flags?.has("EPHEMERAL") && isHavingInteraction == false && isOnBreak == false && (message?.embeds[0]?.title?.includes("Upcoming Commands") || message?.embeds[0]?.footer?.text.includes("flow - "))) {
-      if (!config.flowMode) {
+      if (config.flowMode == false) {
         await clickButton(message, message?.components[0]?.components[2]);
         return;
       }
@@ -1467,7 +1467,7 @@ async function start(token, channelId) {
     var shortBreakCooldown = randomInt(config.cooldowns.shortBreak.minDelay, config.cooldowns.shortBreak.maxDelay);
     var longBreakCooldown = randomInt(config.cooldowns.longBreak.minDelay, config.cooldowns.longBreak.maxDelay);
     var actualDelay;
-    if (!config.flowMode) randomCommand(onGoingCommands, channel, client, isOnBreak, isHavingCaptcha);
+    if (config.flowMode == false) randomCommand(onGoingCommands, channel, client, isOnBreak, isHavingCaptcha);
 
     if (Math.random() < config.cooldowns.shortBreak.frequency) {
       actualDelay = shortBreakCooldown;
@@ -1487,7 +1487,7 @@ async function start(token, channelId) {
     setTimeout(() => {
       isOnBreak = false;
       main(onGoingCommands, channel, client, flowChecking, beingNormal);
-      if (config.flowMode && !beingNormal) {
+      if (config.flowMode == true && beingNormal == false) {
         channel.sendSlash(botid, "flow start", config.flowID);
         beingNormal = true;
       }
