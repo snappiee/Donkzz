@@ -8,9 +8,6 @@
       "command": "hunt",
       "cooldown": 40000
     },
-    { "command": "giveaway view",
-      "cooldown": 30000
-    },
     {
       "command": "search",
       "cooldown": 30000
@@ -46,6 +43,7 @@
   "autoAdventure": true,
   "autoWork": true,
   "autoScratch": true,
+  "autoGlobalGiveaway": true,
   "adventure": "west",
   "autoApple": true,
   "autoPizza": true,
