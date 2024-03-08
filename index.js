@@ -1,5 +1,5 @@
-// Version 4.0.5
-const version = "4.0.5";
+// Version 4.0.6
+const version = "4.0.6";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -456,12 +456,16 @@ async function start(token, channelId) {
       isHavingCaptcha = true;
     }
 
+    if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("passed the captcha")) {
+      isHavingCaptcha = false;
+      main(onGoingCommands, channel, client, flowChecking, beingNormal, isHavingCaptcha)
+    }
+
     if (message?.flags?.has("EPHEMERAL") && isHavingInteraction == false && isOnBreak == false && isHavingCaptcha == false && (message?.embeds[0]?.title?.includes("Upcoming Commands") || message?.embeds[0]?.footer?.text.includes("flow - "))) {
       if (config.flowMode == false) {
         await clickButton(message, message?.components[0]?.components[2]);
         return;
       }
-      if (isHavingCaptcha) return;
       if (isOnBreak) return;
       let NextButton = message?.components[0].components[0];
       let skipToNextButton = message?.components[0].components[1];
@@ -482,7 +486,7 @@ async function start(token, channelId) {
         channel.sendSlash(botid, "flow start", config.flowID);
         console.log(client.user.username + ": Resent flow start.");
       }, 30000);
-      console.log(chalk.cyan(`${client.user.username}: Successfully ran the command: ` + `${commandRunning}`))
+      console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.blue(commandRunning)}`)
     }
 
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You are unable to interact")) {
@@ -780,7 +784,7 @@ async function start(token, channelId) {
       if (message.components[1].components[0].disabled) {
         if (!message.embeds[0]?.description?.match(/<t:\d+:t>/)[0]) {
           isHavingInteraction = false;
-          console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.cyan(": Having no tickets, queued adventure for 24 minutes later.")}`);
+          console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.cyan(" Having no tickets, queued adventure for 24 minutes later.")}`);
           return setTimeout(() => {
             channel.sendSlash(botid, "adventure")
             isHavingInteraction = true;
@@ -1316,56 +1320,8 @@ async function start(token, channelId) {
     }
     // defining positions
     if (findSpace[0].includes(blank_emojiID) && findSpace[1].includes(blank_emojiID) && findSpace[2].includes(blank_emojiID)) {
-      switch (UpcomingPositionID2) {
-        case 0:
-          switch (MolePositionID) {
-            default:
-              console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
-              return;
-            case 1:
-              await clickButton(message, btnLeft);
-              console.log(client.user.username + ": playing MoleMan minigame: moved Left once.");
-              return;
-            case 2:
-              await clickButton(message, btnLeft);
-              await wait(300);
-              await clickButton(message, btnLeft);
-              console.log(client.user.username + ": playing MoleMan minigame: moved Left twice.");
-              return;
-          }
-        case 1:
-          switch (MolePositionID) {
-            case 0:
-              await clickButton(message, btnRight);
-              console.log(client.user.username + ": playing MoleMan minigame: moved Right once.");
-              return;
-            default:
-              console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
-              return;
-            case 2:
-              await clickButton(message, btnLeft);
-              console.log(client.user.username + ": playing MoleMan minigame: moved Left once.");
-              return;
-          }
-        case 2:
-          switch (MolePositionID) {
-            case 0:
-              await clickButton(message, btnRight);
-              await wait(300);
-              await clickButton(message, btnRight);
-              console.log(client.user.username + ": playing MoleMan minigame: moved Right twice.");
-              return;
-            case 1:
-              await clickButton(message, btnRight);
-              console.log(client.user.username + ": playing MoleMan minigame: moved Right once.");
-              return;
-            default:
-              console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
-              return;
-          }
-        default:
-          return;
-      }
+      console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
+      return;
     }
     if (findSpace[0].includes(blank_emojiID) || findSpace[1].includes(blank_emojiID) || findSpace[2].includes(blank_emojiID)) {
       switch (UpcomingPositionID) {
@@ -1375,40 +1331,40 @@ async function start(token, channelId) {
               console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
               return;
             case 1:
-              await clickButton(message, btnLeft);
+              await instantClickButton(message, btnLeft);
               console.log(client.user.username + ": playing MoleMan minigame: moved Left once.");
               return;
             case 2:
-              await clickButton(message, btnLeft);
-              await wait(300);
-              await clickButton(message, btnLeft);
+              await instantClickButton(message, btnLeft);
+              await wait(200);
+              await instantClickButton(message, btnLeft);
               console.log(client.user.username + ": playing MoleMan minigame: moved Left twice.");
               return;
           }
         case 1:
           switch (MolePositionID) {
             case 0:
-              await clickButton(message, btnRight);
+              await instantClickButton(message, btnRight);
               console.log(client.user.username + ": playing MoleMan minigame: moved Right once.");
               return;
             default:
               console.log(client.user.username + ": playing MoleMan minigame: stayed still.");
               return;
             case 2:
-              await clickButton(message, btnLeft);
+              await instantClickButton(message, btnLeft);
               console.log(client.user.username + ": playing MoleMan minigame: moved Left once.");
               return;
           }
         case 2:
           switch (MolePositionID) {
             case 0:
-              await clickButton(message, btnRight);
-              await wait(300);
-              await clickButton(message, btnRight);
+              await instantClickButton(message, btnRight);
+              await wait(200);
+              await instantClickButton(message, btnRight);
               console.log(client.user.username + ": playing MoleMan minigame: moved Right twice.");
               return;
             case 1:
-              await clickButton(message, btnRight);
+              await instantClickButton(message, btnRight);
               console.log(client.user.username + ": playing MoleMan minigame: moved Right once.");
               return;
             default:
@@ -1459,8 +1415,9 @@ async function start(token, channelId) {
     }
   }
 
-  async function main(onGoingCommands, channel, client, flowChecking, beingNormal) {
-    if (flowChecking == false && config.flowChecking == true && config.flowMode == true) {
+  async function main(onGoingCommands, channel, client, flowChecking, beingNormal, isHavingCaptcha) {
+    if (config.flowMode == true && isHavingCaptcha == true) return;
+    if (flowChecking == false && config.flowMode == true) {
       await channel.sendSlash(botid, "flow list");
       console.log(client.user.username + ": Checked flow list (ID/Name): (" + config.flowID + ")")
       flowChecking = true;
@@ -1518,6 +1475,10 @@ async function clickButton(message, btn) {
   setTimeout(async () => {
     await message.clickButton(btn?.customId);
   }, randomInt(config.cooldowns.buttonClickDelay.minDelay, config.cooldowns.buttonClickDelay.maxDelay));
+}
+
+async function instantClickButton(message, btn) {
+  await message.clickbutton(btn?.customID);
 }
 
 async function findAnswer(question) {
