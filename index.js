@@ -1,5 +1,5 @@
-// Version 4.0.3
-const version = "4.0.3";
+// Version 4.0.4
+const version = "4.0.4";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -25,7 +25,8 @@ if (config.serverEventsDonate.enabled) console.log(chalk.redBright('ServerEvents
 if (config.commands.filter(a => a.command === 'trivia').length > 0) console.log(chalk.redBright('Trivia is VERY risky at the moment. Bot admins are monitoring trivia bots. You may want to turn this off.'))
 
 process.on("unhandledRejection", (error) => {
-  if (error.toString().includes("Cannot read properties of undefined (reading 'type')")) return;
+  if (error.toString().includes("Cannot read properties of undefined")) return;
+  if (error.toString().includes("Cannot read properties of null")) return;
   if (error.toString().includes("INTERACTION_TIMEOUT")) return;
   if (error.toString().includes("BUTTON_NOT_FOUND")) return;
   if (error.toString().includes("Invalid Form Body")) return;
@@ -557,7 +558,7 @@ async function start(token, channelId) {
 
     // =================== Click Minigame End ===================
 
-    if (message?.interaction?.user !== client?.user) return;
+    if (message?.interaction?.user != client?.user && config.flowMode == false) return;
 
     // =================== Auto Upgrades Start ===================
     if (message?.embeds[0]?.description?.includes("You've eaten an apple! If you die within the next 24 hours, you won't lose any items. You will, however, still lose coins.")) {
@@ -611,6 +612,7 @@ async function start(token, channelId) {
       message.channel.sendSlash(botid, "flow start", config.flowID);
       flowStarted = true;
     }
+
     if (message?.embeds[0]?.description?.includes("cooldown is")) {
       await channel.sendSlash(botid, "balance");
       isHavingCooldown = true;
