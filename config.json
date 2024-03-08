@@ -46,6 +46,7 @@
   "autoAdventure": true,
   "autoWork": true,
   "autoScratch": true,
+  "autoGlobalGiveaway": true,
   "adventure": "west",
   "autoApple": true,
   "autoPizza": true,
