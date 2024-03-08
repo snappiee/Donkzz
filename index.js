@@ -849,7 +849,7 @@ async function start(token, channelId) {
 
     // =================== Giveaway Command Start =================== 
 
-    if (message?.embeds[0]?.title?.includes("Giveaway")) {
+    if (config.autoGlobalGiveaway == true && message?.embeds[0]?.title?.includes("Giveaway")) {
       await clickButton(message, message.components[0].components[0]);
       console.log(chalk.cyan(`${client.user.username}: Successfully joined giveaway`));
     }
