@@ -1,5 +1,5 @@
-// Version 4.0.4
-const version = "4.0.4";
+// Version 4.0.5
+const version = "4.0.5";
 
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
@@ -456,7 +456,7 @@ async function start(token, channelId) {
       isHavingCaptcha = true;
     }
 
-    if (message?.flags?.has("EPHEMERAL") && isHavingInteraction == false && isOnBreak == false && (message?.embeds[0]?.title?.includes("Upcoming Commands") || message?.embeds[0]?.footer?.text.includes("flow - "))) {
+    if (message?.flags?.has("EPHEMERAL") && isHavingInteraction == false && isOnBreak == false && isHavingCaptcha == false && (message?.embeds[0]?.title?.includes("Upcoming Commands") || message?.embeds[0]?.footer?.text.includes("flow - "))) {
       if (config.flowMode == false) {
         await clickButton(message, message?.components[0]?.components[2]);
         return;
