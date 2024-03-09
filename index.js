@@ -1,5 +1,5 @@
-// Version 4.0.6
-const version = "4.0.6";
+// Version 4.0.7
+const version = "4.0.7";
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
 console.log(chalk.hex('#FFA500')(`If you encounter any issues, join our Discord: \nhttps://discord.gg/7A6gAdnBaw`))
