@@ -36,6 +36,7 @@
       "cooldown": 350000
     }
   ],
+  "prefix": "$"
   "autodeposit": true,
   "mainUserID": "DUMBDANKDEVS",
   "flowChecking": false,
