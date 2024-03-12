@@ -18,13 +18,13 @@ Advanced Dank Memer self-bot! Supports slash commands, incredibly strong, reliab
 # Instructions
 Fill in the information in config.json and tokens.txt as in the file.
 Run the bot and have it ready for you.
-To use the autoBuy function, you must open the Shop View embed and select the menu to Coin Shop. Otherwise, the bot won't work correctly!
+To use the auto buy function, you must open the Shop View embed and select the menu to Coin Shop. Otherwise, the bot won't work correctly!
 Credits
 # Installation
 Download this Repository
 open tokens.txt
-hit CTRL+A then type the channel id then with a space token 
-# How to get channel id 
+Hit CTRL+A then type/paste the channel ID then a space then the token 
+# How to get channel ID (sub-part of Installation)
 Getting Channel ID:
 Enable Developer Mode:
 
@@ -36,27 +36,34 @@ Copy Channel ID:
 
 Right-click on the channel you want to get the ID for.
 Click on "Copy ID" to copy the channel's ID to your clipboard.
-Download NodeJS
-Run the following commands in your shell/console:
-```bash
-git clone https://github.com/TahaGorme/donkzz.git
-```
+# How to get Token (sub-part of Installation) 
+[Latest how to get token](https://www.youtube.com/results?search_query=how+to+get+token+id+in+discord&sp=EgIIBQ%253D%253D)
 
-```bash
-cd donkzz
-```
+the top result should do 
+# Real installation 
+Download NodeJS
+# How to open cmd correctly (sub-part of Real installation) 
+Go to the Donkzz folder
+
+https://github.com/sarimwaniR/Donkzz/assets/101258901/69bc7691-d589-4759-a337-9f6e124c0b30
+
+# Running of commands (sub-part of Installation)
+Run the following commands in your shell/console:
 
 ```bash
 npm i
 ```
-
-Now enter the correct values in config.json.
+then 
+```bash
+npm audit fix --force
+```
 To start the self-bot, run the following command in your shell/console:
 
 ```bash
 node .
+
 ```
-This bot is forked and rewritten from TahaGorme/donkzz. Give them some credit.
+This bot is forked and rewritten from [TahaGorme/donkzz](https://github.com/TahaGorme/slashy) Give them some credit.
 Also, this bot has added many functions from the old version, like supporting work minigames, auto-join global DMC giveaways, auto-scratch, and support for webhooks!
 For Replit hosting and custom website, as I'm not good at doing HTML stuff (with the outdated website from the original version) and Replit only supports up to NodeJS v18, Donkzz can't be hosted on Replits, as it can cause RAM overloads and big lag spikes. Since then, I've removed the website and made it self-hosting only. Will have more changes in the future.
 Instructions can be found in the repository of the original one (Donkzz). Thanks for taking a look at this.
