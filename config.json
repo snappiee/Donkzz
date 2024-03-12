@@ -56,7 +56,7 @@
   "postMemesPlatforms": ["tiktok", "discord", "reddit", "twitter", "facebook"],
   "streamGame": "",
   "devMode": true,
-  "webhookLogging": true,
+  "webhookLogging": false,
   "webhook": "DUMBDANKDEVS",
   "autoBuy": true,
   "triviaOdds": 0.65,
