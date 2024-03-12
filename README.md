@@ -14,6 +14,30 @@ After v3.0.1 was released, i can go to sleep now, tysm dudes helping me on the w
 # Donkzz
 Advanced Dank Memer self-bot! Supports slash commands, incredibly strong, reliable and easy to use.
 
+## Installation
+note: join our [discord](https://discord.gg/AEMGVcnTWp) server to beta test!
+
+- Download [NodeJS](https://nodejs.org/en/download)
+- Run the following commands in your shell/console:
+
+```bash
+git clone https://github.com/TahaGorme/slashy.git
+```
+
+```bash
+cd slashy
+```
+
+```bash
+npm i
+```
+- Now enter the correct values in [config.json](./config.json).
+
+To start the selfbot, run the following command in your shell/console:
+```javascript
+node .
+```
+
 
 # Instructions
   1. Fill the information in config.json and tokens.txt, as in the file.
