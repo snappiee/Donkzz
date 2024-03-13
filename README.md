@@ -41,7 +41,7 @@ Click on "Copy ID" to copy the channel's ID to your clipboard.
 
 the top result should do 
 # Real installation 
-[Download NodeJS]([https://nodejs.org/en/download)
+[Download NodeJS](https://nodejs.org/en/download)
 # How to open cmd correctly (sub-part of Real installation) 
 Go to the Donkzz folder
 
