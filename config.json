@@ -37,7 +37,7 @@
     }
   ],
   "prefix": "$",
-  "autodeposit": true,
+  "autoDeposit": true,
   "mainUserID": "DUMBDANKDEVS",
   "flowChecking": false,
   "flowID": "DUMBFLOWID",
