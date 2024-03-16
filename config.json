@@ -37,7 +37,7 @@
     }
   ],
   "prefix": "$",
-  "autodeposit": true,
+  "autoDeposit": true,
   "mainUserID": "DUMBDANKDEVS",
   "flowChecking": false,
   "flowID": "DUMBFLOWID",
@@ -69,14 +69,11 @@
       "Apple",
       "Lucky Horseshoe",
       "Hunting Rifle",
-      "Fishing Pole",
       "Shovel",
       "Trivia Trophy",
       "Adventure Ticket",
       "Mouse",
       "Keyboard",
-      "Birthday Cake",
-      "Pink Plastic Bits"
     ],
     "mainUserId": "",
     "payoutOnlyMode": false,
