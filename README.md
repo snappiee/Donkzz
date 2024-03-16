@@ -1,3 +1,4 @@
+# 24/7 comming soon!
 # Estimated coins per minute =166K = 240 million a day 
 # Notifications!
 "WTF FLOW MODE RELEASED I NEED TEST ON THEM AND SEND BUGS TO THE DISCORD SERVER PLEASE
