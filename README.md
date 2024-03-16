@@ -1,4 +1,6 @@
-# 24/7 virtual machine online access coming soon! If you want to help contact Discord- sarimwanir  [Sever for VM help ONLY ](https://discord.gg/P8796nzwvs) [Sever for Other help ](https://discord.gg/TnKuHYgp)
+# 24/7 virtual machine online access coming soon! If you want to help contact 
+[Server for VM help ONLY ](https://discord.gg/P8796nzwvs) 
+[Server for Other help ](https://discord.gg/TnKuHYgp)
 # Estimated coins per minute =166K = 240 million a day 
 # Notifications!
 "WTF FLOW MODE RELEASED I NEED TEST ON THEM AND SEND BUGS TO THE DISCORD SERVER PLEASE
