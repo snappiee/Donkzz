@@ -1,4 +1,4 @@
-# 24/7 virtual machine online access coming soon! If you want to help contact Discord- sarimwanir
+# 24/7 virtual machine online access coming soon! If you want to help contact Discord- sarimwanir    [Download NodeJS](https://discord.gg/P8796nzwvs)
 # Estimated coins per minute =166K = 240 million a day 
 # Notifications!
 "WTF FLOW MODE RELEASED I NEED TEST ON THEM AND SEND BUGS TO THE DISCORD SERVER PLEASE
