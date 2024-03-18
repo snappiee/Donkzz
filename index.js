@@ -1,5 +1,5 @@
-// Version 4.0.7
-const version = "4.0.7";
+// Version 4.0.9
+const version = "4.0.9";
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
 console.log(chalk.hex('#FFA500')(`If you encounter any issues, join our Discord: \nhttps://discord.gg/7A6gAdnBaw`))
@@ -304,8 +304,9 @@ async function start(token, channelId) {
       if (m == -1) {
         let btn = newMessage?.components[4].components[3];
         await clickButton(newMessage, btn);
-        await (300);
-        await channel.sendSlash(botid, "flow start", config.flowID)
+        await wait(3000);
+        if (config.flowMode) await channel.sendSlash(botid, "flow start", config.flowID);
+        isHavingInteraction = false;
         return setTimeout(() => {
           channel.sendSlash(botid, "scratch");
         }, randomInt(10800000, 11000000));
@@ -315,7 +316,6 @@ async function start(token, channelId) {
         await clickButton(newMessage, btn);
         console.log(chalk.cyan(`${client.user.username}: Successfully scratching (Remaining: ${m}/4)`));
       }
-      isBotFree = true;
     }
     // =================== Scratch Prompt End ================
     // =================== Adventure Start ===================
@@ -363,8 +363,17 @@ async function start(token, channelId) {
         if (config.flowMode == true) await channel.sendSlash(botid, "flow start", config.flowID);
       } else if (message?.content?.includes("stop")) toExit = true;
     }
-    if (message.channel.id != channelId && config.flowMode == true) return;
     if (message.author.id != botid && config.flowMode == false) return;
+    // =================== Heist Prompt Start =====================
+    if (message?.embeds?.length && message?.embeds[0]?.title && message?.embeds[0]?.title?.includes("bank robbery")) {
+      console.log(chalk.cyan(`${client.user.username}: Detected bankrob`));
+      await channel.sendSlash(botid, "deposit", "max");
+      await wait(5000)
+      await clickButton(message, message.components[0].components[0]);
+      console.log(chalk.cyan(`${client.user.username}: Successfully joined bankrob`));
+    }
+    // ==================== Heist Prompt End ======================
+    if (message.channel.id != channelId && config.flowMode == true) return;
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("You're currently banned!")) {
       console.log(chalk.redBright(`${client.user.username} is banned!`));
       fs.writeFileSync("tokensOld.txt", client.token + "\n");
@@ -373,7 +382,7 @@ async function start(token, channelId) {
     }
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("passed the captcha")) {
       isHavingCaptcha = false;
-      main(onGoingCommands, channel, client, flowChecking, beingNormal, isHavingCaptcha)
+      main(onGoingCommands, channel, client, flowChecking, beingNormal, isHavingCaptcha);
     }
     if (message?.flags?.has("EPHEMERAL") && isPausing == false && isHavingInteraction == false && isOnBreak == false && isHavingCaptcha == false && (message?.embeds[0]?.title?.includes("Upcoming Commands") || message?.embeds[0]?.footer?.text.includes("flow - "))) {
       if (config.flowMode == false) {
@@ -431,7 +440,7 @@ async function start(token, channelId) {
     }
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.title?.includes("Hold tight! Maintenance in progress.")) {
       console.log(chalk.redBright(`${client.user.username} got maintenance! Stopping Donkzz; restart it later.`));
-      toExit = true;
+      process.exit(0);
     }
     // =================== Autoalerts Start ===================
     if (message?.embeds[0]?.title?.includes("You have an unread alert") && message?.flags?.has("EPHEMERAL")) {
@@ -508,7 +517,7 @@ async function start(token, channelId) {
       message.channel.sendSlash(botid, "flow start", config.flowID);
       flowStarted = true;
     }
-    if (message?.embeds[0]?.description?.includes("cooldown is")) {
+    if (message?.embeds[0]?.description?.includes("cooldown is") && config.flowMode == true) {
       await channel.sendSlash(botid, "balance");
       isHavingCooldown = true;
     }
@@ -651,7 +660,8 @@ async function start(token, channelId) {
       });
     }
     autoAdventure(message);
-    // =================== Autoadventure End ===================
+    // =================== Autoadventure End =====================
+    
     // =================== Crime Command Start ===================
     if (message?.embeds[0]?.description?.includes("What crime do you want to commit?")) {
       if (config.crimeLocations?.length == 0) {
@@ -690,7 +700,7 @@ async function start(token, channelId) {
       console.log(chalk.cyan(`${client.user.username}: Successfully joined giveaway`));
     }
     // =================== Giveaway Command End =================== 
-    // =================== Shop Command Start ====================
+    // =================== Shop Command Start =====================
     if (message?.embeds[0]?.title?.includes("Dank Memer Shop")) {
       if (buyRifle == true) {
         await clickButton(message, message.components[2].components[1]);
@@ -717,7 +727,7 @@ async function start(token, channelId) {
           return setTimeout(() => {
             channel.sendSlash(botid, "scratch");
           }, remainingTime + randomInt(8000, 15000));
-        } else if (message?.embeds[0]?.description?.includes("if you have voted")) {
+        } else if (message?.embeds[0]?.description?.includes("vote")) {
           console.log(client.user.username + ": Scratch is not ready, you have to vote first.")
         }
       }
@@ -826,6 +836,8 @@ async function start(token, channelId) {
       isBotFree = true;
     }
     // =================== PostMeme Command End ===================
+
+
   });
   client.login(token).catch((err) => {
     if (err.toString().includes("TOKEN_INVALID")) {
