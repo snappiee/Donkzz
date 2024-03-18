@@ -1,5 +1,5 @@
-// Version 4.0.8
-const version = "4.0.8";
+// Version 4.0.9
+const version = "4.0.9";
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
 console.log(chalk.hex('#FFA500')(`If you encounter any issues, join our Discord: \nhttps://discord.gg/7A6gAdnBaw`))
@@ -517,7 +517,7 @@ async function start(token, channelId) {
       message.channel.sendSlash(botid, "flow start", config.flowID);
       flowStarted = true;
     }
-    if (message?.embeds[0]?.description?.includes("cooldown is")) {
+    if (message?.embeds[0]?.description?.includes("cooldown is") && config.flowMode == true) {
       await channel.sendSlash(botid, "balance");
       isHavingCooldown = true;
     }
