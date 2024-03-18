@@ -68,6 +68,11 @@ To start the self-bot, run the following command in your shell/console:
 node .
 
 ```
+To update the bot run
+```bash
+node updater.js
+
+```
 This bot is forked and rewritten from [TahaGorme/donkzz](https://github.com/TahaGorme/slashy) Give them some credit.
 Also, this bot has added many functions from the old version, like supporting work minigames, auto-join global DMC giveaways, auto-scratch, and support for webhooks!
 For Replit hosting and custom website, as I'm not good at doing HTML stuff (with the outdated website from the original version) and Replit only supports up to NodeJS v18, Donkzz can't be hosted on Replits, as it can cause RAM overloads and big lag spikes. Since then, I've removed the website and made it self-hosting only. Will have more changes in the future.
