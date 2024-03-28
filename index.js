@@ -1,5 +1,5 @@
-// Version 4.0.9
-const version = "4.0.9";
+// Version 4.1.0
+const version = "4.1.0";
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
 console.log(chalk.hex('#FFA500')(`If you encounter any issues, join our Discord: \nhttps://discord.gg/7A6gAdnBaw`))
@@ -304,9 +304,8 @@ async function start(token, channelId) {
       if (m == -1) {
         let btn = newMessage?.components[4].components[3];
         await clickButton(newMessage, btn);
-        await wait(3000);
+        await wait(5000);
         if (config.flowMode) await channel.sendSlash(botid, "flow start", config.flowID);
-        isHavingInteraction = false;
         return setTimeout(() => {
           channel.sendSlash(botid, "scratch");
         }, randomInt(10800000, 11000000));
@@ -321,11 +320,20 @@ async function start(token, channelId) {
     // =================== Adventure Start ===================
     autoAdventure(newMessage);
     if (newMessage?.embeds[0]?.title?.includes(client.user.username + ", choose items you want to bring along")) {
-      if (newMessage.components[1]?.components[0].disabled) return (isHavingInteraction = false);
-      await clickButton(newMessage, newMessage.components[1]?.components[0]);
-      setTimeout(async () => {
-        isHavingInteraction = false;
-      }, 300000)
+      if (newMessage.components[2]?.components[0]) {
+        if (newMessage.components[2]?.components[0].disabled) return (isHavingInteraction = false);
+        await clickButton(newMessage, newMessage.components[1]?.components[0]);
+        setTimeout(async () => {
+          isHavingInteraction = false;
+        }, 300000)
+      }
+      if (!newMessage.components[2]?.components[0]) {
+        if (newMessage.components[1]?.components[0].disabled) return (isHavingInteraction = false);
+        await clickButton(newMessage, newMessage.components[1]?.components[0]);
+        setTimeout(async () => {
+          isHavingInteraction = false;
+        }, 300000);
+      }
     }
     playMinigames(newMessage);
     if (config.serverEventsDonate.enabled && newMessage?.embeds[0]?.author?.name?.includes(`${client.user.username}'s inventory`)) {
@@ -428,13 +436,11 @@ async function start(token, channelId) {
     }
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You don't have a shovel") && config.autoBuy) {
       console.log(client.user.username, ", Preparing to buy a shovel");
-      isHavingInteraction = true;
       buyShovel = true;
       openShop();
     }
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("You don't have a hunting rifle") && config.autoBuy) {
       console.log(client.user.username, ", Preparing to buy a rifle");
-      isHavingInteraction = true;
       buyRifle = true;
       openShop();
     }
@@ -531,7 +537,7 @@ async function start(token, channelId) {
             await message.clickButton(components[0].customId);
             setTimeout(async () => {
               if (message.components[0].components[0]?.type == "SELECT_MENU") {
-                const Games = ["Apex Legends", "COD MW2", "CS GO", "Dead by Daylight", "Destiny 2", "Dota 2", "Elden Ring", "Escape from Tarkov", "FIFA 22", "Fortnite", "Grand Theft Auto V", "Hearthstone", "Just Chatting", "League of Legends", "Lost Ark", "Minecraft", "PUBG Battlegrounds", "Rainbox Six Siege", "Rocket League", "Rust", "Teamfight Tactics", "Valorant", "Warzone 2", "World of Tanks", "World of Warcraft", ];
+                const Games = ["Apex Legends", "COD MW2", "CS GO", "Dead by Daylight", "Destiny 2", "Dota 2", "Elden Ring", "Escape from Tarkov", "FIFA 22", "Fortnite", "Grand Theft Auto V", "Hearthstone", "Just Chatting", "League of Legends", "Lost Ark", "Minecraft", "PUBG Battlegrounds", "Rainbox Six Siege", "Rocket League", "Rust", "Teamfight Tactics", "Valorant", "Warzone 2", "World of Tanks", "World of Warcraft",];
                 const Game = (config.streamGame === '') ? Games[Math.floor(Math.random() * Games.length)] : config.streamGame;
                 const GamesMenu = message.components[0].components[0]
                 await message.selectMenu(GamesMenu, [Game]);
@@ -661,7 +667,7 @@ async function start(token, channelId) {
     }
     autoAdventure(message);
     // =================== Autoadventure End =====================
-    
+
     // =================== Crime Command Start ===================
     if (message?.embeds[0]?.description?.includes("What crime do you want to commit?")) {
       if (config.crimeLocations?.length == 0) {
@@ -701,7 +707,7 @@ async function start(token, channelId) {
     }
     // =================== Giveaway Command End =================== 
     // =================== Shop Command Start =====================
-    if (message?.embeds[0]?.title?.includes("Dank Memer Shop")) {
+    if (message?.embeds[0]?.title?.includes("Shop")) {
       if (buyRifle == true) {
         await clickButton(message, message.components[2].components[1]);
         buyRifle = false;
@@ -889,7 +895,7 @@ async function start(token, channelId) {
       let btnLabel = btn.label;
       var time = btnLabel.match(/in \d+ minutes/)[0]?.replace("in ", "")?.replace(" minutes", "");
       console.log(`${client.user.username}: Finished playing adventure. Next adventure in ${time} minutes`);
-      await channel.sendSlash(botid, "flow start", config.flowID);
+      if (config.flowMode == true) await channel.sendSlash(botid, "flow start", config.flowID);
       setTimeout(() => {
         channel.sendSlash(botid, "adventure")
       }, randomInt(Number(time) * 60 * 1000, Number(time) * 1.1 * 60 * 1000));
@@ -1152,7 +1158,7 @@ async function start(token, channelId) {
     if (isPausing) return;
     const commands = config.commands;
     const randomCommand = commands[Math.floor(Math.random() * commands.length)];
-    if (botNotFreeCount > 7) {
+    if (botNotFreeCount > 6) {
       botNotFreeCount = 0;
       isBotFree = true;
       if (config.flowMode == false && config.autoDeposit == true) {
@@ -1165,7 +1171,7 @@ async function start(token, channelId) {
     if (isDeadMeme && command == "postmemes") return;
     if (onGoingCommands.includes(command)) return;
     if (isHavingInteraction) return;
-    if (command === "search" || command === "crime" || command === "highlow" || command === "trivia" || command === "postmemes" || command === "stream" || command === "scratch") isBotFree = false;
+    if (command === "search" || command === "crime" || command === "highlow" || command === "trivia" || command === "postmemes" || command === "stream") isBotFree = false;
     await channel.sendSlash(botid, command);
     if (config.devMode) console.log(`${chalk.magentaBright(client.user.username)}: ${chalk.blue(command)}`);
     onGoingCommands.push(command);
@@ -1255,7 +1261,7 @@ function formatConsoleDate(date) {
   return chalk.cyanBright('[' + ((hour < 10) ? '0' + hour : hour) + ':' + ((minutes < 10) ? '0' + minutes : minutes) + ':' + ((seconds < 10) ? '0' + seconds : seconds) + '] - ')
 }
 var log = console.log;
-console.log = function() {
+console.log = function () {
   var first_parameter = arguments[0];
   var other_parameters = Array.prototype.slice.call(arguments, 1);
   const msg = stripAnsi([...arguments].join(' '));
@@ -1270,7 +1276,7 @@ console.log = function() {
   log.apply(console, [formatConsoleDate(new Date()) + first_parameter].concat(other_parameters));
 };
 var error = console.error;
-console.error = function() {
+console.error = function () {
   var first_parameter = arguments[0];
   var other_parameters = Array.prototype.slice.call(arguments, 1);
   const msg = stripAnsi([...arguments].join(' '));
