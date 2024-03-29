@@ -1,5 +1,5 @@
-// Version 4.1.0
-const version = "4.1.0";
+// Version 4.1.1
+const version = "4.1.1";
 const chalk = require("chalk");
 console.log(chalk.red(`Donkzz has started!!`))
 console.log(chalk.hex('#FFA500')(`If you encounter any issues, join our Discord: \nhttps://discord.gg/7A6gAdnBaw`))
@@ -322,7 +322,7 @@ async function start(token, channelId) {
     if (newMessage?.embeds[0]?.title?.includes(client.user.username + ", choose items you want to bring along")) {
       if (newMessage.components[2]?.components[0]) {
         if (newMessage.components[2]?.components[0].disabled) return (isHavingInteraction = false);
-        await clickButton(newMessage, newMessage.components[1]?.components[0]);
+        await clickButton(newMessage, newMessage.components[2]?.components[0]);
         setTimeout(async () => {
           isHavingInteraction = false;
         }, 300000)
