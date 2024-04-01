@@ -17,13 +17,20 @@ if (config.webhookLogging && config.webhook) webhook = new Webhook(config.webhoo
 if (config.flowMode) console.log(chalk.redBright('Flow Mode is experimental. You may want to turn this off.'))
 if (config.serverEventsDonate.enabled) console.log(chalk.redBright('ServerEvents Donate is VERY risky at the moment. Bot admins are monitoring server pools usage. You may want to turn this off.'))
 if (config.commands.filter(a => a.command === 'trivia').length > 0) console.log(chalk.redBright('Trivia is VERY risky at the moment. Bot admins are monitoring trivia bots. You may want to turn this off.'))
+
+const ignorableErrors = [
+  "Cannot read properties of undefined",
+  "Cannot read properties of null",
+  "INTERACTION_TIMEOUT",
+  "BUTTON_NOT_FOUND",
+  "Invalid Form Body",
+  "COMPONENT_VALIDATION_FAILED: Component validation failed"
+];
+
 process.on("unhandledRejection", (error) => {
-  if (error.toString().includes("Cannot read properties of undefined")) return;
-  if (error.toString().includes("Cannot read properties of null")) return;
-  if (error.toString().includes("INTERACTION_TIMEOUT")) return;
-  if (error.toString().includes("BUTTON_NOT_FOUND")) return;
-  if (error.toString().includes("Invalid Form Body")) return;
-  if (error.toString().includes("COMPONENT_VALIDATION_FAILED: Component validation failed")) return;
+  if (ignorableErrors.some(str => error.toString().includes(str))) {
+    return;
+  }
   if (error.toString().includes("Cannot send messages to this user")) return console.error(chalk.red("Make sure all of the users are in a server where Dank Memer is in"));
   console.log(chalk.gray("—————————————————————————————————"));
   console.log(chalk.white("["), chalk.red.bold("Anti-Crash"), chalk.white("]"), chalk.gray(" : "), chalk.white.bold("Unhandled Rejection/Catch"));
