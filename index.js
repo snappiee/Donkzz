@@ -397,7 +397,7 @@ async function start(token, channelId) {
     }
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("passed the captcha")) {
       isHavingCaptcha = false;
-      main(onGoingCommands, channel, client, flowChecking, beingNormal, isHavingCaptcha);
+      main(onGoingCommands, channel, client, flowChecking, beingNormal);
     }
     if (message?.flags?.has("EPHEMERAL") && isPausing == false && isHavingInteraction == false && isOnBreak == false && isHavingCaptcha == false && (message?.embeds[0]?.title?.includes("Upcoming Commands") || message?.embeds[0]?.footer?.text.includes("flow - "))) {
       if (config.flowMode == false) {
