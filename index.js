@@ -397,7 +397,7 @@ async function start(token, channelId) {
     }
     if (message?.flags?.has("EPHEMERAL") && message?.embeds[0]?.description?.includes("passed the captcha")) {
       isHavingCaptcha = false;
-      main(onGoingCommands, channel, client, flowChecking, beingNormal, isHavingCaptcha);
+      main(onGoingCommands, channel, client, flowChecking, beingNormal);
     }
     if (message?.flags?.has("EPHEMERAL") && isPausing == false && isHavingInteraction == false && isOnBreak == false && isHavingCaptcha == false && (message?.embeds[0]?.title?.includes("Upcoming Commands") || message?.embeds[0]?.footer?.text.includes("flow - "))) {
       if (config.flowMode == false) {
@@ -1159,7 +1159,7 @@ async function start(token, channelId) {
       }
     }
   }
-  async function randomCommand(onGoingCommands, channel, client, isOnBreak, isHavingCaptcha) {
+  async function randomCommand(onGoingCommands, channel, client, isOnBreak) {
     if (isHavingCaptcha) return;
     if (isOnBreak) return;
     if (isPausing) return;
@@ -1192,7 +1192,7 @@ async function start(token, channelId) {
       if (arr[i] === item) arr.splice(i, 1);
     }
   }
-  async function main(onGoingCommands, channel, client, flowChecking, beingNormal, isHavingCaptcha) {
+  async function main(onGoingCommands, channel, client, flowChecking, beingNormal) {
     if (config.flowMode == true && isHavingCaptcha == true) return;
     if (flowChecking == false && config.flowMode == true) {
       await channel.sendSlash(botid, "flow list");
