@@ -1,7 +1,6 @@
 # Notifications! 
-WTF FLOW MODE RELEASED I NEED TEST ON THEM AND SEND BUGS TO THE DISCORD SERVER PLEASE
-DID I FIX THE CAPTCHA PAUSE OR ISONBREAK THING SMH?
-JOIN AND TELL ME THE BUGS PLEASE FOR YOUR SAKE OF BOTTING BRUH
+sorry the repo is now deprecated and i no longer have any interest in DM. this should be an end to the journey of this repo (where i tried to maintain it but failed miserably).
+its now discontinued. feel free to use the code and make another WORKING AWESOMELY replica, crediting their owners (taha ofc). tysm
 
 # desparations
 request is out of date and deprecated, i knew, but i still use it. any problems?
